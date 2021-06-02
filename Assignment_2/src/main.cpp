@@ -11,14 +11,14 @@
 #include <iostream>
 #include <vector>
 
-char *input_file = "scene2_03_colored_lights.txt";
+char *input_file = "scene2_16_t_scale.txt";
 int width = 200;
 int height = 200;
-char *output_file = "output2_03.tga";
+char *output_file = "output2_16.tga";
 float depth_min = 8;
 float depth_max = 12;
-char *depth_file = nullptr;
-char *normals_file = "normals2_03.tga";
+char *depth_file = "depth2_16.tga";
+char *normals_file = "tmp.tga";
 bool shade_back = false;
 
 void prase_cmd(int argc, char *argv[])
@@ -114,11 +114,20 @@ int main(int argc, char *argv[])
             float fx = x / (float)width;
             float fy = y / (float)height;
 
+            // #if DEBUG
+            if (x == 150 && y == 150)
+            {
+                cout << "(x,y) = (100, 200)" << endl;
+            }
+            // #endif
+
             Ray r = camera->generateRay(Vec2f(fx, fy));
             Hit h = Hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
 
             if (group->intersect(r, h, camera->getTMin()))
             {
+
+
                 Vec3f pt = h.getIntersectionPoint();
                 Vec3f pt_normal = h.getNormal();
                 if (shade_back && pt_normal.Dot3(r.getDirection()) > 0)
@@ -148,7 +157,7 @@ int main(int argc, char *argv[])
                 float gray = 1 - (depth - depth_min) / gray_scale;
                 depth_img.SetPixel(x, y, Vec3f(gray, gray, gray));
 
-                normal_img.SetPixel(x, y, h.getNormal());
+                normal_img.SetPixel(x, y, Vec3f(fabs(pt_normal.r()),fabs(pt_normal.g()),fabs(pt_normal.b())));
             }
         }
     img.SaveTGA(output_file);

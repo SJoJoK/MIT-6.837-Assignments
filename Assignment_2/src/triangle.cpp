@@ -17,7 +17,7 @@ bool Triangle::intersect(const Ray &r, Hit &h, float tmin)
         float t = s2.Dot3(e2) / det;
         float b1 = s1.Dot3(s) / det;
         float b2 = s2.Dot3(d) / det;
-        if (t > max(0.0f, tmin) && b1 + b2 < 1 && b1 > 0 && b2 > 0 && t > h.getT())
+        if (t > max(0.0f, tmin) && b1 + b2 < 1 && b1 > 0 && b2 > 0 && t < h.getT())
         {
             h.set(t, this->material, this->normal, r);
             return true;
