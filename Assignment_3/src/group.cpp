@@ -10,3 +10,12 @@ bool Group::intersect(const Ray &r, Hit &h, float tmin)
     }
     return res;
 }
+void Group::paint()
+{
+    for (int i = 0; i < this->n_objs; i++)
+    {
+        if (objs[i] == nullptr)
+            continue;
+        objs[i]->paint();
+    }
+}

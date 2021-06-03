@@ -111,7 +111,20 @@ public:
     }
     virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
     {
-        ;
+        Vec3f normal = hit.getNormal();
+        //Ray is Camera to Point
+        Vec3f dirToCamera = ray.getDirection();
+        float distToLight = 1.0f;
+        dirToCamera.Negate();
+        Vec3f half = dirToCamera + dirToLight;
+        half.Normalize();
+        float r = 1.0f;
+        float diffuse = dirToLight.Dot3(normal);
+        float specular = normal.Dot3(half);
+        float shiness = pow(specular, exponent);
+        Vec3f color = diffuseColor * diffuse + specularColor * shiness;
+        color = color * lightColor * (1 / pow(distToLight, 2));
+        return color;
     }
 };
 

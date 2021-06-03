@@ -65,7 +65,7 @@ private:
 
 public:
     Plane(){};
-    Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(d){};
+    Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(-1*d){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
 };
 

@@ -13,6 +13,7 @@ public:
     Object3D() : material(nullptr){};
     Object3D(Material *m) : material(m){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
+    virtual void paint(void) = 0;
     virtual ~Object3D(){};
 };
 
@@ -26,6 +27,8 @@ public:
     Sphere() : center(Vec3f(0, 0, 0)), radius(0){};
     Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
+    Vec3f Sphere::getSphereCoord(float theta, float phi);
 };
 
 class Group : public Object3D
@@ -46,6 +49,7 @@ public:
         objs[index] = obj;
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
     ~Group()
     {
         //不知道要不要销毁对象...先销毁吧
@@ -65,8 +69,10 @@ private:
 
 public:
     Plane(){};
-    Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(d){};
+    //np + d = 0
+    Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(-1*d){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
 };
 
 class Triangle : public Object3D
@@ -87,6 +93,7 @@ public:
         normal.Normalize();
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
 };
 
 class Transform : public Object3D
@@ -99,4 +106,5 @@ public:
     Transform(){};
     Transform(Matrix &m, Object3D *o) : transform_mat(m), obj(o){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
 };
