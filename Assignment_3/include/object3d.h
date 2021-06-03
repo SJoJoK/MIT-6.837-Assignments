@@ -28,7 +28,7 @@ public:
     Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual void paint();
-    Vec3f Sphere::getSphereCoord(float theta, float phi);
+    Vec3f getSphereCoord(float theta, float phi);
 };
 
 class Group : public Object3D

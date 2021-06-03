@@ -31,7 +31,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
         if (t_p < tmp && t_p > tmin)
         {
             Vec3f h_pt = Ro + t_p * Rd;
-            Vec3f normal = h_pt - this->center;
+            Vec3f normal = h_pt;
             normal.Normalize();
             h.set(t_p, this->material, normal, r);
             return true;
@@ -42,7 +42,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
         if (t_n < tmp && t_n > tmin)
         {
             Vec3f h_pt = Ro + t_n * Rd;
-            Vec3f normal = h_pt - this->center;
+            Vec3f normal = h_pt;
             normal.Normalize();
             h.set(t_n, this->material, normal, r);
             return true;
@@ -57,60 +57,65 @@ void Sphere::paint()
     //phi 0-2PI
     float dtheta = PI / (float)theta_steps;
     float dphi = 2 * PI / (float)phi_steps;
-    glBegin(GL_QUADS);
-    float theta = 0;
-    for (int i = 0; i < theta_steps; i++)
-    {
-        float phi = 0;
-        float theta_next = theta + dtheta;
-        Vec3f pt0 = getSphereCoord(theta, phi);
-        Vec3f pt1 = getSphereCoord(theta_next, phi);
-        Vec3f pt2 = getSphereCoord(theta, phi + dphi);
-        Vec3f pt3 = getSphereCoord(theta_next, phi + dphi);
-        for (int j = 0; j < phi_steps; j++)
-        {
-            if(j!=0)
-            {
-                pt0 = pt3;
-                pt1 = pt2;
-                pt2 = getSphereCoord(theta, phi + dphi);
-                pt3 = getSphereCoord(theta_next, phi + dphi);
-            }
-            Vec3f normal;
-            //Normals of Vertexs
-            if(gouraud)
-            {
-                normal = pt0 - this->center;
-                normal.Normalize();
-                glNormal3f(normal.x(), normal.y(), normal.z());
-                glVertex3f(pt0.x(), pt0.y(), pt0.z());
-                normal = pt1 - this->center;
-                normal.Normalize();
-                glNormal3f(normal.x(), normal.y(), normal.z());
-                glVertex3f(pt1.x(), pt1.y(), pt1.z());
-                normal = pt2 - this->center;
-                normal.Normalize();
-                glNormal3f(normal.x(), normal.y(), normal.z());
-                glVertex3f(pt2.x(), pt2.y(), pt2.z());
-                normal = pt3 - this->center;
-                normal.Normalize();
-                glNormal3f(normal.x(), normal.y(), normal.z());
-                glVertex3f(pt3.x(), pt3.y(), pt3.z());
-            }
-            else
-            {
-                Vec3f a = pt3 - pt0;
-                Vec3f b = pt1 - pt0;
-                Vec3f::Cross3(normal, b, a);
-                normal.Normalize();
-                glNormal3f(normal.x(), normal.y(), normal.z());
-                glVertex3f(pt0.x(), pt0.y(), pt0.z());
-                glVertex3f(pt1.x(), pt1.y(), pt1.z());
-                glVertex3f(pt2.x(), pt2.y(), pt2.z());
-                glVertex3f(pt3.x(), pt3.y(), pt3.z());
-            }
-            phi += dphi;
-        }
-    }
+    // glBegin(GL_QUADS);
+    // float theta = 0;
+    this->material->glSetMaterial();
+    glPushMatrix();
+    glTranslatef(center.x(), center.y(), center.z());
+    glutSolidSphere(radius, 100, 100);
+    glPopMatrix();
+    // for (int i = 0; i < theta_steps; i++)
+    // {
+    //     float phi = 0;
+    //     float theta_next = theta + dtheta;
+    //     Vec3f pt0 = getSphereCoord(theta, phi);
+    //     Vec3f pt1 = getSphereCoord(theta_next, phi);
+    //     Vec3f pt2 = getSphereCoord(theta, phi + dphi);
+    //     Vec3f pt3 = getSphereCoord(theta_next, phi + dphi);
+    //     for (int j = 0; j < phi_steps; j++)
+    //     {
+    //         if(j!=0)
+    //         {
+    //             pt0 = pt3;
+    //             pt1 = pt2;
+    //             pt2 = getSphereCoord(theta, phi + dphi);
+    //             pt3 = getSphereCoord(theta_next, phi + dphi);
+    //         }
+    //         Vec3f normal;
+    //         //Normals of Vertexs
+    //         if(gouraud)
+    //         {
+    //             normal = pt0 - this->center;
+    //             normal.Normalize();
+    //             glNormal3f(normal.x(), normal.y(), normal.z());
+    //             glVertex3f(pt0.x(), pt0.y(), pt0.z());
+    //             normal = pt1 - this->center;
+    //             normal.Normalize();
+    //             glNormal3f(normal.x(), normal.y(), normal.z());
+    //             glVertex3f(pt1.x(), pt1.y(), pt1.z());
+    //             normal = pt2 - this->center;
+    //             normal.Normalize();
+    //             glNormal3f(normal.x(), normal.y(), normal.z());
+    //             glVertex3f(pt2.x(), pt2.y(), pt2.z());
+    //             normal = pt3 - this->center;
+    //             normal.Normalize();
+    //             glNormal3f(normal.x(), normal.y(), normal.z());
+    //             glVertex3f(pt3.x(), pt3.y(), pt3.z());
+    //         }
+    //         else
+    //         {
+    //             Vec3f a = pt3 - pt0;
+    //             Vec3f b = pt1 - pt0;
+    //             Vec3f::Cross3(normal, b, a);
+    //             normal.Normalize();
+    //             glNormal3f(normal.x(), normal.y(), normal.z());
+    //             glVertex3f(pt0.x(), pt0.y(), pt0.z());
+    //             glVertex3f(pt1.x(), pt1.y(), pt1.z());
+    //             glVertex3f(pt2.x(), pt2.y(), pt2.z());
+    //             glVertex3f(pt3.x(), pt3.y(), pt3.z());
+    //         }
+    //         phi += dphi;
+    //     }
+    // }
     glEnd();
 }

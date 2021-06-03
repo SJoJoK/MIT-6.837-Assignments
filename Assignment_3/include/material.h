@@ -11,7 +11,7 @@ extern int SPECULAR_FIX_WHICH_PASS;
 #endif
 
 #include "vectors.h"
-
+extern bool shade_back;
 // ====================================================================
 // ====================================================================
 
@@ -28,6 +28,7 @@ public:
     virtual Vec3f getDiffuseColor() const { return diffuseColor; }
     virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const = 0;
     virtual void glSetMaterial(void) const = 0;
+
 protected:
     // REPRESENTATION
     Vec3f diffuseColor;
@@ -41,14 +42,14 @@ class PhongMaterial : public Material
 private:
     Vec3f specularColor;
     float exponent;
+
 public:
-    PhongMaterial(const Vec3f &diffuseColor, const Vec3f &specularColor, float exponent) : 
-    Material(diffuseColor), specularColor(specularColor), exponent(exponent){};
+    PhongMaterial(const Vec3f &diffuseColor, const Vec3f &specularColor, float exponent) : Material(diffuseColor), specularColor(specularColor), exponent(exponent){};
     Vec3f getSpecularColor() const
     {
         return specularColor;
     }
-    virtual void PhongMaterial::glSetMaterial(void) const
+    virtual void glSetMaterial(void) const
     {
 
         GLfloat one[4] = {1.0, 1.0, 1.0, 1.0};
@@ -112,15 +113,22 @@ public:
     virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
     {
         Vec3f normal = hit.getNormal();
+        //if light cant reach the point
+        if(normal.Dot3(dirToLight)<0)
+            return Vec3f(0, 0, 0);
         //Ray is Camera to Point
         Vec3f dirToCamera = ray.getDirection();
+        if (shade_back && normal.Dot3(dirToCamera) > 0)
+        {
+            normal.Negate();
+        }
         float distToLight = 1.0f;
         dirToCamera.Negate();
         Vec3f half = dirToCamera + dirToLight;
         half.Normalize();
         float r = 1.0f;
-        float diffuse = dirToLight.Dot3(normal);
-        float specular = normal.Dot3(half);
+        float diffuse = max(dirToLight.Dot3(normal), 0.0f);
+        float specular = max(normal.Dot3(half), 0.0f);
         float shiness = pow(specular, exponent);
         Vec3f color = diffuseColor * diffuse + specularColor * shiness;
         color = color * lightColor * (1 / pow(distToLight, 2));
