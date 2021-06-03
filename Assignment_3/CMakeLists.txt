@@ -22,8 +22,12 @@ include_directories(${INCLUDE_DIRS})
 # Search all the .cpp files in the directory where CMakeLists lies and set them to ${SOURCE_FILES}.
 # Search all the .h files in the directory where CMakeLists lies and set them to ${INCLUDE_FILES}.
 file(GLOB SOURCE_FILES src/*.cpp)
-file(GLOB INCLUDE_FILES include/*.h)
 # Add the executable Example to be built from the source files
-add_executable(raytracer ${SOURCE_FILES} ${INCLUDE_FILES})
+add_executable(raytracer ${SOURCE_FILES})
 # Link the executable to the libraries
 target_link_libraries(raytracer ${LIBRARIES})
+
+target_include_directories(raytracer
+    PRIVATE 
+        ${PROJECT_SOURCE_DIR}/include
+)

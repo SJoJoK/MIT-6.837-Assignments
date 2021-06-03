@@ -257,9 +257,10 @@ void SceneParser::parseMaterials()
     while (num_materials > count)
     {
         getToken(token);
-        if (!strcmp(token, "Material"))
+        if (!strcmp(token, "Material") ||
+            !strcmp(token, "PhongMaterial"))
         {
-            materials[count] = parseMaterial();
+            materials[count] = parsePhongMaterial();
         }
         else
         {
@@ -272,10 +273,12 @@ void SceneParser::parseMaterials()
     assert(!strcmp(token, "}"));
 }
 
-Material *SceneParser::parseMaterial()
+Material *SceneParser::parsePhongMaterial()
 {
     char token[MAX_PARSER_TOKEN_LENGTH];
     Vec3f diffuseColor(1, 1, 1);
+    Vec3f specularColor(0, 0, 0);
+    float exponent = 1;
     getToken(token);
     assert(!strcmp(token, "{"));
     while (1)
@@ -285,13 +288,21 @@ Material *SceneParser::parseMaterial()
         {
             diffuseColor = readVec3f();
         }
+        else if (!strcmp(token, "specularColor"))
+        {
+            specularColor = readVec3f();
+        }
+        else if (!strcmp(token, "exponent"))
+        {
+            exponent = readFloat();
+        }
         else
         {
             assert(!strcmp(token, "}"));
             break;
         }
     }
-    Material *answer = new Material(diffuseColor);
+    Material *answer = new PhongMaterial(diffuseColor, specularColor, exponent);
     return answer;
 }
 

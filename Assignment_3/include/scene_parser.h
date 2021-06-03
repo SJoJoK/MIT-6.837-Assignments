@@ -56,7 +56,7 @@ private:
     void parseLights();
     Light *parseDirectionalLight();
     void parseMaterials();
-    Material *parseMaterial();
+    Material *parsePhongMaterial();
 
     Object3D *parseObject(char token[MAX_PARSER_TOKEN_LENGTH]);
     Group *parseGroup();

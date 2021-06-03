@@ -80,90 +80,29 @@ int main(int argc, char *argv[])
 {
     prase_cmd(argc, argv);
 
-    SceneParser sp(input_file);
-    Vec3f groundColor = sp.getBackgroundColor();
-    Camera *camera = sp.getCamera();
-    vector<Material *> materials;
-    vector<Light *> lights;
-    int n_material = sp.getNumMaterials();
-    int n_light = sp.getNumLights();
+    SceneParser* sp = new SceneParser(input_file);
+    GLCanvas canvas;
+        // Vec3f groundColor = sp.getBackgroundColor();
+        // Camera *camera = sp.getCamera();
+        // vector<Material *> materials;
+        // vector<Light *> lights;
+        // int n_material = sp.getNumMaterials();
+        // int n_light = sp.getNumLights();
 
-    for (int i = 0; i < n_material; i++)
-    {
-        materials.push_back(sp.getMaterial(i));
-    }
+        // for (int i = 0; i < n_material; i++)
+        // {
+        //     materials.push_back(sp.getMaterial(i));
+        // }
 
-    for (int i = 0; i < n_light; i++)
-    {
-        lights.push_back(sp.getLight(i));
-    }
+        // for (int i = 0; i < n_light; i++)
+        // {
+        //     lights.push_back(sp.getLight(i));
+        // }
 
-    Vec3f ambient = sp.getAmbientLight();
+        // Vec3f ambient = sp.getAmbientLight();
 
-    float gray_scale = depth_max - depth_min;
+        // float gray_scale = depth_max - depth_min;
 
-    Group *group = sp.getGroup();
-    Image img(width, height);
-    Image depth_img(width, height);
-    Image normal_img(width, height);
-
-    img.SetAllPixels(groundColor);
-    for (int x = 0; x < width; x++)
-        for (int y = 0; y < height; y++)
-        {
-            float fx = x / (float)width;
-            float fy = y / (float)height;
-
-            // #if DEBUG
-            if (x == 150 && y == 150)
-            {
-                cout << "(x,y) = (100, 200)" << endl;
-            }
-            // #endif
-
-            Ray r = camera->generateRay(Vec2f(fx, fy));
-            Hit h = Hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
-
-            if (group->intersect(r, h, camera->getTMin()))
-            {
-
-
-                Vec3f pt = h.getIntersectionPoint();
-                Vec3f pt_normal = h.getNormal();
-                if (shade_back && pt_normal.Dot3(r.getDirection()) > 0)
-                {
-                    pt_normal = -1 * pt_normal;
-                }
-                Vec3f color = Vec3f(0, 0, 0);
-                Vec3f dir2light;
-                Vec3f diffM = h.getMaterial()->getDiffuseColor();
-
-                color += ambient;
-
-                for (int l = 0; l < n_light; l++)
-                {
-                    Vec3f tmp;
-                    lights[l]->getIllumination(pt, dir2light, tmp);
-                    color += tmp * max((pt_normal.Dot3(dir2light)), 0.0f);
-                }
-
-                color.Set(color.x() * diffM.x(), color.y() * diffM.y(), color.z() * diffM.z());
-
-                img.SetPixel(x, y, color);
-
-                float depth = h.getT();
-                depth = max(depth, depth_min);
-                depth = min(depth, depth_max);
-                float gray = 1 - (depth - depth_min) / gray_scale;
-                depth_img.SetPixel(x, y, Vec3f(gray, gray, gray));
-
-                normal_img.SetPixel(x, y, Vec3f(fabs(pt_normal.r()),fabs(pt_normal.g()),fabs(pt_normal.b())));
-            }
-        }
-    img.SaveTGA(output_file);
-    if(depth_file)
-        depth_img.SaveTGA(depth_file);
-    if(normals_file)
-        normal_img.SaveTGA(normals_file);
-    return 0;
+        // Group *group = sp.getGroup();
+        return 0;
 }
