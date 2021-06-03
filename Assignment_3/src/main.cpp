@@ -20,8 +20,8 @@ float depth_max = 12;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
 bool shade_back = false;
-int theta_steps = 50;
-int phi_steps = 50;
+int theta_steps = 10;
+int phi_steps = 10;
 bool gui = true;
 bool gouraud = false;
 
@@ -82,10 +82,10 @@ void prase_cmd(int argc, char *argv[])
         {
             i++;
             assert(i < argc);
-            theta_steps = atoi(argv[i]);
+            phi_steps = atoi(argv[i]);
             i++;
             assert(i < argc);
-            phi_steps = atoi(argv[i]);
+            theta_steps = atoi(argv[i]);
         }
         else if (!strcmp(argv[i], "-gouraud"))
         {
