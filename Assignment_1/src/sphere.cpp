@@ -4,6 +4,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
     Vec3f Rd = r.getDirection();
     Vec3f Ro = r.getOrigin() - this->center;
     // double a = 1;
+    //从Assignment 2 回来， 这里坑实在太大了...千万别默认！
     double b = 2 * Rd.Dot3(Ro);
     double c = Ro.Dot3(Ro) - pow(this->radius, 2);
     double d_2 = b * b - 4 * c;
