@@ -113,11 +113,10 @@ public:
     virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
     {
         Vec3f normal = hit.getNormal();
-        //if light cant reach the point
-        if(normal.Dot3(dirToLight)<0)
-            return Vec3f(0, 0, 0);
         //Ray is Camera to Point
         Vec3f dirToCamera = ray.getDirection();
+        //Clamping
+        float clamping = max(normal.Dot3(dirToLight), 0.0f);
         if (shade_back && normal.Dot3(dirToCamera) > 0)
         {
             normal.Negate();
@@ -132,6 +131,7 @@ public:
         float shiness = pow(specular, exponent);
         Vec3f color = diffuseColor * diffuse + specularColor * shiness;
         color = color * lightColor * (1 / pow(distToLight, 2));
+        color = color * clamping;
         return color;
     }
 };
