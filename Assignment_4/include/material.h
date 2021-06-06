@@ -42,12 +42,32 @@ class PhongMaterial : public Material
 private:
     Vec3f specularColor;
     float exponent;
+    Vec3f reflectiveColor;
+    Vec3f transparentColor;
 
 public:
-    PhongMaterial(const Vec3f &diffuseColor, const Vec3f &specularColor, float exponent) : Material(diffuseColor), specularColor(specularColor), exponent(exponent){};
+    PhongMaterial::PhongMaterial(const Vec3f &diffuseColor,
+                                 const Vec3f &specularColor,
+                                 float exponent,
+                                 const Vec3f &reflectiveColor,
+                                 const Vec3f &transparentColor,
+                                 float indexOfRefraction) : 
+                                 Material(diffuseColor), 
+                                 specularColor(specularColor), 
+                                 exponent(exponent),
+                                 reflectiveColor(reflectiveColor),
+                                 transparentColor(transparentColor){}
     Vec3f getSpecularColor() const
     {
         return specularColor;
+    }
+    Vec3f getReflectiveColor() const
+    {
+        return reflectiveColor;
+    }
+    Vec3f getTransparentColor() const
+    {
+        return transparentColor;
     }
     virtual void glSetMaterial(void) const
     {
