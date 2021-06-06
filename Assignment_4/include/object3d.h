@@ -13,6 +13,10 @@ public:
     Object3D() : material(nullptr){};
     Object3D(Material *m) : material(m){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
+    virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin)
+    {
+        this->intersect(r, h, tmin);
+    }
     virtual void paint(void) = 0;
     virtual ~Object3D(){};
 };
@@ -49,6 +53,7 @@ public:
         objs[index] = obj;
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin);
     virtual void paint();
     ~Group()
     {

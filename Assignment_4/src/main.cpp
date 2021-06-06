@@ -24,8 +24,8 @@ int theta_steps = 10;
 int phi_steps = 10;
 bool gui = true;
 bool gouraud = false;
-int bounces = 1;
-float weight = 0.5;
+int max_bounces = 1;
+float cutoff_weight = 0.5;
 bool shadows = false;
 float epsilon = 0.1;
 void render(){};
@@ -98,13 +98,13 @@ void prase_cmd(int argc, char *argv[])
         {
             i++;
             assert(i < argc);
-            bounces = atoi(argv[i]);
+            max_bounces = atoi(argv[i]);
         }
         else if (!strcmp(argv[i], "-weight"))
         {
             i++;
             assert(i < argc);
-            weight = atof(argv[i]);
+            cutoff_weight = atof(argv[i]);
         }
         else if (!strcmp(argv[i], "-shadows"))
         {
