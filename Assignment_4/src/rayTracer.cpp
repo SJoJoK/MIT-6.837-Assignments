@@ -1,4 +1,5 @@
 #include "rayTracer.h"
+#include "rayTree.h"
 #include "object3d.h"
 #include "camera.h"
 #include "light.h"
@@ -33,7 +34,7 @@ bool RayTracer::transmittedDirection(const Vec3f &normal, const Vec3f &incoming,
     return false;
 }
 Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
-                          float indexOfRefraction, Hit &hit) const
+                          float indexOfRefraction, Hit &hit, bool main) const
 {
     if(bounces>max_bounces)
         return Vec3f(0, 0, 0);
@@ -71,7 +72,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                 Ray mirror_ray(pt, mirror_dir);
                 Hit mirror_hit(dist2light, materials[0], Vec3f(0, 0, 0));
                 Vec3f mirror_shade = traceRay(mirror_ray, epsilon, bounces + 1, weight * mirror_color.Length(),
-                                              indexOfRefraction, mirror_hit);
+                                              indexOfRefraction, mirror_hit, false);
                 color += mirror_color * mirror_shade;
             }
             //Transparent
@@ -99,7 +100,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                 {
                     Ray trans_ray(pt, trans_dir);
                     Hit trans_hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
-                    Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit);
+                    Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit, false);
                     color += trans_color * trans_shade;
                 }
             }
