@@ -29,6 +29,7 @@ int max_bounces = 1;
 float cutoff_weight = 0.5;
 bool shadows = false;
 float epsilon = 0.1;
+SceneParser *sp;
 void render(){};
 
 void prase_cmd(int argc, char *argv[])
@@ -120,11 +121,19 @@ void prase_cmd(int argc, char *argv[])
     }
 }
 
+void traceRayFunction(float x, float y)
+{
+    Ray r = sp->getCamera()->generateRay(Vec2f(x, y));
+    Hit h(MAXFLOAT, nullptr, Vec3f(0.0f, 0.0f, 1.0f));
+    RayTracer rt(sp);
+    Vec3f pixel = rt.traceRay(r, epsilon, 0, 1.0, 1.0, h, true);
+}
+
 int main(int argc, char *argv[])
 {
     prase_cmd(argc, argv);
 
-    SceneParser* sp = new SceneParser(input_file);
+    sp = new SceneParser(input_file);
     RayTracer *rt = new RayTracer(sp);
     Vec3f background_color = sp->getBackgroundColor();
 
@@ -182,8 +191,8 @@ int main(int argc, char *argv[])
     {
         glutInit(&argc, argv);
         GLCanvas canvas;
-        // canvas.initialize(sp, render);
+        canvas.initialize(sp, render, traceRayFunction);
     }
-    
+
     return 0;
 }
