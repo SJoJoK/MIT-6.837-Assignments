@@ -13,22 +13,22 @@
 #include <vector>
 
 char *input_file = "test.txt";
-int width = 300;
-int height = 300;
+int width = 200;
+int height = 200;
 char *output_file = "test.tga";
 float depth_min = 8;
 float depth_max = 12;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
 bool shade_back = false;
-int theta_steps = 10;
-int phi_steps = 10;
-bool gui = true;
+int theta_steps = 20;
+int phi_steps = 20;
+bool gui = false;
 bool gouraud = false;
 int max_bounces = 1;
-float cutoff_weight = 0.5;
+float cutoff_weight = 0.01;
 bool shadows = false;
-float epsilon = 0.1;
+float epsilon = 0.05;
 SceneParser *sp;
 void render(){};
 
@@ -156,9 +156,9 @@ int main(int argc, char *argv[])
             float fx = x / (float)width;
             float fy = y / (float)height;
 
-            if (x == 150 && y == 250)
+            if (x == 150 && y == 13)
             {
-                cout << "(x,y) = (150, 150)" << endl;
+                cout << "(x,y) = (150, 13)" << endl;
             }
 
             Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));

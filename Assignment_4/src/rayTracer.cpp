@@ -40,7 +40,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
         return Vec3f(0, 0, 0);
     if(weight<cutoff_weight)
         return Vec3f(0, 0, 0);
-    if (group->intersect(ray, hit, camera->getTMin()))
+    if (group->intersect(ray, hit, epsilon))
     {
         if(main)
         {
@@ -48,6 +48,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
         }
         Vec3f pt = hit.getIntersectionPoint();
         Vec3f pt_normal = hit.getNormal();
+        pt_normal.Normalize();
         Vec3f color = hit.getMaterial()->getDiffuseColor() * ambient_light;
         Vec3f dir2light;
         float dist2light;

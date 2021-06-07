@@ -61,10 +61,9 @@ void Sphere::paint()
     float theta = 0;
     glBegin(GL_QUADS);
     this->material->glSetMaterial();
-    // glPushMatrix();
+    glPushMatrix();
+    glutSolidSphere(radius, 100, 100);
     // glTranslatef(center.x(), center.y(), center.z());
-    // glutSolidSphere(radius, 100, 100);
-    // glPopMatrix();
     for (int i = 0; i < theta_steps; i++)
     {
         float phi = 0;
@@ -124,5 +123,6 @@ void Sphere::paint()
         }
         theta += dtheta;
     }
+    glPopMatrix();
     glEnd();
 }
