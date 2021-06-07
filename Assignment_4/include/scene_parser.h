@@ -55,6 +55,7 @@ private:
     void parseBackground();
     void parseLights();
     Light *parseDirectionalLight();
+    Light *parsePointLight();
     void parseMaterials();
     Material *parsePhongMaterial();
 

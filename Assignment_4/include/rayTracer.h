@@ -49,7 +49,7 @@ public:
             lights.push_back(sp->getLight(i));
         }
     }
-    ~RayTracer();
+    ~RayTracer(){};
     Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight,
                    float indexOfRefraction, Hit &hit, bool main) const;
     Vec3f mirrorDirection(const Vec3f &normal, const Vec3f &incoming) const;

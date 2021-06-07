@@ -212,6 +212,10 @@ void SceneParser::parseLights()
         {
             lights[count] = parseDirectionalLight();
         }
+        else if (!strcmp(token, "PointLight"))
+        {
+            lights[count] = parsePointLight();
+        }
         else
         {
             printf("Unknown token in parseLight: '%s'\n", token);
@@ -237,6 +241,30 @@ Light *SceneParser::parseDirectionalLight()
     getToken(token);
     assert(!strcmp(token, "}"));
     return new DirectionalLight(direction, color);
+}
+
+Light *SceneParser::parsePointLight()
+{
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token);
+    assert(!strcmp(token, "{"));
+    getToken(token);
+    assert(!strcmp(token, "position"));
+    Vec3f position = readVec3f();
+    getToken(token);
+    assert(!strcmp(token, "color"));
+    Vec3f color = readVec3f();
+    float att[3] = {1, 0, 0};
+    getToken(token);
+    if (!strcmp(token, "attenuation"))
+    {
+        att[0] = readFloat();
+        att[1] = readFloat();
+        att[2] = readFloat();
+        getToken(token);
+    }
+    assert(!strcmp(token, "}"));
+    return new PointLight(position, color, att[0], att[1], att[2]);
 }
 
 // ====================================================================
@@ -279,6 +307,9 @@ Material *SceneParser::parsePhongMaterial()
     Vec3f diffuseColor(1, 1, 1);
     Vec3f specularColor(0, 0, 0);
     float exponent = 1;
+    Vec3f reflectiveColor(0, 0, 0);
+    Vec3f transparentColor(0, 0, 0);
+    float indexOfRefraction = 1;
     getToken(token);
     assert(!strcmp(token, "{"));
     while (1)
@@ -296,13 +327,27 @@ Material *SceneParser::parsePhongMaterial()
         {
             exponent = readFloat();
         }
+        else if (!strcmp(token, "reflectiveColor"))
+        {
+            reflectiveColor = readVec3f();
+        }
+        else if (!strcmp(token, "transparentColor"))
+        {
+            transparentColor = readVec3f();
+        }
+        else if (!strcmp(token, "indexOfRefraction"))
+        {
+            indexOfRefraction = readFloat();
+        }
         else
         {
             assert(!strcmp(token, "}"));
             break;
         }
     }
-    Material *answer = new PhongMaterial(diffuseColor, specularColor, exponent);
+    Material *answer = new PhongMaterial(diffuseColor, specularColor, exponent,
+                                         reflectiveColor, transparentColor,
+                                         indexOfRefraction);
     return answer;
 }
 

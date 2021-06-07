@@ -15,7 +15,7 @@ public:
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
     virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin)
     {
-        this->intersect(r, h, tmin);
+        return this->intersect(r, h, tmin);
     }
     virtual void paint(void) = 0;
     virtual ~Object3D(){};

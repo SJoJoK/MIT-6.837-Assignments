@@ -67,12 +67,12 @@ private:
     float exponent;
 
 public:
-    PhongMaterial::PhongMaterial(const Vec3f &diffuseColor,
-                                 const Vec3f &specularColor,
-                                 const Vec3f &reflectiveColor,
-                                 const Vec3f &transparentColor,
-                                 float exponent,
-                                 float indexOfRefraction) : Material(diffuseColor)
+    PhongMaterial(const Vec3f &diffuseColor,
+                  const Vec3f &specularColor,
+                  float exponent,
+                  const Vec3f &reflectiveColor,
+                  const Vec3f &transparentColor,
+                  float indexOfRefraction) : Material(diffuseColor)
     {
         this->specularColor = specularColor;
         this->reflectiveColor = reflectiveColor;

@@ -113,4 +113,5 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
         }
         return color;
     }
+    return this->background_color;
 }
