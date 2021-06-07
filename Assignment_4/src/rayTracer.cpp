@@ -42,7 +42,10 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
         return Vec3f(0, 0, 0);
     if (group->intersect(ray, hit, camera->getTMin()))
     {
-
+        if(main)
+        {
+            RayTree::SetMainSegment(ray, 0.0f, hit.getT());
+        }
         Vec3f pt = hit.getIntersectionPoint();
         Vec3f pt_normal = hit.getNormal();
         Vec3f color = hit.getMaterial()->getDiffuseColor() * ambient_light;
@@ -59,6 +62,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                 Hit shadow_hit(dist2light, materials[0], Vec3f(0, 0, 0));
                 if (!group->intersectShadowRay(shadow_ray, shadow_hit, epsilon))
                     color += hit.getMaterial()->Shade(ray, hit, dir2light, light_color);
+                RayTree::AddShadowSegment(shadow_ray, 0.0f, shadow_hit.getT());
             }
             else
             {
@@ -74,6 +78,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                 Vec3f mirror_shade = traceRay(mirror_ray, epsilon, bounces + 1, weight * mirror_color.Length(),
                                               indexOfRefraction, mirror_hit, false);
                 color += mirror_color * mirror_shade;
+                RayTree::AddReflectedSegment(mirror_ray, 0.0f, mirror_hit.getT());
             }
             //Transparent
             Vec3f trans_color = hit.getMaterial()->getTransparentColor();
@@ -102,6 +107,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                     Hit trans_hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
                     Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit, false);
                     color += trans_color * trans_shade;
+                    RayTree::AddTransmittedSegment(trans_ray, 0.0f, trans_hit.getT());
                 }
             }
         }

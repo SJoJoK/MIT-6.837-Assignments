@@ -8,6 +8,7 @@
 #include "light.h"
 #include "object3d.h"
 #include "scene_parser.h"
+#include "rayTracer.h"
 #include <iostream>
 #include <vector>
 
@@ -124,25 +125,8 @@ int main(int argc, char *argv[])
     prase_cmd(argc, argv);
 
     SceneParser* sp = new SceneParser(input_file);
-    vector<Material *> materials;
-    vector<Light *> lights;
-    int n_material = sp->getNumMaterials();
-    int n_light = sp->getNumLights();
-
-    for (int i = 0; i < n_material; i++)
-    {
-        materials.push_back(sp->getMaterial(i));
-    }
-
-    for (int i = 0; i < n_light; i++)
-    {
-        lights.push_back(sp->getLight(i));
-    }
-
-    Camera *camera = sp->getCamera();
-    Group *group = sp->getGroup();
+    RayTracer *rt = new RayTracer(sp);
     Vec3f background_color = sp->getBackgroundColor();
-    Vec3f ambient_light = sp->getAmbientLight();
 
     Image *image = new Image(width, height);
     image->SetAllPixels(background_color);
@@ -168,32 +152,18 @@ int main(int argc, char *argv[])
                 cout << "(x,y) = (150, 150)" << endl;
             }
 
-            Ray r = camera->generateRay(Vec2f(fx, fy));
-            Hit h = Hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
+            Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
+            Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
 
-            if (group->intersect(r, h, camera->getTMin()))
-            {
-
-                Vec3f pt = h.getIntersectionPoint();
-                Vec3f pt_normal = h.getNormal();
-                Vec3f color = Vec3f(0, 0, 0);
-                Vec3f dir2light;
-                float dist2light;
-                for (int l = 0; l < n_light; l++)
-                {
-                    Vec3f light_color;
-                    lights[l]->getIllumination(pt, dir2light, light_color, dist2light);
-                    color += h.getMaterial()->Shade(r, h, dir2light, light_color);
-                }
-                color += h.getMaterial()->getDiffuseColor() * ambient_light;
-                image->SetPixel(x, y, color);
-                float depth = h.getT();
-                depth = max(depth, depth_min);
-                depth = min(depth, depth_max);
-                float gray = 1 - (depth - depth_min) / precalc;
-                depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
-                normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.r()), fabs(pt_normal.g()), fabs(pt_normal.b())));
-            }
+            Vec3f color = rt->traceRay(r, epsilon, 0, 1, 1, h, true);
+            Vec3f pt_normal = h.getNormal();
+            float depth = h.getT();
+            depth = max(depth, depth_min);
+            depth = min(depth, depth_max);
+            float gray = 1 - (depth - depth_min) / precalc;
+            image->SetPixel(x, y, color);
+            depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
+            normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
         }
 
     if (output_file != NULL)
