@@ -7,9 +7,11 @@ const double PI = 3.1415926;
 
 BoundingBox *Sphere::getBoundingBox()
 {
-    boundingBox = new BoundingBox(Vec3f(center.x() - radius, center.y() - radius, center.z() - radius), 
+    if (this->boundingBox)
+        return this->boundingBox;
+    this->boundingBox = new BoundingBox(Vec3f(center.x() - radius, center.y() - radius, center.z() - radius), 
                                     Vec3f(center.x() + radius, center.y() + radius, center.z() + radius));
-    return boundingBox;
+    return this->boundingBox;
 }
 
 Vec3f Sphere::getSphereCoord(float theta, float phi)

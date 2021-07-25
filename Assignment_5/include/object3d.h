@@ -28,7 +28,7 @@ public:
         return this->intersect(r, h, tmin);
     }
     virtual void paint(void) = 0;
-    virtual BoundingBox* getBoundingBox()
+    virtual BoundingBox *getBoundingBox()
     {
         boundingBox = nullptr;
         return boundingBox;
@@ -86,8 +86,6 @@ public:
     Vec3f getSphereCoord(float theta, float phi);
 };
 
-
-
 class Plane : public Object3D
 {
 private:
@@ -97,7 +95,7 @@ private:
 public:
     Plane(){};
     //np + d = 0
-    Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(-1*d){};
+    Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(-1 * d){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual void paint();
 };
@@ -111,14 +109,17 @@ private:
     Vec3f c;
 
 public:
-    Triangle() { isTriangle = true; };
+    Triangle() { _isTriangle = true; };
     Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m) : Object3D(m), a(a), b(b), c(c)
     {
         Vec3f AB = b - a;
         Vec3f AC = c - a;
         Vec3f::Cross3(normal, AB, AC);
         normal.Normalize();
-        isTriangle = true;
+        _isTriangle = true;
+        _a = a;
+        _b = b;
+        _c = c;
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual BoundingBox *getBoundingBox();

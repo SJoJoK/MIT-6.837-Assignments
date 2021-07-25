@@ -11,6 +11,8 @@ inline float MAX3(float x, float y, float z)
 }
 BoundingBox *Transform::getBoundingBox()
 {
+    if (this->boundingBox)
+        return this->boundingBox;
     Matrix m_matrix = transform_mat;
     if (obj->_isTriangle)
     {
@@ -102,9 +104,9 @@ BoundingBox *Transform::getBoundingBox()
     _zmax = _zmax > _z7 ? _zmax : _z7;
     _zmax = _zmax > _z8 ? _zmax : _z8;
 
-    boundingBox = new BoundingBox(Vec3f(_xmax, _ymax, _zmax), Vec3f(_xmin, _ymin, _zmin));
+    this->boundingBox = new BoundingBox(Vec3f(_xmax, _ymax, _zmax), Vec3f(_xmin, _ymin, _zmin));
 
-    return boundingBox;
+    return this->boundingBox;
 }
 bool Transform::intersect(const Ray &r, Hit &h, float tmin)
 {
