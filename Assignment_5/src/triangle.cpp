@@ -1,4 +1,21 @@
 #include "object3d.h"
+inline float MIN3(float x,float y,float z)
+{
+    float tmp = x < y ? x : y;
+    return tmp < z ? tmp : z;
+}
+inline float MAX3(float x, float y, float z)
+{
+    float tmp = x > y ? x : y;
+    return tmp > z ? tmp : z;
+}
+BoundingBox *Triangle::getBoundingBox()
+{
+    boundingBox = new BoundingBox(Vec3f(MIN3(a.x(), b.x(), c.x()), MIN3(a.y(), b.y(), c.y()), MIN3(a.z(), b.z(), c.z())), 
+                                Vec3f(MAX3(a.x(), b.x(), c.x()), MAX3(a.y(), b.y(), c.y()), MAX3(a.z(), b.z(), c.z())));
+    return boundingBox;
+}
+
 bool Triangle::intersect(const Ray &r, Hit &h, float tmin)
 {
     Vec3f e1 = b - a;

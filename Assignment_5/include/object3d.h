@@ -3,11 +3,15 @@
 #include "hit.h"
 #include "material.h"
 #include "matrix.h"
+#include "boundingbox.h"
 #include <vector>
+
+class Grid;
 class Object3D
 {
 protected:
     Material *material;
+    BoundingBox *boundingBox;
 
 public:
     Object3D() : material(nullptr){};
@@ -18,6 +22,12 @@ public:
         return this->intersect(r, h, tmin);
     }
     virtual void paint(void) = 0;
+    virtual BoundingBox* getBoundingBox()
+    {
+        boundingBox = nullptr;
+        return boundingBox;
+    };
+    virtual void insertIntoGrid(Grid *g, Matrix *m){};
     virtual ~Object3D(){};
 };
 
@@ -32,6 +42,8 @@ public:
     Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual void paint();
+    virtual BoundingBox *getBoundingBox();
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
     Vec3f getSphereCoord(float theta, float phi);
 };
 
@@ -54,6 +66,8 @@ public:
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin);
+    virtual BoundingBox *getBoundingBox();
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
     virtual void paint();
     ~Group()
     {
@@ -98,6 +112,8 @@ public:
         normal.Normalize();
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual BoundingBox *getBoundingBox();
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
     virtual void paint();
 };
 
@@ -111,5 +127,7 @@ public:
     Transform(){};
     Transform(Matrix &m, Object3D *o) : transform_mat(m), obj(o){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual BoundingBox *getBoundingBox();
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
     virtual void paint();
 };

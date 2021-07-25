@@ -12,10 +12,10 @@
 #include <iostream>
 #include <vector>
 
-char *input_file = "test.txt";
+char *input_file = (char *)"test.txt";
 int width = 200;
 int height = 200;
-char *output_file = "test.tga";
+char *output_file = (char *)"test.tga";
 float depth_min = 8;
 float depth_max = 12;
 char *depth_file = nullptr;

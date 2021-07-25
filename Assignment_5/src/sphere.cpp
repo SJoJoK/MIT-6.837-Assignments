@@ -4,6 +4,14 @@ extern int theta_steps;
 extern int phi_steps;
 extern bool gouraud;
 const double PI = 3.1415926;
+
+BoundingBox *Sphere::getBoundingBox()
+{
+    boundingBox = new BoundingBox(Vec3f(center.x() - radius, center.y() - radius, center.z() - radius), 
+                                    Vec3f(center.x() + radius, center.y() + radius, center.z() + radius));
+    return boundingBox;
+}
+
 Vec3f Sphere::getSphereCoord(float theta, float phi)
 {
     float x = radius * sin(theta) * cos(phi);
