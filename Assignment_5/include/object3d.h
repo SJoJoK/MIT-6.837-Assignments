@@ -14,6 +14,12 @@ protected:
     BoundingBox *boundingBox;
 
 public:
+    bool _isTriangle = false;
+    Vec3f _a;
+    Vec3f _b;
+    Vec3f _c;
+
+public:
     Object3D() : material(nullptr){};
     Object3D(Material *m) : material(m){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
@@ -29,22 +35,6 @@ public:
     };
     virtual void insertIntoGrid(Grid *g, Matrix *m){};
     virtual ~Object3D(){};
-};
-
-class Sphere : public Object3D
-{
-private:
-    Vec3f center;
-    double radius;
-
-public:
-    Sphere() : center(Vec3f(0, 0, 0)), radius(0){};
-    Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r){};
-    virtual bool intersect(const Ray &r, Hit &h, float tmin);
-    virtual void paint();
-    virtual BoundingBox *getBoundingBox();
-    virtual void insertIntoGrid(Grid *g, Matrix *m);
-    Vec3f getSphereCoord(float theta, float phi);
 };
 
 class Group : public Object3D
@@ -80,6 +70,24 @@ public:
     }
 };
 
+class Sphere : public Object3D
+{
+private:
+    Vec3f center;
+    double radius;
+
+public:
+    Sphere() : center(Vec3f(0, 0, 0)), radius(0){};
+    Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r){};
+    virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
+    virtual BoundingBox *getBoundingBox();
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
+    Vec3f getSphereCoord(float theta, float phi);
+};
+
+
+
 class Plane : public Object3D
 {
 private:
@@ -103,13 +111,14 @@ private:
     Vec3f c;
 
 public:
-    Triangle(){};
+    Triangle() { isTriangle = true; };
     Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m) : Object3D(m), a(a), b(b), c(c)
     {
         Vec3f AB = b - a;
         Vec3f AC = c - a;
         Vec3f::Cross3(normal, AB, AC);
         normal.Normalize();
+        isTriangle = true;
     }
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual BoundingBox *getBoundingBox();
