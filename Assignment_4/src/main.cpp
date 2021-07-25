@@ -25,9 +25,9 @@ int theta_steps = 20;
 int phi_steps = 20;
 bool gui = false;
 bool gouraud = false;
-int max_bounces = 1;
+int max_bounces = 2;
 float cutoff_weight = 0.01;
-bool shadows = false;
+bool shadows = true;
 float epsilon = 0.05;
 SceneParser *sp;
 void render(){};
@@ -156,15 +156,22 @@ int main(int argc, char *argv[])
             float fx = x / (float)width;
             float fy = y / (float)height;
 
-            if (x == 150 && y == 13)
+            if (x == 100 && y == 90)
             {
-                cout << "(x,y) = (150, 13)" << endl;
+                cout << "(x,y) = (100, 90)" << endl;
             }
 
             Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
             Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
-
-            Vec3f color = rt->traceRay(r, epsilon, 0, 1, 1, h, true);
+            Vec3f color;
+            if (x == 100 && y == 90)
+            {
+                color = rt->traceRay(r, epsilon, 0, 1, 1, h, true, true);
+            }
+            else
+            {
+                color = rt->traceRay(r, epsilon, 0, 1, 1, h, true);
+            }
             Vec3f pt_normal = h.getNormal();
             float depth = h.getT();
             depth = max(depth, depth_min);

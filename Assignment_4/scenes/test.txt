@@ -1,95 +1,63 @@
 PerspectiveCamera {
-    center -5.3 7 8.3
-    direction .4 -.5 -.75
+    center 0 5.4 16
+    direction 0 -6 -16
     up 0 1 0
-    angle 25
+    angle 15
 }
 
 Lights {
-    numLights 2
-    DirectionalLight {
-        direction -0.3 -0.5 -0.5 
-	color 0.7 0.7 0.7
+    numLights 3
+    PointLight {
+        position 3 5 0
+        color 1 0.1 0.1
+	attenuation 0 0 0.025
     }
-    DirectionalLight {
-        direction 0.3 -1 -0.5 
-	color 0.2 0.2 0.2
+    PointLight {
+        position 0 3.5 5
+	color 0.1 1 0.1
+	attenuation 0 0 0.025
+    }
+    PointLight {
+        position -3 5 0
+	color 0.1 0.1 1
+	attenuation 0 0 0.025
     }
 }
 
 Background {
-    color 0 0 0
-    ambientLight 0.1 0.1 0.1 
+    color 0.2 0.2 0.2
+    ambientLight 0.1 0.1 0.1
 }
 
 Materials {
-    numMaterials 4
-
+    numMaterials 2
     PhongMaterial {
-        diffuseColor 0.3 0.3 0.3
-	reflectiveColor 0.7 0.7 0.7
+        diffuseColor 0.25 0.25 0.25
+	specularColor 0.25 0.25 0.25
+	exponent 32
+	reflectiveColor 0.5 0.5 0.5
+	transparentColor 0.95 0.95 0.95
+	indexOfRefraction 2.413
     }
-
     PhongMaterial {
-        diffuseColor 1 0 0 
-    }
-
-    PhongMaterial {
-        diffuseColor 0 1 0 
-    }
-
-    PhongMaterial {
-        diffuseColor 0 0 1 
+        diffuseColor 1 1 1
     }
 }
 
 Group {
-    numObjects 5
-
+    numObjects 2
     MaterialIndex 0
-    Triangle {
-        vertex0 -5 0 -5
-	vertex1 -5 0 5
-	vertex2 5 0 5
+    Transform {
+        XRotate -90
+        TriangleMesh {
+            obj_file diamond.obj
+        }
     }
-    Triangle {
-        vertex0 -5 0 -5
-	vertex1 5 0 5
-	vertex2 5 0 -5
-    }
-
     MaterialIndex 1
-    Transform {
-        Translate  -0.8 0 -2 
-	Scale  0.25 1.0 0.25 
-	YRotate  45 
-        Translate  0 1 0 
-        TriangleMesh {
-       	    obj_file cube.obj
-	}
-    }
-
-    MaterialIndex 2
-    Transform {
-        Translate  0 2 -2 
-	Scale  1.6 0.3 0.1 
-        Translate  0 1 0 
-        TriangleMesh {
-       	    obj_file cube.obj
-	}
-    }
-
-    MaterialIndex 3
-    Transform {
-        Translate  0.8 0 -2 
-	Scale  0.25 1.0 0.25 
-	YRotate  45 
-        Translate  0 1 0 
-        TriangleMesh {
-       	    obj_file cube.obj
-	}
-    }
-
+    Plane {
+        normal 0 1 0
+        offset -3.5
+    } 
 }
 
 

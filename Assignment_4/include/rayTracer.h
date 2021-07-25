@@ -51,7 +51,7 @@ public:
     }
     ~RayTracer(){};
     Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight,
-                   float indexOfRefraction, Hit &hit, bool main) const;
+                   float indexOfRefraction, Hit &hit, bool main, bool debug=false) const;
     Vec3f mirrorDirection(const Vec3f &normal, const Vec3f &incoming) const;
     bool transmittedDirection(const Vec3f &normal, const Vec3f &incoming, float index_i, float index_t, Vec3f &transmitted) const;
 };

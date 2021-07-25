@@ -34,7 +34,7 @@ bool RayTracer::transmittedDirection(const Vec3f &normal, const Vec3f &incoming,
     return false;
 }
 Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
-                          float indexOfRefraction, Hit &hit, bool main) const
+                          float indexOfRefraction, Hit &hit, bool main, bool debug) const
 {
     if(bounces>max_bounces)
         return Vec3f(0, 0, 0);
@@ -61,8 +61,20 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
             {
                 Ray shadow_ray(pt, dir2light);
                 Hit shadow_hit(dist2light, materials[0], Vec3f(0, 0, 0));
+                Vec3f tmp;
                 if (!group->intersectShadowRay(shadow_ray, shadow_hit, epsilon))
-                    color += hit.getMaterial()->Shade(ray, hit, dir2light, light_color);
+                {
+                    tmp = hit.getMaterial()->Shade(ray, hit, dir2light, light_color);
+                }
+                if(debug&&main)
+                {
+                    for (int i = 0; i < bounces; i++)
+                    {
+                        cout << " ";
+                    }
+                    cout << "Shadow: " << tmp << endl;
+                }
+                color += tmp;
                 RayTree::AddShadowSegment(shadow_ray, 0.0f, shadow_hit.getT());
             }
             else
@@ -77,7 +89,15 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                 Ray mirror_ray(pt, mirror_dir);
                 Hit mirror_hit(dist2light, materials[0], Vec3f(0, 0, 0));
                 Vec3f mirror_shade = traceRay(mirror_ray, epsilon, bounces + 1, weight * mirror_color.Length(),
-                                              indexOfRefraction, mirror_hit, false);
+                                              indexOfRefraction, mirror_hit, false,debug);
+                if (debug && main)
+                {
+                    for (int i = 0; i < bounces; i++)
+                    {
+                        cout << " ";
+                    }
+                    cout << "Mirrow: " << mirror_color * mirror_shade << endl;
+                }
                 color += mirror_color * mirror_shade;
                 RayTree::AddReflectedSegment(mirror_ray, 0.0f, mirror_hit.getT());
             }
@@ -106,11 +126,27 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
                 {
                     Ray trans_ray(pt, trans_dir);
                     Hit trans_hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
-                    Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit, false);
+                    Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit, false,debug);
+                    if (debug && main)
+                    {
+                        for (int i = 0; i < bounces; i++)
+                        {
+                            cout << " ";
+                        }
+                        cout << "Trans: " << trans_color * trans_shade << endl;
+                    }
                     color += trans_color * trans_shade;
                     RayTree::AddTransmittedSegment(trans_ray, 0.0f, trans_hit.getT());
                 }
             }
+        }
+        if (debug&&main)
+        {
+            for (int i = 0; i < bounces; i++)
+            {
+                cout << " ";
+            }
+            cout << "Color: " << color << endl;
         }
         return color;
     }
