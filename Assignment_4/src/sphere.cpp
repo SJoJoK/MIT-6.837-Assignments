@@ -113,11 +113,11 @@ void Sphere::paint()
                 glVertex3f(pt1.x(), pt1.y(), pt1.z());
                 glVertex3f(pt2.x(), pt2.y(), pt2.z());
                 glVertex3f(pt3.x(), pt3.y(), pt3.z());
-                cout << "Sending..." << endl
-                     << "P0:(" << pt0.x() << ", " << pt0.y() << ", " << pt0.z() << ")" << endl
-                     << "P1:(" << pt1.x() << ", " << pt1.y() << ", " << pt1.z() << ")" << endl
-                     << "P2:(" << pt2.x() << ", " << pt2.y() << ", " << pt2.z() << ")" << endl
-                     << "P3:(" << pt3.x() << ", " << pt3.y() << ", " << pt3.z() << ")" << endl;
+                // cout << "Sending..." << endl
+                //      << "P0:(" << pt0.x() << ", " << pt0.y() << ", " << pt0.z() << ")" << endl
+                //      << "P1:(" << pt1.x() << ", " << pt1.y() << ", " << pt1.z() << ")" << endl
+                //      << "P2:(" << pt2.x() << ", " << pt2.y() << ", " << pt2.z() << ")" << endl
+                //      << "P3:(" << pt3.x() << ", " << pt3.y() << ", " << pt3.z() << ")" << endl;
             }
             phi += dphi;
         }

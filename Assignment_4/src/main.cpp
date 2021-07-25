@@ -28,7 +28,7 @@ bool gouraud = false;
 int max_bounces = 2;
 float cutoff_weight = 0.01;
 bool shadows = true;
-float epsilon = 0.05;
+float epsilon = 0.01;
 SceneParser *sp;
 void render(){};
 
