@@ -29,6 +29,10 @@ int max_bounces = 2;
 float cutoff_weight = 0.01;
 bool shadows = true;
 float epsilon = 0.01;
+int nx = 1;
+int ny = 1;
+int nz = 1;
+bool visualize_grid = false;
 SceneParser *sp;
 void render(){};
 
@@ -83,6 +87,10 @@ void prase_cmd(int argc, char *argv[])
         {
             gui = true;
         }
+        else if (!strcmp(argv[i], "-visualize_grid"))
+        {
+            visualize_grid = true;
+        }
         else if (!strcmp(argv[i], "-tessellation"))
         {
             i++;
@@ -111,6 +119,18 @@ void prase_cmd(int argc, char *argv[])
         else if (!strcmp(argv[i], "-shadows"))
         {
             shadows = true;
+        }
+        else if (!strcmp(argv[i], "-grid"))
+        {
+            i++;
+            assert(i < argc);
+            nx = atoi(argv[i]);
+            i++;
+            assert(i < argc);
+            ny = atoi(argv[i]);
+            i++;
+            assert(i < argc);
+            nz = atoi(argv[i]);
         }
         else
         
@@ -198,7 +218,7 @@ int main(int argc, char *argv[])
     {
         glutInit(&argc, argv);
         GLCanvas canvas;
-        canvas.initialize(sp, render, traceRayFunction);
+        canvas.initialize(sp, render, traceRayFunction,rt->getGrid(),visualize_grid);
     }
 
     return 0;

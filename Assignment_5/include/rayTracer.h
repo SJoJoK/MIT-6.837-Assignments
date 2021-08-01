@@ -19,10 +19,13 @@ extern int max_bounces;
 extern float cutoff_weight;
 extern bool shadows;
 extern float epsilon;
+extern bool visualize_grid;
+extern int nx, ny, nz;
 class RayTracer
 {
 private:
     SceneParser *sp;
+    Grid *grid;
     Camera *camera;
     Group *group;
     Vec3f background_color;
@@ -31,27 +34,11 @@ private:
     vector<Light *> lights;
 
 public:
-    RayTracer(SceneParser *s) : sp(s)
-    {
-        camera = sp->getCamera();
-        group = sp->getGroup();
-        background_color = sp->getBackgroundColor();
-        ambient_light = sp->getAmbientLight();
-        int n_material = sp->getNumMaterials();
-        int n_light = sp->getNumLights();
-        for (int i = 0; i < n_material; i++)
-        {
-            materials.push_back(sp->getMaterial(i));
-        }
-
-        for (int i = 0; i < n_light; i++)
-        {
-            lights.push_back(sp->getLight(i));
-        }
-    }
+    RayTracer(SceneParser *s);
     ~RayTracer(){};
+    Grid *getGrid() { return grid; };
     Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight,
-                   float indexOfRefraction, Hit &hit, bool main, bool debug=false) const;
+                   float indexOfRefraction, Hit &hit, bool main, bool debug = false) const;
     Vec3f mirrorDirection(const Vec3f &normal, const Vec3f &incoming) const;
     bool transmittedDirection(const Vec3f &normal, const Vec3f &incoming, float index_i, float index_t, Vec3f &transmitted) const;
 };

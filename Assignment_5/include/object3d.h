@@ -4,16 +4,17 @@
 #include "material.h"
 #include "matrix.h"
 #include "boundingbox.h"
+#include "marchingInfo.h"
 #include <vector>
 
 class Grid;
 class Object3D
 {
 protected:
-    Material *material;
     BoundingBox *boundingBox;
 
 public:
+    Material *material;
     bool _isTriangle = false;
     Vec3f _a;
     Vec3f _b;
@@ -140,7 +141,7 @@ public:
     Transform(Matrix &m, Object3D *o) : transform_mat(m), obj(o){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual BoundingBox *getBoundingBox();
-    virtual void insertIntoGrid(Grid *g, Matrix *m);
+    // virtual void insertIntoGrid(Grid *g, Matrix *m);
     virtual void paint();
 };
 
@@ -164,10 +165,10 @@ public:
     }
     BoundingBox *getBoundingBox();
     Vec3f getGird();
+    void initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const;
     void insertIntoThis(int i, bool v, Object3D *obj);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual void paint();
-    void setMaterial(Material *m) { this->material = m; };
 
 
 };

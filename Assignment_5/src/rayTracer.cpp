@@ -3,6 +3,34 @@
 #include "object3d.h"
 #include "camera.h"
 #include "light.h"
+RayTracer::RayTracer(SceneParser *s)
+{
+    this->sp = s;
+    camera = sp->getCamera();
+    group = sp->getGroup();
+    background_color = sp->getBackgroundColor();
+    ambient_light = sp->getAmbientLight();
+    int n_material = sp->getNumMaterials();
+    int n_light = sp->getNumLights();
+    for (int i = 0; i < n_material; i++)
+    {
+        materials.push_back(sp->getMaterial(i));
+    }
+
+    for (int i = 0; i < n_light; i++)
+    {
+        lights.push_back(sp->getLight(i));
+    }
+    if (!visualize_grid)
+    {
+        grid = nullptr;
+    }
+    else
+    {
+        grid = new Grid(group->getBoundingBox(), nx, ny, nz);
+        group->insertIntoGrid(grid, nullptr);
+    }
+}
 Vec3f RayTracer::mirrorDirection(const Vec3f &normal, const Vec3f &incoming) const
 {
     //out = incoming – 2 (incoming · normal) normal

@@ -13,6 +13,7 @@ class Sphere;
 class Plane;
 class Triangle;
 class Transform;
+class Grid;
 
 #define MAX_PARSER_TOKEN_LENGTH 100
 
