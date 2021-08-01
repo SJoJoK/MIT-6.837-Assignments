@@ -42,6 +42,7 @@ class Group : public Object3D
 private:
     int n_objs;
     Object3D **objs;
+    Grid* grid;
 
 public:
     Group() : n_objs(0){};
@@ -97,6 +98,7 @@ public:
     //np + d = 0
     Plane(Vec3f &normal, float d, Material *m) : Object3D(m), normal(normal), distance(-1 * d){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void insertIntoGrid(Grid *g, Matrix *m);
     virtual void paint();
 };
 
@@ -153,7 +155,8 @@ private:
     bool visualize;
 
 public:
-    Grid(BoundingBox *bb, int nx, int ny, int nz):nx(nx),ny(ny),nz(nz)
+    Grid(){};
+    Grid(BoundingBox *bb, int nx, int ny, int nz) : nx(nx), ny(ny), nz(nz)
     {
         this->boundingBox = bb;
         m_is_voxel_opaque.assign(nx * ny * nz, false);

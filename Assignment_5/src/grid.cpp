@@ -18,25 +18,25 @@ void Grid::insertIntoThis(int i, bool v, Object3D *obj)
 
 bool Grid::intersect(const Ray &r, Hit &h, float tmin)
 {
-    bool result = false;
-    MarchingInfo mi;
-    initializeRayMarch(mi, r, tmin);
-    if (mi.tmin < h.getT())
-    {
-        while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
-        {
-            if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
-            {
-                if (objs[(mi.i * ny + mi.j) * nz + mi.k]->material == NULL)
-                    objs[(mi.i * ny + mi.j) * nz + mi.k]->material = material;
-                h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k]->material, mi.normal, r);
-                result = true;
-                break;
-            }
-            mi.nextCell();
-        }
-    }
-    return result;
+    // bool result = false;
+    // MarchingInfo mi;
+    // initializeRayMarch(mi, r, tmin);
+    // if (mi.tmin < h.getT())
+    // {
+    //     while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
+    //     {
+    //         if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
+    //         {
+    //             if (objs[(mi.i * ny + mi.j) * nz + mi.k]->material == NULL)
+    //                 objs[(mi.i * ny + mi.j) * nz + mi.k]->material = material;
+    //             h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k]->material, mi.normal, r);
+    //             result = true;
+    //             break;
+    //         }
+    //         mi.nextCell();
+    //     }
+    // }
+    // return result;
 }
 
 void Grid::paint()
