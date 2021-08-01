@@ -7,7 +7,7 @@ const double PI = 3.1415926;
 
 void Sphere::insertIntoGrid(Grid *g, Matrix *m)
 {
-    if (m != NULL)
+    if (m != nullptr)
     {
         Object3D::insertIntoGrid(g, m);
         return;
