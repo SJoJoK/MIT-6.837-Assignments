@@ -141,3 +141,30 @@ public:
     virtual void insertIntoGrid(Grid *g, Matrix *m);
     virtual void paint();
 };
+
+class Grid: public Object3D
+{
+private:
+    int nx;
+    int ny;
+    int nz;
+    vector<bool> m_is_voxel_opaque;
+    vector<Object3D *> objs;
+    bool visualize;
+
+public:
+    Grid(BoundingBox *bb, int nx, int ny, int nz):nx(nx),ny(ny),nz(nz)
+    {
+        this->boundingBox = bb;
+        m_is_voxel_opaque.assign(nx * ny * nz, false);
+        objs.resize(nx * ny * nz);
+    }
+    BoundingBox *getBoundingBox();
+    Vec3f getGird();
+    void insertIntoThis(int i, bool v, Object3D *obj);
+    virtual bool intersect(const Ray &r, Hit &h, float tmin);
+    virtual void paint();
+    void setMaterial(Material *m) { this->material = m; };
+
+
+};

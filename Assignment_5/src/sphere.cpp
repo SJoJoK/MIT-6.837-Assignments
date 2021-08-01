@@ -5,6 +5,44 @@ extern int phi_steps;
 extern bool gouraud;
 const double PI = 3.1415926;
 
+void Sphere::insertIntoGrid(Grid *g, Matrix *m)
+{
+    if (m != NULL)
+    {
+        Object3D::insertIntoGrid(g, m);
+        return;
+    }
+    Vec3f v = g->getGird();
+    BoundingBox *bb = g->getBoundingBox();
+    Vec3f min = bb->getMin();
+    Vec3f max = Vec3f(bb->getMax().x(), bb->getMax().y(), bb->getMax().z());
+    int x = v.x();
+    int y = v.y();
+    int z = v.z();
+    Vec3f size = max - min;
+    float grid_x = size.x() / x;
+    float grid_y = size.y() / y;
+    float grid_z = size.z() / z;
+    Vec3f cen = center - min;
+    Vec3f _voxel;
+    for (int _i = 0; _i < x; _i++)
+    {
+        for (int _j = 0; _j < y; _j++)
+        {
+            for (int _k = 0; _k < z; _k++)
+            {
+                float _x1 = (_i + 0.5f) * grid_x;
+                float _y1 = (_j + 0.5f) * grid_y;
+                float _z1 = (_k + 0.5f) * grid_z;
+                _voxel.Set(_x1, _y1, _z1);
+                if ((_voxel - cen).Length() <= radius)
+                {
+                    g->insertIntoThis((_i * y + _j) * z + _k, true, this);
+                }
+            }
+        }
+    }
+}
 BoundingBox *Sphere::getBoundingBox()
 {
     if (this->boundingBox)
@@ -13,7 +51,6 @@ BoundingBox *Sphere::getBoundingBox()
                                     Vec3f(center.x() + radius, center.y() + radius, center.z() + radius));
     return this->boundingBox;
 }
-
 Vec3f Sphere::getSphereCoord(float theta, float phi)
 {
     float x = radius * sin(theta) * cos(phi);
