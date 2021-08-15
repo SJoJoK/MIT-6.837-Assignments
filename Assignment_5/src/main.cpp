@@ -23,7 +23,7 @@ char *normal_file = nullptr;
 bool shade_back = false;
 int theta_steps = 20;
 int phi_steps = 20;
-bool gui = false;
+bool gui = true;
 bool gouraud = false;
 int max_bounces = 2;
 float cutoff_weight = 0.01;
@@ -32,7 +32,7 @@ float epsilon = 0.01;
 int nx = 1;
 int ny = 1;
 int nz = 1;
-bool visualize_grid = false;
+bool visualize_grid = true;
 SceneParser *sp;
 void render(){};
 
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
             Vec3f color;
             if (x == 100 && y == 90)
             {
-                color = rt->traceRay(r, epsilon, 0, 1, 1, h, true, true);
+                color = rt->traceRay(r, epsilon, 0, 1, 1, h, true, false);
             }
             else
             {

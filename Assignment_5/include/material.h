@@ -11,6 +11,7 @@ extern int SPECULAR_FIX_WHICH_PASS;
 #endif
 
 #include "vectors.h"
+#include "hit.h"
 extern bool shade_back;
 // ====================================================================
 // ====================================================================

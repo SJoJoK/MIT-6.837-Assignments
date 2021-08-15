@@ -21,13 +21,14 @@ RayTracer::RayTracer(SceneParser *s)
     {
         lights.push_back(sp->getLight(i));
     }
-    if (!visualize_grid)
+    if (nx==0)
     {
         grid = nullptr;
     }
     else
     {
         grid = new Grid(group->getBoundingBox(), nx, ny, nz);
+        grid->material = group->material;
         group->insertIntoGrid(grid, nullptr);
     }
 }

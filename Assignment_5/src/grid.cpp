@@ -157,7 +157,7 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
 
 void Grid::paint()
 {
-    material->glSetMaterial();
+    // material->glSetMaterial();
     boundingBox->paint();
     Vec3f size = boundingBox->getMax() - boundingBox->getMin();
     float grid_x = size.x() / nx;
