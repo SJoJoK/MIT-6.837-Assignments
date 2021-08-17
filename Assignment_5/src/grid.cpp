@@ -144,7 +144,7 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
             if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
             {
                 if (objs[(mi.i * ny + mi.j) * nz + mi.k]->material == nullptr)
-                    objs[(mi.i * ny + mi.j) * nz + mi.k]->material = material;
+                    objs[(mi.i * ny + mi.j) * nz + mi.k]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
                 h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k]->material, mi.normal, r);
                 result = true;
                 break;

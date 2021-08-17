@@ -52,11 +52,11 @@ public:
 
 protected:
     // REPRESENTATION
-    Vec3f diffuseColor;
-    Vec3f specularColor;
-    Vec3f reflectiveColor;
-    Vec3f transparentColor;
-    float indexOfRefraction;
+    Vec3f diffuseColor = Vec3f(1,1,1);
+    Vec3f specularColor = Vec3f(0,0,0);
+    Vec3f reflectiveColor = Vec3f(0,0,0);
+    Vec3f transparentColor = Vec3f(0,0,0);
+    float indexOfRefraction = 1;
 };
 
 // ====================================================================
@@ -65,9 +65,11 @@ protected:
 class PhongMaterial : public Material
 {
 private:
-    float exponent;
+    float exponent=1;
 
 public:
+    PhongMaterial(const Vec3f &diffuseColor) : Material(diffuseColor)
+                  {};
     PhongMaterial(const Vec3f &diffuseColor,
                   const Vec3f &specularColor,
                   float exponent,

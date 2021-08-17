@@ -180,8 +180,8 @@ void Transform::insertIntoGrid(Grid *g, Matrix *m)
 	for (int _i = _start_i; _i < _end_i; _i++) {
 		for (int _j = _start_j; _j < _end_j; _j++) {
 			for (int _k = _start_k; _k < _end_k; _k++) {
-				g->insertIntoThis((_i * y + _j) * z + _k, true, this);
+				g->insertIntoThis((_i * y + _j) * z + _k, true, this->obj);
 			}
 		}
-	}
+	} 
 }
