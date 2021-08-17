@@ -15,7 +15,7 @@
 char *input_file = (char *)"test.txt";
 int width = 200;
 int height = 200;
-char *output_file = (char *)"test.tga";
+char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
 char *depth_file = nullptr;
@@ -23,11 +23,11 @@ char *normal_file = nullptr;
 bool shade_back = false;
 int theta_steps = 20;
 int phi_steps = 20;
-bool gui = true;
+bool gui = false;
 bool gouraud = false;
 int max_bounces = 2;
 float cutoff_weight = 0.01;
-bool shadows = true;
+bool shadows = false;
 float epsilon = 0.01;
 int nx = 1;
 int ny = 1;
@@ -201,16 +201,20 @@ int main(int argc, char *argv[])
             depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
             normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
         }
-
-    if (output_file != NULL)
+    if (output_file == nullptr)
     {
-        image->SaveTGA(output_file);
+        image->SavePPM((char *)"test.ppm");
+        image->SaveTGA((char *)"test.tga");
     }
-    if (depth_file != NULL)
+    if (output_file != nullptr)
+    {
+        image->SavePPM(output_file);
+    }
+    if (depth_file != nullptr)
     {
         depth_image->SaveTGA(depth_file);
     }
-    if (normal_file != NULL)
+    if (normal_file != nullptr)
     {
         normal_image->SaveTGA(normal_file);
     }

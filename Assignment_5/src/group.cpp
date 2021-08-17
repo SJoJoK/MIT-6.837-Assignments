@@ -2,7 +2,7 @@
 extern int nx, ny, nz;
 BoundingBox *Group::getBoundingBox()
 {
-    if(this->boundingBox)
+    if (this->boundingBox)
         return this->boundingBox;
     float x_min = MAXFLOAT, y_min = MAXFLOAT, z_min = MAXFLOAT;
     float x_max = -1 * MAXFLOAT, y_max = -1 * MAXFLOAT, z_max = -1 * MAXFLOAT;
@@ -30,15 +30,18 @@ BoundingBox *Group::getBoundingBox()
 bool Group::intersect(const Ray &r, Hit &h, float tmin)
 {
     bool res = false;
-    if(nx!=0)
+    if (nx != 0)
     {
-        res=grid->intersect(r, h, tmin);
+        res = grid->intersect(r, h, tmin);
     }
-    for (int i = 0; i < this->n_objs; i++)
+    else
     {
-        if (objs[i] == nullptr)
-            continue;
-        res = objs[i]->intersect(r, h, tmin) || res;
+        for (int i = 0; i < this->n_objs; i++)
+        {
+            if (objs[i] == nullptr)
+                continue;
+            res = objs[i]->intersect(r, h, tmin) || res;
+        }
     }
     return res;
 }
