@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
     }
     if (output_file != nullptr)
     {
-        image->SavePPM(output_file);
+        image->SaveTGA(output_file);
     }
     if (depth_file != nullptr)
     {
