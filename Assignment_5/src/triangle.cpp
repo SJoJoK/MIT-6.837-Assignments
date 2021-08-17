@@ -76,6 +76,10 @@ void Triangle::paint()
 
 void Triangle::insertIntoGrid(Grid *g, Matrix *m)
 {
+    if (m != nullptr)
+    {
+        this->boundingBox = (new Transform(*m, this))->getBoundingBox();
+    }
     Vec3f m_min = boundingBox->getMin();
     Vec3f m_max = boundingBox->getMax();
     Vec3f v = g->getGird();
