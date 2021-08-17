@@ -72,8 +72,8 @@ private:
     double radius;
 
 public:
-    Sphere() : center(Vec3f(0, 0, 0)), radius(0){};
-    Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r){};
+    Sphere();
+    Sphere(Vec3f c, double r, Material *m);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual void paint();
     virtual BoundingBox *getBoundingBox();
@@ -105,18 +105,8 @@ private:
     Vec3f c;
 
 public:
-    Triangle() { _isTriangle = true; };
-    Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m) : Object3D(m), a(a), b(b), c(c)
-    {
-        Vec3f AB = b - a;
-        Vec3f AC = c - a;
-        Vec3f::Cross3(normal, AB, AC);
-        normal.Normalize();
-        _isTriangle = true;
-        _a = a;
-        _b = b;
-        _c = c;
-    }
+    Triangle();
+    Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual BoundingBox *getBoundingBox();
     virtual void insertIntoGrid(Grid *g, Matrix *m);

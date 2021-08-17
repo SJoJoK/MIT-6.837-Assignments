@@ -4,13 +4,22 @@ extern int theta_steps;
 extern int phi_steps;
 extern bool gouraud;
 const double PI = 3.1415926;
+Sphere::Sphere()
+{
+    center = Vec3f(0, 0, 0);
+    radius = 0;
+}
+
+Sphere::Sphere(Vec3f c, double r, Material *m) : Object3D(m), center(c), radius(r)
+{
+    this->getBoundingBox();
+};
 
 void Sphere::insertIntoGrid(Grid *g, Matrix *m)
 {
     if (m != nullptr)
     {
-        Object3D::insertIntoGrid(g, m);
-        this->boundingBox = (new Transform(*m,this))->getBoundingBox();
+        this->boundingBox = (new Transform(*m, this))->getBoundingBox();
         Vec3f m_min = boundingBox->getMin();
         Vec3f m_max = boundingBox->getMax();
         Vec3f v = g->getGird();

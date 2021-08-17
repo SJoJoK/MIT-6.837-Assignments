@@ -9,6 +9,25 @@ inline float MAX3(float x, float y, float z)
     float tmp = x > y ? x : y;
     return tmp > z ? tmp : z;
 }
+
+Triangle::Triangle()
+{
+    _isTriangle = true;
+}
+
+Triangle::Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m) : Object3D(m), a(a), b(b), c(c)
+{
+    Vec3f AB = b - a;
+    Vec3f AC = c - a;
+    Vec3f::Cross3(normal, AB, AC);
+    normal.Normalize();
+    _isTriangle = true;
+    _a = a;
+    _b = b;
+    _c = c;
+    this->getBoundingBox();
+}
+
 BoundingBox *Triangle::getBoundingBox()
 {
     if (this->boundingBox)
