@@ -1,5 +1,23 @@
 #include "object3d.h"
 extern int nx, ny, nz;
+Group::Group()
+{
+    n_objs = 0;
+    boundingBox = nullptr;
+}
+
+Group::Group(int n)
+{
+    n_objs=n;
+    objs = new Object3D *[n];
+    boundingBox = nullptr;
+}
+void Group::addObject(int index, Object3D *obj)
+{
+    assert(index < n_objs);
+    objs[index] = obj;
+}
+
 BoundingBox *Group::getBoundingBox()
 {
     if (this->boundingBox)

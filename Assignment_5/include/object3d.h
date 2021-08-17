@@ -46,16 +46,9 @@ private:
     Grid* grid;
 
 public:
-    Group() : n_objs(0){};
-    Group(int n) : n_objs(n)
-    {
-        objs = new Object3D *[n];
-    }
-    void addObject(int index, Object3D *obj)
-    {
-        assert(index < n_objs);
-        objs[index] = obj;
-    }
+    Group();
+    Group(int n);
+    void addObject(int index, Object3D *obj);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin);
     virtual BoundingBox *getBoundingBox();
