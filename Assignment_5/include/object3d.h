@@ -11,7 +11,7 @@ class Grid;
 class Object3D
 {
 protected:
-    BoundingBox *boundingBox;
+    BoundingBox *boundingBox = nullptr;
 
 public:
     Material *material;
