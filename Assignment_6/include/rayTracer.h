@@ -21,6 +21,7 @@ extern bool shadows;
 extern float epsilon;
 extern bool visualize_grid;
 extern int nx, ny, nz;
+extern bool is_grid;
 class RayTracer
 {
 private:

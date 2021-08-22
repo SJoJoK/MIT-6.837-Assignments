@@ -1,5 +1,6 @@
 #include "object3d.h"
 extern int nx, ny, nz;
+extern bool is_grid;
 Group::Group()
 {
     n_objs = 0;
@@ -48,7 +49,7 @@ BoundingBox *Group::getBoundingBox()
 bool Group::intersect(const Ray &r, Hit &h, float tmin)
 {
     bool res = false;
-    if (nx != 0)
+    if (is_grid)
     {
         res = grid->intersect(r, h, tmin);
     }

@@ -21,7 +21,7 @@ RayTracer::RayTracer(SceneParser *s)
     {
         lights.push_back(sp->getLight(i));
     }
-    if (nx==0)
+    if (!is_grid)
     {
         grid = nullptr;
     }

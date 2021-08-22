@@ -29,6 +29,7 @@ int max_bounces = 2;
 float cutoff_weight = 0.01;
 bool shadows = false;
 float epsilon = 0.01;
+bool is_grid = false;
 int nx = 30;
 int ny = 30;
 int nz = 30;
@@ -122,6 +123,7 @@ void prase_cmd(int argc, char *argv[])
         }
         else if (!strcmp(argv[i], "-grid"))
         {
+            is_grid = true;
             i++;
             assert(i < argc);
             nx = atoi(argv[i]);
@@ -133,7 +135,7 @@ void prase_cmd(int argc, char *argv[])
             nz = atoi(argv[i]);
         }
         else
-        
+
         {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
             assert(0);
@@ -218,11 +220,11 @@ int main(int argc, char *argv[])
     {
         normal_image->SaveTGA(normal_file);
     }
-    if(gui)
+    if (gui)
     {
         glutInit(&argc, argv);
         GLCanvas canvas;
-        canvas.initialize(sp, render, traceRayFunction,rt->getGrid(),visualize_grid);
+        canvas.initialize(sp, render, traceRayFunction, rt->getGrid(), visualize_grid);
     }
 
     return 0;
