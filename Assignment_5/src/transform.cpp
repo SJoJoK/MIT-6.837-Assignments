@@ -9,6 +9,11 @@ inline float MAX3(float x, float y, float z)
     float tmp = x > y ? x : y;
     return tmp > z ? tmp : z;
 }
+Transform::Transform(Matrix &m, Object3D *o) : transform_mat(m), obj(o)
+{
+    this->material=obj->material;
+};
+
 BoundingBox *Transform::getBoundingBox()
 {
     if (this->boundingBox)

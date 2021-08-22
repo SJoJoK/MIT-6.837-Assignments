@@ -121,10 +121,7 @@ private:
 
 public:
     Transform(){};
-    Transform(Matrix &m, Object3D *o) : transform_mat(m), obj(o)
-    {
-        this->material=obj->material;
-    };
+    Transform(Matrix &m, Object3D *o);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual BoundingBox *getBoundingBox();
     virtual void insertIntoGrid(Grid *g, Matrix *m);
