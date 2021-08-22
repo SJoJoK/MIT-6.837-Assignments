@@ -135,7 +135,7 @@ private:
     int ny;
     int nz;
     vector<bool> m_is_voxel_opaque;
-    vector<Object3D *> objs;
+    vector<vector<Object3D *>> objs;
     bool visualize;
 
 public:

@@ -13,7 +13,7 @@ BoundingBox *Grid::getBoundingBox()
 void Grid::insertIntoThis(int i, bool v, Object3D *obj)
 {
     m_is_voxel_opaque[i] = v;
-    objs[i] = obj;
+    objs[i].push_back(obj);
 }
 
 void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
@@ -143,9 +143,9 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
         {
             if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
             {
-                if (objs[(mi.i * ny + mi.j) * nz + mi.k]->material == nullptr)
-                    objs[(mi.i * ny + mi.j) * nz + mi.k]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
-                h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k]->material, mi.normal, r);
+                if (objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material == nullptr)
+                    objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
+                h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material, mi.normal, r);
                 result = true;
                 break;
             }
