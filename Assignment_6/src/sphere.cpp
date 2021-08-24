@@ -83,6 +83,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
     float grid_x = size.x() / x;
     float grid_y = size.y() / y;
     float grid_z = size.z() / z;
+    float diag = sqrt(pow(grid_x, 2) + pow(grid_y, 2) + pow(grid_z, 2));
     Vec3f cen = center - min;
     Vec3f _voxel;
     for (int _i = 0; _i < x; _i++)
@@ -95,7 +96,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
                 float _y1 = (_j + 0.5f) * grid_y;
                 float _z1 = (_k + 0.5f) * grid_z;
                 _voxel.Set(_x1, _y1, _z1);
-                if ((_voxel - cen).Length() <= radius)
+                if ((_voxel - cen).Length() <= radius + 0.5 * diag)
                 {
                     g->insertIntoThis((_i * y + _j) * z + _k, true, this);
                 }

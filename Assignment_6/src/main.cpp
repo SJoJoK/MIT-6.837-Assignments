@@ -33,7 +33,7 @@ bool is_grid = true;
 int nx = 10;
 int ny = 10;
 int nz = 10;
-bool visualize_grid = true;
+bool visualize_grid = false;
 bool stats = false;
 SceneParser *sp;
 void render(){};
