@@ -182,15 +182,15 @@ int main(int argc, char *argv[])
             float fx = x / (float)width;
             float fy = y / (float)height;
 
-            if (x == 100 && y == 90)
+            if (x == 10 && y == 10)
             {
-                cout << "(x,y) = (100, 90)" << endl;
+                cout << x << y << endl;
             }
 
             Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
             Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
             Vec3f color;
-            if (x == 100 && y == 90)
+            if (false)
             {
                 color = rt->traceRay(r, epsilon, 0, 1, 1, h, true, false);
             }

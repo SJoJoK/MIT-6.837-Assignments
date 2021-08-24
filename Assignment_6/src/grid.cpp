@@ -1,5 +1,6 @@
 #include "object3d.h"
 extern bool visualize_grid;
+extern float epsilon;
 Vec3f Grid::getGird()
 {
     return Vec3f(nx, ny, nz);
@@ -186,12 +187,19 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                             //get the intersection point
                             Vec3f p = h.getIntersectionPoint();
                             Vec3f rp = p - g_min;
+                            // return true;
                             //if the intersectionpoint is in the cell
-                            if (rp.x() >= mi.i * grid_x && rp.x() <= (mi.i + 1) * grid_x && rp.y() >= mi.j * grid_y && rp.y() <= (mi.j + 1) * grid_y && rp.z() >= mi.k * grid_z && rp.z() <= (mi.k + 1) * grid_z)
+                            if (rp.x() + epsilon >= mi.i * grid_x && rp.x() - epsilon <= (mi.i + 1) * grid_x &&
+                                rp.y() + epsilon >= mi.j * grid_y && rp.y() - epsilon <= (mi.j + 1) * grid_y &&
+                                rp.z() + epsilon >= mi.k * grid_z && rp.z() - epsilon <= (mi.k + 1) * grid_z)
                             {
                                 return true;
                             }
                             //else, reset the hit
+                            // cout << "The relatvie intersect point is " << rp << endl;
+                            // cout << "But the Cell is " << endl
+                            //      << "Min:" << Vec3f(mi.i * grid_x, mi.j * grid_y, mi.k * grid_z)
+                            //      << " Max:" << Vec3f((mi.i+1) * grid_x, (1+mi.j) * grid_y, (1+mi.k) * grid_z) << endl;
                             h = pri_h;
                         }
                     }
