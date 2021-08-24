@@ -136,6 +136,7 @@ private:
     int nz;
     vector<bool> m_is_voxel_opaque;
     vector<vector<Object3D *>> objs;
+    vector<Object3D *> inf_objs;
     bool visualize;
 
 public:
@@ -149,6 +150,7 @@ public:
     BoundingBox *getBoundingBox();
     Vec3f getGird();
     void initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const;
+    void insertInfObj(Object3D *obj);
     void insertIntoThis(int i, bool v, Object3D *obj);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);
     virtual void paint();
