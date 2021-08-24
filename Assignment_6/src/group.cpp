@@ -98,8 +98,6 @@ void Group::insertIntoGrid(Grid *g, Matrix *m)
     grid = g;
     for (int i = 0; i < n_objs; i++)
     {
-        if (objs[i]->getBoundingBox() == NULL)
-            continue;
         objs[i]->insertIntoGrid(g, m);
     }
 }

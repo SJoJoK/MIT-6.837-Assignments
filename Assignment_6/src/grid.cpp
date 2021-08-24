@@ -140,6 +140,7 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
 
 bool Grid::intersect(const Ray &r, Hit &h, float tmin)
 {
+    // static int cnt = 0;
     bool result = false;
     MarchingInfo mi;
     initializeRayMarch(mi, r, tmin);
@@ -182,6 +183,7 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                     {
                         //try to intersect all the primitives in the cell
                         bool tmpres = objs[grid_id][i]->intersect(r, h, tmin);
+                        // cnt++;
                         if (tmpres)
                         {
                             //get the intersection point
@@ -204,12 +206,11 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                         }
                     }
                 }
-                if (result)
-                    return result;
                 mi.nextCell();
             }
         }
     }
+    // cout << cnt << endl;
     return result;
 }
 
