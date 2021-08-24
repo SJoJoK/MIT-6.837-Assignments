@@ -67,15 +67,22 @@ bool Group::intersect(const Ray &r, Hit &h, float tmin)
 bool Group::intersectShadowRay(const Ray &r, Hit &h, float tmin)
 {
     bool res = false;
-    for (int i = 0; i < this->n_objs; i++)
+    if(is_grid)
     {
-        if (objs[i] == nullptr)
-            continue;
-        res = objs[i]->intersect(r, h, tmin) || res;
-        if (res)
-            return true;
+        res = grid->intersect(r, h, tmin);
     }
-    return false;
+    else
+    {
+        for (int i = 0; i < this->n_objs; i++)
+        {
+            if (objs[i] == nullptr)
+                continue;
+            res = objs[i]->intersect(r, h, tmin);
+            if (res)
+                return true;
+        }
+    }
+    return res;
 }
 void Group::paint()
 {

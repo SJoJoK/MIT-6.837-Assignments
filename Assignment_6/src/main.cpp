@@ -33,7 +33,8 @@ bool is_grid = false;
 int nx = 30;
 int ny = 30;
 int nz = 30;
-bool visualize_grid = true;
+bool visualize_grid = false;
+bool stats = false;
 SceneParser *sp;
 void render(){};
 
@@ -121,6 +122,10 @@ void prase_cmd(int argc, char *argv[])
         {
             shadows = true;
         }
+        else if (!strcmp(argv[i], "-stats"))
+        {
+            stats = true;
+        }
         else if (!strcmp(argv[i], "-grid"))
         {
             is_grid = true;
@@ -135,7 +140,6 @@ void prase_cmd(int argc, char *argv[])
             nz = atoi(argv[i]);
         }
         else
-
         {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
             assert(0);

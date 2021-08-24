@@ -84,7 +84,7 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
     _n.Normalize();
 
     Vec3f min = boundingBox->getMin();
-    Vec3f max = Vec3f(boundingBox->getMax().x(), boundingBox->getMax().y() , boundingBox->getMax().z());
+    Vec3f max = Vec3f(boundingBox->getMax().x(), boundingBox->getMax().y(), boundingBox->getMax().z());
     Vec3f size = max - min;
     float grid_x = size.x() / nx;
     float grid_y = size.y() / ny;
@@ -137,18 +137,46 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
     bool result = false;
     MarchingInfo mi;
     initializeRayMarch(mi, r, tmin);
+    Vec3f g_min = this->boundingBox->getMin();
+    Vec3f g_max = this->boundingBox->getMax();
+    Vec3f g_size = g_max - g_min;
+    float grid_x = g_size.x() / this->nx;
+    float grid_y = g_size.y() / this->ny;
+    float grid_z = g_size.z() / this->nz;
     if (mi.tmin < h.getT())
     {
+        // while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
+        // {
+        //     if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
+        //     {
+        //         if (objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material == nullptr)
+        //             objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
+        //         h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material, mi.normal, r);
+        //         result = true;
+        //         break;
+        //     }
+        //     mi.nextCell();
+        // }
         while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
         {
-            if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
+            int grid_id = (mi.i * ny + mi.j) * nz + mi.k;
+            if (m_is_voxel_opaque[grid_id])
             {
-                if (objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material == nullptr)
-                    objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
-                h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material, mi.normal, r);
-                result = true;
-                break;
+                for (int i = 0; i < objs[grid_id].size(); i++)
+                {
+                    objs[grid_id][i]->intersect(r, h, tmin);
+                    Vec3f p = h.getIntersectionPoint();
+                    Vec3f rp = p - g_min;
+                    if (rp.x() >= mi.i * grid_x && rp.x() <= (mi.i + 1) * grid_x && rp.y() >= mi.j * grid_y && rp.y() <= (mi.j + 1) * grid_y && rp.z() >= mi.k * grid_z && rp.z() <= (mi.k + 1) * grid_z)
+                    {
+                        h.set(mi.tmin, objs[grid_id][i]->material, mi.normal, r);
+                        result = true;
+                        break;
+                    }
+                }
             }
+            if(result)
+                return result;
             mi.nextCell();
         }
     }
