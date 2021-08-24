@@ -16,6 +16,11 @@ void Grid::insertIntoThis(int i, bool v, Object3D *obj)
     objs[i].push_back(obj);
 }
 
+void Grid::insertInfObj(Object3D *obj)
+{
+    inf_objs.push_back(obj);
+}
+
 void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
 {
     const Vec3f D = r.getDirection();
@@ -143,20 +148,13 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
     float grid_x = g_size.x() / this->nx;
     float grid_y = g_size.y() / this->ny;
     float grid_z = g_size.z() / this->nz;
+    for (int i = 0; i < this->inf_objs.size(); i++)
+    {
+        result = inf_objs[i]->intersect(r, h, tmin) || result;
+    }
+    Hit pri_h(h);
     if (mi.tmin < h.getT())
     {
-        // while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
-        // {
-        //     if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
-        //     {
-        //         if (objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material == nullptr)
-        //             objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
-        //         h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material, mi.normal, r);
-        //         result = true;
-        //         break;
-        //     }
-        //     mi.nextCell();
-        // }
         while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
         {
             int grid_id = (mi.i * ny + mi.j) * nz + mi.k;
@@ -164,18 +162,24 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
             {
                 for (int i = 0; i < objs[grid_id].size(); i++)
                 {
-                    objs[grid_id][i]->intersect(r, h, tmin);
-                    Vec3f p = h.getIntersectionPoint();
-                    Vec3f rp = p - g_min;
-                    if (rp.x() >= mi.i * grid_x && rp.x() <= (mi.i + 1) * grid_x && rp.y() >= mi.j * grid_y && rp.y() <= (mi.j + 1) * grid_y && rp.z() >= mi.k * grid_z && rp.z() <= (mi.k + 1) * grid_z)
+                    //try to intersect all the primitives in the cell
+                    bool tmpres = objs[grid_id][i]->intersect(r, h, tmin);
+                    if (tmpres)
                     {
-                        h.set(mi.tmin, objs[grid_id][i]->material, mi.normal, r);
-                        result = true;
-                        break;
+                        //get the intersection point
+                        Vec3f p = h.getIntersectionPoint();
+                        Vec3f rp = p - g_min;
+                        //if the intersectionpoint is in the cell
+                        if (rp.x() >= mi.i * grid_x && rp.x() <= (mi.i + 1) * grid_x && rp.y() >= mi.j * grid_y && rp.y() <= (mi.j + 1) * grid_y && rp.z() >= mi.k * grid_z && rp.z() <= (mi.k + 1) * grid_z)
+                        {
+                            return true;
+                        }
+                        //else, reset the hit
+                        h = pri_h;
                     }
                 }
             }
-            if(result)
+            if (result)
                 return result;
             mi.nextCell();
         }
