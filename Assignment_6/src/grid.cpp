@@ -181,9 +181,16 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                 {
                     for (int i = 0; i < objs[grid_id].size(); i++)
                     {
+                        bool tmpres;
                         //try to intersect all the primitives in the cell
-                        bool tmpres = objs[grid_id][i]->intersect(r, h, tmin);
-                        // cnt++;
+                        if (objs[grid_id][i]->pretrans_mat)
+                        {
+                            objs[grid_id][i] = new Transform(*(objs[grid_id][i]->pretrans_mat), objs[grid_id][i]);
+                            tmpres = objs[grid_id][i]->intersect(r, h, tmin);
+                        }
+                        else
+                            tmpres = objs[grid_id][i]->intersect(r, h, tmin);
+                            // cnt++;
                         if (tmpres)
                         {
                             //get the intersection point

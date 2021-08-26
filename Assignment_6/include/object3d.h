@@ -14,6 +14,7 @@ protected:
     BoundingBox *boundingBox = nullptr;
 
 public:
+    Matrix *pretrans_mat;
     Material *material;
     bool _isTriangle = false;
     Vec3f _a;
@@ -21,7 +22,7 @@ public:
     Vec3f _c;
 
 public:
-    Object3D() : material(nullptr){};
+    Object3D() : material(nullptr), pretrans_mat(nullptr){};
     Object3D(Material *m) : material(m){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
     virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin)

@@ -19,13 +19,14 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
 {
     if (m != nullptr)
     {
+        this->pretrans_mat = m;
         this->boundingBox = (new Transform(*m, this))->getBoundingBox();
         Vec3f m_min = boundingBox->getMin();
         Vec3f m_max = boundingBox->getMax();
         Vec3f v = g->getGird();
         BoundingBox *bb = g->getBoundingBox();
         Vec3f min = bb->getMin();
-        Vec3f max = bb->getMax();
+        Vec3f max = Vec3f(bb->getMax().x(), bb->getMax().y(), bb->getMax().z());
         int x = v.x();
         int y = v.y();
         int z = v.z();
@@ -41,30 +42,24 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
         int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
         int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
 
-        if (_start_i == _end_i)
-            _start_i--;
-        if (_start_j == _end_j)
-            _start_j--;
-        if (_start_k == _end_k)
-            _start_k--;
-        if (_start_i > _end_i)
-            swap(_start_i, _end_i);
-        if (_start_j > _end_j)
-            swap(_start_j, _end_j);
-        if (_start_k > _end_k)
-            swap(_start_k, _end_k);
-        if (_end_i > x)
-            _end_i--;
-        if (_end_j > y)
-            _end_j--;
-        if (_end_k > z)
-            _end_k--;
-
-        for (int _i = _start_i; _i < _end_i; _i++)
+        if (_end_i >= x)
         {
-            for (int _j = _start_j; _j < _end_j; _j++)
+            _end_i = x - 1;
+        }
+
+        if (_end_j >= y)
+        {
+            _end_j = y - 1;
+        }
+        if (_end_k >= z)
+        {
+            _end_k = z - 1;
+        }
+        for (int _i = _start_i; _i <= _end_i; _i++)
+        {
+            for (int _j = _start_j; _j <= _end_j; _j++)
             {
-                for (int _k = _start_k; _k < _end_k; _k++)
+                for (int _k = _start_k; _k <= _end_k; _k++)
                 {
                     g->insertIntoThis((_i * y + _j) * z + _k, true, this);
                 }

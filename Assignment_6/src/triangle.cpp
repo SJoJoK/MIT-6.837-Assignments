@@ -78,6 +78,7 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m)
 {
     if (m != nullptr)
     {
+        this->pretrans_mat = m;
         this->boundingBox = (new Transform(*m, this))->getBoundingBox();
     }
     Vec3f m_min = boundingBox->getMin();
