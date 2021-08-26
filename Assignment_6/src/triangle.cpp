@@ -100,45 +100,25 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m)
     int _end_i = (fabs(m_max.x() - min.x())) * (1 / grid_x);
     int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
     int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
-
-    if (_start_i > _end_i)
-        swap(_start_i, _end_i);
-    if (_start_j > _end_j)
-        swap(_start_j, _end_j);
-    if (_start_k > _end_k)
-        swap(_start_k, _end_k);
-
-    if (_start_i == _end_i)
-        _end_i++;
-    if (_start_j == _end_j)
-        _end_j++;
-    if (_start_k == _end_k)
-        _end_k++;
     
-    while(_end_i>x)
+    if(_end_i>=x)
     {
-        _end_i--;
-        _start_i--;
+        _end_i = x - 1;
     }
 
-    while(_end_j>y)
+    if(_end_j>=y)
     {
-        _end_j--;
-        _start_j--;
+        _end_j = y - 1;
     }
-
-        while(_end_k>z)
+    if(_end_k>=z)
     {
-        _end_k--;
-        _start_k--;
+        _end_k = z - 1;
     }
-    assert(_end_i <= x && _end_j <= y && _end_k <= z);
-
-    for (int _i = _start_i; _i < _end_i; _i++)
+    for (int _i = _start_i; _i <= _end_i; _i++)
     {
-        for (int _j = _start_j; _j < _end_j; _j++)
+        for (int _j = _start_j; _j <= _end_j; _j++)
         {
-            for (int _k = _start_k; _k < _end_k; _k++)
+            for (int _k = _start_k; _k <= _end_k; _k++)
             {
                 g->insertIntoThis((_i * y + _j) * z + _k, true, this);
             }
