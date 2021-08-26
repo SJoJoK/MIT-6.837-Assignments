@@ -101,20 +101,12 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m)
     int _end_i = (fabs(m_max.x() - min.x())) * (1 / grid_x);
     int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
     int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
-    
-    if(_end_i>=x)
-    {
-        _end_i = x - 1;
-    }
-
-    if(_end_j>=y)
-    {
-        _end_j = y - 1;
-    }
-    if(_end_k>=z)
-    {
-        _end_k = z - 1;
-    }
+    _start_i = _start_i >= x ? x - 1 : _start_i;
+    _start_j = _start_j >= y ? y - 1 : _start_j;
+    _start_k = _start_k >= z ? z - 1 : _start_k;
+    _end_i = _end_i >= x ? x - 1 : _end_i;
+    _end_j = _end_j >= y ? y - 1 : _end_j;
+    _end_k = _end_k >= z ? z - 1 : _end_k;
     for (int _i = _start_i; _i <= _end_i; _i++)
     {
         for (int _j = _start_j; _j <= _end_j; _j++)
