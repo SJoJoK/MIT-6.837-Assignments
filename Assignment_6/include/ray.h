@@ -15,6 +15,8 @@ class Ray
 {
 
 public:
+    int x;
+    int y;
     // CONSTRUCTOR & DESTRUCTOR
     Ray() {}
     Ray(const Vec3f &orig, const Vec3f &dir)

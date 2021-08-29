@@ -99,13 +99,13 @@ public:
 
 class Triangle : public Object3D
 {
-private:
+public:
     Vec3f normal;
     Vec3f a;
     Vec3f b;
     Vec3f c;
 
-public:
+
     Triangle();
     Triangle(Vec3f &a, Vec3f &b, Vec3f &c, Material *m);
     virtual bool intersect(const Ray &r, Hit &h, float tmin);

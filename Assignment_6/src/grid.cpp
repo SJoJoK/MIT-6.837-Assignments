@@ -140,7 +140,10 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
 
 bool Grid::intersect(const Ray &r, Hit &h, float tmin)
 {
-    // static int cnt = 0;
+    if(r.x==26&&r.y==22)
+    {
+        cout << "aha" << endl;
+    }
     bool result = false;
     MarchingInfo mi;
     initializeRayMarch(mi, r, tmin);
@@ -203,7 +206,22 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                                 rp.y() + epsilon >= mi.j * grid_y && rp.y() - epsilon <= (mi.j + 1) * grid_y &&
                                 rp.z() + epsilon >= mi.k * grid_z && rp.z() - epsilon <= (mi.k + 1) * grid_z)
                             {
-                                return true;
+                                // if (h.getNormal()[0] < 0 && h.getNormal()[1] < 0 && h.getNormal()[2] < 0)
+                                // {
+                                //     cout << h.getIntersectionPoint() << endl
+                                //          << h.getNormal() << endl
+                                //          << Vec3f(mi.i, mi.j, mi.k) << endl
+                                //          << Vec3f(r.x, r.y, 0) << endl
+                                //          << endl;
+                                //     cout << "In this GRID, the objs normal are" << endl;
+                                //     for (int ii = 0; ii < objs[grid_id].size(); ii++)
+                                //     {
+                                //         cout << ((Triangle *)objs[grid_id][ii])->normal << endl;
+                                //     }
+                                //     cout << endl;
+                                // }
+                                result = true;
+                                continue;
                             }
                             //else, reset the hit
                             // cout << "The relatvie intersect point is " << rp << endl;

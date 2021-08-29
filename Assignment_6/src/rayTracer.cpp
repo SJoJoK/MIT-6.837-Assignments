@@ -179,26 +179,26 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
             cout << "Color: " << color << endl;
         }
 
-        if (debug_next)
-        {
-            cout << "GGGGGGGGGGGGGGGGGGGG" << endl;
-            cout << hit.getIntersectionPoint() << endl;
-            cout << hit.getNormal() << endl;
-            cout << "GGGGGGGGGGGGGGGGGGGG" << endl;
-            debug_next = false;
-        }
+        // if (debug_next)
+        // {
+        //     cout << "GGGGGGGGGGGGGGGGGGGG" << endl;
+        //     cout << hit.getIntersectionPoint() << endl;
+        //     cout << hit.getNormal() << endl;
+        //     cout << "GGGGGGGGGGGGGGGGGGGG" << endl;
+        //     debug_next = false;
+        // }
 
-        if ((color - Vec3f(0.4, 0.4, 0.32)).Length() <= 0.09 
-            && ray.getDirection().y()>(-0.2)
-            )
-        {
-            color = Vec3f(0, 0, 0);
-            cout << "FFFFFFFFFFFFFFFFFFFFF" << endl;
-            cout << hit.getIntersectionPoint() << endl;
-            cout << hit.getNormal() << endl;
-            cout << "FFFFFFFFFFFFFFFFFFFFF" << endl;
-            debug_next = true;
-        }
+        // if ((color - Vec3f(0.4, 0.4, 0.32)).Length() <= 0.09 
+        //     && ray.getDirection().y()>(-0.2)
+        //     )
+        // {
+        //     color = Vec3f(0, 0, 0);
+        //     cout << "FFFFFFFFFFFFFFFFFFFFF" << endl;
+        //     cout << hit.getIntersectionPoint() << endl;
+        //     cout << hit.getNormal() << endl;
+        //     cout << "FFFFFFFFFFFFFFFFFFFFF" << endl;
+        //     debug_next = true;
+        // }
         return color;
     }
     return this->background_color;

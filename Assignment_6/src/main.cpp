@@ -13,14 +13,14 @@
 #include <vector>
 
 char *input_file = (char *)"test.txt";
-int width = 50;
-int height = 50;
+int width = 500;
+int height = 500;
 char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
-bool shade_back = true;
+bool shade_back = false;
 int theta_steps = 20;
 int phi_steps = 20;
 bool gui = false;
@@ -182,12 +182,9 @@ int main(int argc, char *argv[])
             float fx = x / (float)width;
             float fy = y / (float)height;
 
-            if (x == 10 && y == 10)
-            {
-                cout << x << y << endl;
-            }
-
             Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
+            r.x = x;
+            r.y = y;
             Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
             Vec3f color;
             if (false)
@@ -214,7 +211,7 @@ int main(int argc, char *argv[])
     }
     if (output_file != nullptr)
     {
-        image->SaveTGA(output_file);
+        image->SavePPM(output_file);
     }
     if (depth_file != nullptr)
     {
