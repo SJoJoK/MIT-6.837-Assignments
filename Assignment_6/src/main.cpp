@@ -13,14 +13,14 @@
 #include <vector>
 
 char *input_file = (char *)"test.txt";
-int width = 100;
-int height = 100;
+int width = 50;
+int height = 50;
 char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
-bool shade_back = false;
+bool shade_back = true;
 int theta_steps = 20;
 int phi_steps = 20;
 bool gui = false;
