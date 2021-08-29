@@ -13,8 +13,8 @@
 #include <vector>
 
 char *input_file = (char *)"test.txt";
-int width = 500;
-int height = 500;
+int width = 100;
+int height = 100;
 char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
@@ -29,9 +29,9 @@ int max_bounces = 1;
 float cutoff_weight = 0.01;
 bool shadows = false;
 float epsilon = 0.01;
-bool is_grid = false;
+bool is_grid = true;
 int nx = 15;
-int ny = 15;
+int ny = 30;
 int nz = 15;
 bool visualize_grid = false;
 bool stats = false;

@@ -26,7 +26,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
         Vec3f v = g->getGird();
         BoundingBox *bb = g->getBoundingBox();
         Vec3f min = bb->getMin();
-        Vec3f max = Vec3f(bb->getMax().x(), bb->getMax().y(), bb->getMax().z());
+        Vec3f max = bb->getMax();
         int x = v.x();
         int y = v.y();
         int z = v.z();

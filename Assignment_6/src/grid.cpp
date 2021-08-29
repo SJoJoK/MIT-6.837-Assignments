@@ -161,11 +161,13 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
         {
             while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
             {
-                if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
+                int grid_id = (mi.i * ny + mi.j) * nz + mi.k;
+                if (m_is_voxel_opaque[grid_id])
                 {
-                    if (objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material == nullptr)
-                        objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material = new PhongMaterial(Vec3f(0.5, 0.5, 0.5));
-                    h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material, mi.normal, r);
+                    if (objs[grid_id][0]->material == nullptr)
+                        objs[grid_id][0]->material = new PhongMaterial(Vec3f(0.5, 0.5, 0.5));
+                    Vec3f voxel_color(objs[grid_id].size() / 20.0f, 1 - objs[grid_id].size() / 20.0f, 0);
+                    h.set(mi.tmin, new PhongMaterial(voxel_color), mi.normal, r);
                     result = true;
                     break;
                 }
@@ -196,7 +198,6 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                             //get the intersection point
                             Vec3f p = h.getIntersectionPoint();
                             Vec3f rp = p - g_min;
-                            // return true;
                             //if the intersectionpoint is in the cell
                             if (rp.x() + epsilon >= mi.i * grid_x && rp.x() - epsilon <= (mi.i + 1) * grid_x &&
                                 rp.y() + epsilon >= mi.j * grid_y && rp.y() - epsilon <= (mi.j + 1) * grid_y &&

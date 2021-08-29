@@ -86,7 +86,7 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m)
     Vec3f v = g->getGird();
     BoundingBox *bb = g->getBoundingBox();
     Vec3f min = bb->getMin();
-    Vec3f max = Vec3f(bb->getMax().x(), bb->getMax().y(), bb->getMax().z());
+    Vec3f max = bb->getMax();
     int x = v.x();
     int y = v.y();
     int z = v.z();
@@ -95,12 +95,18 @@ void Triangle::insertIntoGrid(Grid *g, Matrix *m)
     float grid_y = size.y() / y;
     float grid_z = size.z() / z;
 
-    int _start_i = (fabs(m_min.x() - min.x())) * (1 / grid_x);
-    int _start_j = (fabs(m_min.y() - min.y())) * (1 / grid_y);
-    int _start_k = (fabs(m_min.z() - min.z())) * (1 / grid_z);
-    int _end_i = (fabs(m_max.x() - min.x())) * (1 / grid_x);
-    int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
-    int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
+    int _start_i = (m_min.x() - min.x()) * (1 / grid_x) - 1;
+    int _start_j = (m_min.y() - min.y()) * (1 / grid_y) - 1;
+    int _start_k = (m_min.z() - min.z()) * (1 / grid_z) - 1;
+    int _end_i = (m_max.x() - min.x()) * (1 / grid_x) + 1;
+    int _end_j = (m_max.y() - min.y()) * (1 / grid_y) + 1;
+    int _end_k = (m_max.z() - min.z()) * (1 / grid_z) + 1;
+    _start_i = _start_i <= 0 ? 0 : _start_i;
+    _start_j = _start_j <= 0 ? 0 : _start_j;
+    _start_k = _start_k <= 0 ? 0 : _start_k;
+    _end_i = _end_i <= 0 ? 0 : _end_i;
+    _end_j = _end_j <= 0 ? 0 : _end_j;
+    _end_k = _end_k <= 0 ? 0 : _end_k;
     _start_i = _start_i >= x ? x - 1 : _start_i;
     _start_j = _start_j >= y ? y - 1 : _start_j;
     _start_k = _start_k >= z ? z - 1 : _start_k;
