@@ -246,6 +246,7 @@ public:
     Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
     {
         Vec3f p = hit.getIntersectionPoint();
+        mat->Transform(p);
         float c = sin(frequency * p.x() + amplitude * Noise::NoiseCalculate(p, octaves));
         Vec3f color1 = material1->Shade(ray, hit, dirToLight, lightColor);
         Vec3f color2 = material2->Shade(ray, hit, dirToLight, lightColor);
