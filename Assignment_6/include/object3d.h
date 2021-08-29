@@ -23,7 +23,7 @@ public:
 
 public:
     Object3D() : material(nullptr), pretrans_mat(nullptr){};
-    Object3D(Material *m) : material(m){};
+    Object3D(Material *m) : material(m), pretrans_mat(nullptr){};
     virtual bool intersect(const Ray &r, Hit &h, float tmin) = 0;
     virtual bool intersectShadowRay(const Ray &r, Hit &h, float tmin)
     {
