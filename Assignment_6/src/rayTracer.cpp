@@ -177,6 +177,13 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
             }
             cout << "Color: " << color << endl;
         }
+        if ((color - Vec3f(0.4, 0.4, 0.32)).Length() <= 0.09 
+            && ray.getDirection().y()>0
+            )
+        {
+            cout << ray.getDirection() << endl;
+            color = Vec3f(0, 0, 0);
+            }
         return color;
     }
     return this->background_color;
