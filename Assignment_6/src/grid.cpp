@@ -140,10 +140,6 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
 
 bool Grid::intersect(const Ray &r, Hit &h, float tmin)
 {
-    if(r.x==26&&r.y==22)
-    {
-        cout << "aha" << endl;
-    }
     bool result = false;
     MarchingInfo mi;
     initializeRayMarch(mi, r, tmin);
