@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 2.8)
 if (POLICY CMP0072)
   set(OpenGL_GL_PREFERENCE LEGACY)
 endif()
+IF (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+	MESSAGE(STATUS "current platform: Windows")
+  list(APPEND CMAKE_PREFIX_PATH "E:/Utils/freeglut")
+  list(APPEND CMAKE_PREFIX_PATH "E:/Utils/glew-2.1.0")
+ENDIF ()
 project(raytracer)
 # Suppress warnings of the deprecation of glut functions on macOS.
 # Find the packages we need.
@@ -12,6 +17,9 @@ find_package(GLUT REQUIRED)
 find_package(GLEW REQUIRED)
 # OPENGL_INCLUDE_DIR, GLUT_INCLUDE_DIR, OPENGL_LIBRARIES, and GLUT_LIBRARIES
 # are CMake built-in variables defined when the packages are found.
+message(STATUS "OPENGL_INCLUDE_DIR:= ${OPENGL_INCLUDE_DIR}")
+message(STATUS "OPENGL_LIBRARY:= ${OPENGL_LIBRARY}")
+message(STATUS "OPENGL_LIBRARIES:= ${OPENGL_LIBRARIES}")
 set(INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
 set(LIBRARIES ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 # If not on macOS, add glew include directory and library path to lists.

@@ -9,9 +9,10 @@
 #include "object3d.h"
 #include "scene_parser.h"
 #include "rayTracer.h"
+#include "sampler.h"
+#include "film.h"
 #include <iostream>
 #include <vector>
-
 char *input_file = (char *)"test.txt";
 int width = 500;
 int height = 500;
@@ -20,6 +21,7 @@ float depth_min = 8;
 float depth_max = 12;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
+char *sample_file = nullptr;
 bool shade_back = false;
 int theta_steps = 20;
 int phi_steps = 20;
@@ -35,9 +37,13 @@ int ny = 30;
 int nz = 15;
 bool visualize_grid = false;
 bool stats = false;
+bool random_sample = false;
+bool uniform_sample = false;
+bool jittered_sample = false;
+int sample_num = 1;
+float zoom_factor = 1.0f;
 SceneParser *sp;
 void render(){};
-
 void prase_cmd(int argc, char *argv[])
 {
     for (int i = 1; i < argc; i++)
@@ -139,6 +145,36 @@ void prase_cmd(int argc, char *argv[])
             assert(i < argc);
             nz = atoi(argv[i]);
         }
+        else if (!strcmp(argv[i], "-random_samples"))
+        {
+            random_sample = true;
+            i++;
+            assert(i < argc);
+            sample_num = atof(argv[i]);
+        }
+        else if (!strcmp(argv[i], "-uniform_samples"))
+        {
+            uniform_sample = true;
+            i++;
+            assert(i < argc);
+            sample_num = atof(argv[i]);
+        }
+        else if (!strcmp(argv[i], "-jittered_samples"))
+        {
+            jittered_sample = true;
+            i++;
+            assert(i < argc);
+            sample_num = atof(argv[i]);
+        }
+        else if (!strcmp(argv[i], "-render_samples"))
+        {
+            i++;
+            assert(i < argc);
+            sample_file = argv[i];
+            i++;
+            assert(i < argc);
+            zoom_factor = atof(argv[i]);
+        }
         else
         {
             printf("whoops error with command line argument %d: '%s'\n", i, argv[i]);
@@ -175,51 +211,69 @@ int main(int argc, char *argv[])
     {
         precalc = 1.0f;
     }
+    Sampler *spr;
+    if (random_sample)
+    {
+        spr = new RandomSampler(sample_num);
+    }
+    else if (jittered_sample)
+    {
+        spr = new JitteredSampler(sample_num);
+    }
+    else
+    {
+        spr = new UniformSampler(sample_num);
+    }
+    Film film(width, height, sample_num);
 
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
         {
-            float fx = x / (float)width;
-            float fy = y / (float)height;
-
-            Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
-            r.x = x;
-            r.y = y;
-            Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
-            Vec3f color;
-            if (false)
+            for (int n = 0; n < sample_num;n++)
             {
-                color = rt->traceRay(r, epsilon, 0, 1, 1, h, true, false);
-            }
-            else
-            {
+                Vec2f pixel_offset = spr->getSamplePosition(n);
+                float fx = (x+pixel_offset.x()) / (float)width;
+                float fy = (y+pixel_offset.y()) / (float)height;
+                Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
+                r.x = x;
+                r.y = y;
+                Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
+                Vec3f color;
                 color = rt->traceRay(r, epsilon, 0, 1, 1, h, true);
+                Vec3f pt_normal = h.getNormal();
+                float depth = h.getT();
+                depth = max(depth, depth_min);
+                depth = min(depth, depth_max);
+                float gray = 1 - (depth - depth_min) / precalc;
+                film.setSample(x, y, n, pixel_offset, color);
+                // image->SetPixel(x, y, color);
+                depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
+                normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
             }
-            Vec3f pt_normal = h.getNormal();
-            float depth = h.getT();
-            depth = max(depth, depth_min);
-            depth = min(depth, depth_max);
-            float gray = 1 - (depth - depth_min) / precalc;
-            image->SetPixel(x, y, color);
-            depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
-            normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
         }
+    if(sample_file == nullptr)
+    {
+        image->SavePPM((char *)"test_sample.ppm");
+    }
+    else
+    {
+        film.renderSamples(sample_file, zoom_factor);
+    }
     if (output_file == nullptr)
     {
         image->SavePPM((char *)"test.ppm");
-        image->SaveTGA((char *)"test.tga");
     }
-    if (output_file != nullptr)
+    else
     {
         image->SavePPM(output_file);
     }
     if (depth_file != nullptr)
     {
-        depth_image->SaveTGA(depth_file);
+        depth_image->SavePPM(depth_file);
     }
     if (normal_file != nullptr)
     {
-        normal_image->SaveTGA(normal_file);
+        normal_image->SavePPM(normal_file);
     }
     if (gui)
     {
