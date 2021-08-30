@@ -11,6 +11,7 @@
 #include "rayTracer.h"
 #include "sampler.h"
 #include "film.h"
+#include "filter.h"
 #include <iostream>
 #include <vector>
 char *input_file = (char *)"test.txt";
@@ -22,6 +23,7 @@ float depth_max = 12;
 char *depth_file = nullptr;
 char *normal_file = nullptr;
 char *sample_file = nullptr;
+char *filter_file = nullptr;
 bool shade_back = false;
 int theta_steps = 20;
 int phi_steps = 20;
@@ -40,8 +42,14 @@ bool stats = false;
 bool random_sample = false;
 bool uniform_sample = false;
 bool jittered_sample = false;
+bool box_filter = false;
+bool tent_filter = false;
+bool gaussian_filter = false;
+float radius = 0.5;
+float sigma = 0.25;
 int sample_num = 1;
-float zoom_factor = 1.0f;
+int zoom_factor = 1.0f;
+int zoom_factor_1 = 1.0f;
 SceneParser *sp;
 void render(){};
 void prase_cmd(int argc, char *argv[])
@@ -166,6 +174,27 @@ void prase_cmd(int argc, char *argv[])
             assert(i < argc);
             sample_num = atof(argv[i]);
         }
+        else if (!strcmp(argv[i], "-box_filter"))
+        {
+            box_filter = true;
+            i++;
+            assert(i < argc);
+            radius = atof(argv[i]);
+        }
+        else if (!strcmp(argv[i], "-tent_filter"))
+        {
+            tent_filter = true;
+            i++;
+            assert(i < argc);
+            radius = atof(argv[i]);
+        }
+        else if (!strcmp(argv[i], "-gaussian_filter"))
+        {
+            gaussian_filter = true;
+            i++;
+            assert(i < argc);
+            sigma = atof(argv[i]);
+        }
         else if (!strcmp(argv[i], "-render_samples"))
         {
             i++;
@@ -173,7 +202,16 @@ void prase_cmd(int argc, char *argv[])
             sample_file = argv[i];
             i++;
             assert(i < argc);
-            zoom_factor = atof(argv[i]);
+            zoom_factor = atoi(argv[i]);
+        }
+        else if (!strcmp(argv[i], "-render_filter"))
+        {
+            i++;
+            assert(i < argc);
+            filter_file = argv[i];
+            i++;
+            assert(i < argc);
+            zoom_factor_1 = atoi(argv[i]);
         }
         else
         {
@@ -194,16 +232,18 @@ void traceRayFunction(float x, float y)
 int main(int argc, char *argv[])
 {
     prase_cmd(argc, argv);
-
     sp = new SceneParser(input_file);
     RayTracer *rt = new RayTracer(sp);
     Vec3f background_color = sp->getBackgroundColor();
-
+    Sampler *spr;
+    Filter *fltr;
+    Film *film = new Film(width, height, sample_num);
     Image *image = new Image(width, height);
-    image->SetAllPixels(background_color);
     Image *depth_image = new Image(width, height);
-    depth_image->SetAllPixels(Vec3f(0.0, 0.0, 0.0));
     Image *normal_image = new Image(width, height);
+    
+    image->SetAllPixels(background_color);
+    depth_image->SetAllPixels(Vec3f(0.0, 0.0, 0.0));
     normal_image->SetAllPixels(Vec3f(0.0, 0.0, 0.0));
 
     float precalc = depth_max - depth_min;
@@ -211,7 +251,6 @@ int main(int argc, char *argv[])
     {
         precalc = 1.0f;
     }
-    Sampler *spr;
     if (random_sample)
     {
         spr = new RandomSampler(sample_num);
@@ -224,16 +263,28 @@ int main(int argc, char *argv[])
     {
         spr = new UniformSampler(sample_num);
     }
-    Film film(width, height, sample_num);
+
+    if (gaussian_filter)
+    {
+        fltr = new GaussianFilter(sigma);
+    }
+    else if (tent_filter)
+    {
+        fltr = new TentFilter(radius);
+    }
+    else
+    {
+        fltr = new BoxFilter(radius);
+    }
 
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
         {
-            for (int n = 0; n < sample_num;n++)
+            for (int n = 0; n < sample_num; n++)
             {
                 Vec2f pixel_offset = spr->getSamplePosition(n);
-                float fx = (x+pixel_offset.x()) / (float)width;
-                float fy = (y+pixel_offset.y()) / (float)height;
+                float fx = (x + pixel_offset.x()) / (float)width;
+                float fy = (y + pixel_offset.y()) / (float)height;
                 Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
                 r.x = x;
                 r.y = y;
@@ -245,19 +296,32 @@ int main(int argc, char *argv[])
                 depth = max(depth, depth_min);
                 depth = min(depth, depth_max);
                 float gray = 1 - (depth - depth_min) / precalc;
-                film.setSample(x, y, n, pixel_offset, color);
-                // image->SetPixel(x, y, color);
+                film->setSample(x, y, n, pixel_offset, color);
+                
                 depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
                 normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
             }
         }
-    if(sample_file == nullptr)
+    for (int x = 0; x < width; x++)
+        for (int y = 0; y < height; y++)
+        {
+            image->SetPixel(x, y, fltr->getColor(x,y,film));
+        }
+    if (sample_file == nullptr)
     {
-        image->SavePPM((char *)"test_sample.ppm");
+        film->renderSamples((char *)"test_sample.ppm", zoom_factor);
     }
     else
     {
-        film.renderSamples(sample_file, zoom_factor);
+        film->renderSamples(sample_file, zoom_factor);
+    }
+    if (filter_file == nullptr)
+    {
+        film->renderFilter((char *)"test_filter.ppm", zoom_factor_1, fltr);
+    }
+    else
+    {
+        film->renderFilter(filter_file, zoom_factor_1, fltr);
     }
     if (output_file == nullptr)
     {

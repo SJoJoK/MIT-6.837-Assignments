@@ -95,5 +95,5 @@ void Film::renderFilter(char *filter_file, int filter_zoom, Filter *filter)
     }
 
     // save the image
-    image.SaveTGA(filter_file);
+    image.SavePPM(filter_file);
 }
