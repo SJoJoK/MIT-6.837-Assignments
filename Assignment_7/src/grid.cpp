@@ -224,7 +224,7 @@ bool Grid::intersect(const Ray &r, Hit &h, float tmin)
                             // cout << "But the Cell is " << endl
                             //      << "Min:" << Vec3f(mi.i * grid_x, mi.j * grid_y, mi.k * grid_z)
                             //      << " Max:" << Vec3f((mi.i+1) * grid_x, (1+mi.j) * grid_y, (1+mi.k) * grid_z) << endl;
-                            h = pri_h;
+                            if(!result) h = pri_h;
                         }
                     }
                 }
