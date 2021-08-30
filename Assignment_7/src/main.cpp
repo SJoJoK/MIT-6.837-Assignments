@@ -15,8 +15,8 @@
 #include <iostream>
 #include <vector>
 char *input_file = (char *)"test.txt";
-int width = 500;
-int height = 500;
+int width = 9;
+int height = 9;
 char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
@@ -37,7 +37,7 @@ bool is_grid = true;
 int nx = 15;
 int ny = 30;
 int nz = 15;
-bool visualize_grid = false;
+bool visualize_grid = true;
 bool stats = false;
 bool random_sample = false;
 bool uniform_sample = false;
@@ -48,8 +48,8 @@ bool gaussian_filter = false;
 float radius = 0.5;
 float sigma = 0.25;
 int sample_num = 1;
-int zoom_factor = 1.0f;
-int zoom_factor_1 = 1.0f;
+int zoom_factor = 20;
+int zoom_factor_1 = 20;
 SceneParser *sp;
 void render(){};
 void prase_cmd(int argc, char *argv[])
@@ -296,8 +296,7 @@ int main(int argc, char *argv[])
                 depth = max(depth, depth_min);
                 depth = min(depth, depth_max);
                 float gray = 1 - (depth - depth_min) / precalc;
-                film->setSample(x, y, n, pixel_offset, color);
-                
+                film->setSample(x, y, n, pixel_offset, color);                
                 depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
                 normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
             }

@@ -9,11 +9,11 @@ Vec3f Filter::getColor(int i, int j, Film *film)
     float weight = 0;
     for (int _i = i - support_radius; _i <= i + support_radius; _i++)
     {
-        if (_i < 0 || _i > film->getWidth())
+        if (_i < 0 || _i >= film->getWidth())
             continue;
         for (int _j = j - support_radius; _j <= j + support_radius; _j++)
         {
-            if (_j < 0 || _j > film->getHeight())
+            if (_j < 0 || _j >= film->getHeight())
                 continue;
             for (int n = 0; n < num_samples; n++)
             {
