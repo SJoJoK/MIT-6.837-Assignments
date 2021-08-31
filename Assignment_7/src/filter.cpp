@@ -49,7 +49,5 @@ float GaussianFilter::getWeight(float x, float y)
 {
     Vec2f p(x, y);
     float pl = p.Length();
-    if (pl >= 2*sigma)
-        return 0;
     return pow(e, -1 * pl * pl / (2 * sigma * sigma));
 }
