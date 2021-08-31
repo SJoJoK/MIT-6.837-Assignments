@@ -15,8 +15,8 @@
 #include <iostream>
 #include <vector>
 char *input_file = (char *)"test.txt";
-int width = 9;
-int height = 9;
+int width = 180;
+int height = 180;
 char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
@@ -33,7 +33,7 @@ int max_bounces = 1;
 float cutoff_weight = 0.01;
 bool shadows = false;
 float epsilon = 0.01;
-bool is_grid = true;
+bool is_grid = false;
 int nx = 15;
 int ny = 30;
 int nz = 15;
@@ -48,8 +48,8 @@ bool gaussian_filter = false;
 float radius = 0.5;
 float sigma = 0.25;
 int sample_num = 1;
-int zoom_factor = 20;
-int zoom_factor_1 = 20;
+int zoom_factor = 15;
+int zoom_factor_1 = 15;
 SceneParser *sp;
 void render(){};
 void prase_cmd(int argc, char *argv[])
