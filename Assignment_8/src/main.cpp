@@ -5,7 +5,8 @@ using namespace std;
 #include "arg_parser.h"
 #include "glCanvas.h"
 #include "spline_parser.h"
-
+#include <GL/gl.h>
+#include <GL/glut.h>
 // ====================================================================
 // ====================================================================
 
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
     // launch curve editor!
     if (args->gui)
     {
+        glutInit(&argc, argv);
         GLCanvas glcanvas;
         glcanvas.initialize(args, splines);
         // this never returns...

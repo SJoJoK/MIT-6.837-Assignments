@@ -28,13 +28,13 @@ private:
     // HELPER FUNCTIONS
     void DefaultValues()
     {
-        input_file = NULL;
+        input_file = "test.txt";
         output_file = NULL;
         output_bezier_file = NULL;
         output_bspline_file = NULL;
-        gui = 0;
+        gui = 1;
         revolution_tessellation = 10;
-        curve_tessellation = 10;
+        curve_tessellation = 30;
         patch_tessellation = 10;
     }
 

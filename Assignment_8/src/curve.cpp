@@ -28,15 +28,18 @@ void Curve::Paint(ArgParser* args)
     //DRAW THE CURVE
     glColor3f(0.f, 1.f, 0.f);
     glLineWidth(1);
-    glBegin(GL_LINES);
+    glBegin(GL_LINE_STRIP);
     float t = 0;
     float delta = 1.0f / args->curve_tessellation;
     Vec3f curve_pt;
-    for (int i = 0; i <= args->curve_tessellation; i++)
+    for (int c = 0; c < num_p - 3;c++)
     {
-        curve_pt = GBT(i,t);
-        glVertex3f(curve_pt[0], curve_pt[1], curve_pt[2]);
-        t += delta;
+        for (int i = 0; i <= args->curve_tessellation; i++)
+        {
+            curve_pt = GBT(c, t);
+            glVertex3f(curve_pt[0], curve_pt[1], curve_pt[2]);
+            t += delta;
+        }
     }
     glEnd();
 }
