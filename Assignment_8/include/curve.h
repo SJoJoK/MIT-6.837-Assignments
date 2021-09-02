@@ -31,6 +31,8 @@ public:
             }
         );
     };
+    void OutputBezier(FILE *file);
+    void OutputBSpline(FILE *file);
 };
 class BSplineCurve:public Curve
 {
@@ -44,4 +46,6 @@ public:
             1, 0, 0, 0});
         B *= (1 / 6.0f);
     };
+    void OutputBezier(FILE *file);
+    void OutputBSpline(FILE *file);
 };

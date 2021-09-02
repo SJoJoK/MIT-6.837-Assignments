@@ -12,12 +12,12 @@ public:
     virtual void Paint(ArgParser *args){};
 
     // FOR CONVERTING BETWEEN SPLINE TYPES
-    virtual void OutputBezier(FILE *file) {};
+    virtual void OutputBezier(FILE *file){};
     virtual void OutputBSpline(FILE *file){};
 
     // FOR CONTROL POINT PICKING
-    virtual int getNumVertices(){};
-    virtual Vec3f getVertex(int i){};
+    virtual int getNumVertices() { };
+    virtual Vec3f getVertex(int i) { };
 
     // FOR EDITING OPERATIONS
     virtual void moveControlPoint(int selectedPoint, float x, float y){};

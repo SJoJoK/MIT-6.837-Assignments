@@ -50,3 +50,85 @@ Vec3f Curve::GBT(int i, float t)
     B.Transform(T);
     return points[i] * T[0] + points[i + 1] * T[1] + points[i + 2] * T[2] + points[i + 3] * T[3];
 }
+
+void BezierCurve::OutputBezier(FILE *file)
+{
+    fprintf(file, "%s", "bezier\nnum_vertices ");
+    fprintf(file, "%d ", num_p);
+    for (Vec3f pt :points)
+    {
+        fprintf(file, "%.1f %.1f %.1f ", pt[0],pt[1],pt[2]);
+    }
+}
+void BezierCurve::OutputBSpline(FILE *file)
+{
+    BSplineCurve tmp(0);
+    tmp.B.Inverse();
+    Matrix trans = this->B * tmp.B;
+    Vec3f pt;
+    vector<Vec3f *> splines;
+    for (int i = 0; i < num_p - 1; i += 3)
+    {
+        const float o_G[] = {
+            points[i].x(), points[i + 1].x(), points[i + 2].x(), points[i + 3].x(),
+            points[i].y(), points[i + 1].y(), points[i + 2].y(), points[i + 3].y(),
+            points[i].z(), points[i + 1].z(), points[i + 2].z(), points[i + 3].z()};
+        Matrix G = Matrix(o_G);
+        Matrix result_matrix = G * trans;
+        Vec3f vec_result[4] = {
+            Vec3f(result_matrix.Get(0, 0), result_matrix.Get(0, 1), result_matrix.Get(0, 2)),
+            Vec3f(result_matrix.Get(1, 0), result_matrix.Get(1, 1), result_matrix.Get(1, 2)),
+            Vec3f(result_matrix.Get(2, 0), result_matrix.Get(2, 1), result_matrix.Get(2, 2)),
+            Vec3f(result_matrix.Get(3, 0), result_matrix.Get(3, 1), result_matrix.Get(3, 2))};
+        splines.push_back(vec_result);
+    }
+    for (Vec3f *spl : splines)
+    {
+        fprintf(file, "%s", "bspline num_vertices 4 ");
+        fprintf(file, "%.1f %.1f %.1f ", spl[0].x(), spl[0].y(), spl[0].z());
+        fprintf(file, "%.1f %.1f %.1f ", spl[1].x(), spl[1].y(), spl[1].z());
+        fprintf(file, "%.1f %.1f %.1f ", spl[2].x(), spl[2].y(), spl[2].z());
+        fprintf(file, "%.1f %.1f %.1f ", spl[3].x(), spl[3].y(), spl[3].z());
+    }
+}
+
+void BSplineCurve::OutputBezier(FILE *file)
+{
+    BezierCurve tmp(0);
+    tmp.B.Inverse();
+    Matrix trans = this->B * tmp.B;
+    Vec3f pt;
+    vector<Vec3f *> splines;
+    for (int i = 0; i < num_p - 1; i += 3)
+    {
+        const float o_G[] = {
+            points[i].x(), points[i + 1].x(), points[i + 2].x(), points[i + 3].x(),
+            points[i].y(), points[i + 1].y(), points[i + 2].y(), points[i + 3].y(),
+            points[i].z(), points[i + 1].z(), points[i + 2].z(), points[i + 3].z()};
+        Matrix G = Matrix(o_G);
+        Matrix result_matrix = G * trans;
+        Vec3f vec_result[4] = {
+            Vec3f(result_matrix.Get(0, 0), result_matrix.Get(0, 1), result_matrix.Get(0, 2)),
+            Vec3f(result_matrix.Get(1, 0), result_matrix.Get(1, 1), result_matrix.Get(1, 2)),
+            Vec3f(result_matrix.Get(2, 0), result_matrix.Get(2, 1), result_matrix.Get(2, 2)),
+            Vec3f(result_matrix.Get(3, 0), result_matrix.Get(3, 1), result_matrix.Get(3, 2))};
+        splines.push_back(vec_result);
+    }
+    for (Vec3f *spl : splines)
+    {
+        fprintf(file, "%s", "bspline num_vertices 4 ");
+        fprintf(file, "%.1f %.1f %.1f ", spl[0].x(), spl[0].y(), spl[0].z());
+        fprintf(file, "%.1f %.1f %.1f ", spl[1].x(), spl[1].y(), spl[1].z());
+        fprintf(file, "%.1f %.1f %.1f ", spl[2].x(), spl[2].y(), spl[2].z());
+        fprintf(file, "%.1f %.1f %.1f ", spl[3].x(), spl[3].y(), spl[3].z());
+    }
+}
+void BSplineCurve::OutputBSpline(FILE *file)
+{
+    fprintf(file, "%s", "bspline\nnum_vertices ");
+    fprintf(file, "%d ", num_p);
+    for (Vec3f pt : points)
+    {
+        fprintf(file, "%.1f %.1f %.1f ", pt[0], pt[1], pt[2]);
+    }
+}
