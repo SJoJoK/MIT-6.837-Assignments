@@ -1,10 +1,13 @@
 #pragma once
+#include "vector"
 #include "arg_parser.h"
 #include "vectors.h"
+#include "matrix.h"
 #include "triangle_mesh.h"
 class Spline
 {
 public:
+    vector<Vec3f> points;
     // FOR VISUALIZATION
     virtual void Paint(ArgParser *args){};
 
