@@ -2,10 +2,10 @@
 #include "matrix.h"
 #include <GL/glut.h>
 #include <GL/gl.h>
-void Curve::Paint(ArgParser* args)
+void Curve::Paint(ArgParser *args)
 {
     //DRAW THE POLYGON
-    glColor3f(0,0,1);
+    glColor3f(0, 0, 1);
     glLineWidth(1);
     glBegin(GL_LINES);
     for (int i = 1; i < num_p; i++)
@@ -16,7 +16,7 @@ void Curve::Paint(ArgParser* args)
     glEnd();
 
     //DRAW THE CONTROL POINTS
-    glColor3f(1,1,1);
+    glColor3f(1, 1, 1);
     glPointSize(5);
     glBegin(GL_POINTS);
     for (int i = 0; i < num_p; i++)
@@ -24,7 +24,11 @@ void Curve::Paint(ArgParser* args)
         glVertex3f(points[i].x(), points[i].y(), points[i].z());
     }
     glEnd();
+}
 
+void BezierCurve::Paint(ArgParser *args)
+{
+    Curve::Paint(args);
     //DRAW THE CURVE
     glColor3f(0.f, 1.f, 0.f);
     glLineWidth(1);
@@ -32,7 +36,29 @@ void Curve::Paint(ArgParser* args)
     float t = 0;
     float delta = 1.0f / args->curve_tessellation;
     Vec3f curve_pt;
-    for (int c = 0; c < num_p - 3;c++)
+    for (int c = 0; c < num_p - 3; c+=3)
+    {
+        for (int i = 0; i <= args->curve_tessellation; i++)
+        {
+            curve_pt = GBT(c, t);
+            glVertex3f(curve_pt[0], curve_pt[1], curve_pt[2]);
+            t += delta;
+        }
+    }
+    glEnd();
+}
+
+void BSplineCurve::Paint(ArgParser *args)
+{
+    Curve::Paint(args);
+    //DRAW THE CURVE
+    glColor3f(0.f, 1.f, 0.f);
+    glLineWidth(1);
+    glBegin(GL_LINE_STRIP);
+    float t = 0;
+    float delta = 1.0f / args->curve_tessellation;
+    Vec3f curve_pt;
+    for (int c = 0; c < num_p - 3; c++)
     {
         for (int i = 0; i <= args->curve_tessellation; i++)
         {
@@ -55,11 +81,12 @@ void BezierCurve::OutputBezier(FILE *file)
 {
     fprintf(file, "%s", "bezier\nnum_vertices ");
     fprintf(file, "%d ", num_p);
-    for (Vec3f pt :points)
+    for (Vec3f pt : points)
     {
-        fprintf(file, "%.1f %.1f %.1f ", pt[0],pt[1],pt[2]);
+        fprintf(file, "%.1f %.1f %.1f ", pt[0], pt[1], pt[2]);
     }
 }
+
 void BezierCurve::OutputBSpline(FILE *file)
 {
     BSplineCurve tmp(0);
@@ -123,6 +150,7 @@ void BSplineCurve::OutputBezier(FILE *file)
         fprintf(file, "%.1f %.1f %.1f ", spl[3].x(), spl[3].y(), spl[3].z());
     }
 }
+
 void BSplineCurve::OutputBSpline(FILE *file)
 {
     fprintf(file, "%s", "bspline\nnum_vertices ");

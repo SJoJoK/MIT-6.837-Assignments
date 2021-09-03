@@ -14,7 +14,7 @@ public:
     {
         points[i] = v;
     }
-    void Paint(ArgParser *args);
+    virtual void Paint(ArgParser *args);
     Vec3f GBT(int i, float t);
 };
 class BezierCurve:public Curve
@@ -31,6 +31,7 @@ public:
             }
         );
     };
+    void Paint(ArgParser *args);
     void OutputBezier(FILE *file);
     void OutputBSpline(FILE *file);
 };
@@ -46,6 +47,7 @@ public:
             1, 0, 0, 0});
         B *= (1 / 6.0f);
     };
+    void Paint(ArgParser *args);
     void OutputBezier(FILE *file);
     void OutputBSpline(FILE *file);
 };
