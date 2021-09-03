@@ -15,7 +15,29 @@ public:
         points[i] = v;
     }
     virtual void Paint(ArgParser *args);
-    Vec3f GBT(int i, float t);
+    virtual void moveControlPoint(int selectedPoint, float x, float y)
+    {
+        points[selectedPoint] = Vec3f(x, y, 0);
+    };
+    virtual void addControlPoint(int selectedPoint, float x, float y)
+    {
+        points.insert(points.begin() + selectedPoint, Vec3f(x, y, 0));
+        num_p++;
+    };
+    virtual void deleteControlPoint(int selectedPoint)
+    {
+        points.erase(points.begin() + selectedPoint);
+        num_p--;
+    };
+    virtual int getNumVertices()
+    {
+        return num_p;
+    };
+    virtual Vec3f getVertex(int i)
+    {
+        return points[i];
+    }
+    Vec3f GBT(int i, float t); 
 };
 class BezierCurve:public Curve
 {
