@@ -38,6 +38,7 @@ void BezierCurve::Paint(ArgParser *args)
     Vec3f curve_pt;
     for (int c = 0; c < num_p - 3; c+=3)
     {
+        t = 0;
         for (int i = 0; i <= args->curve_tessellation; i++)
         {
             curve_pt = GBT(c, t);
@@ -60,6 +61,7 @@ void BSplineCurve::Paint(ArgParser *args)
     Vec3f curve_pt;
     for (int c = 0; c < num_p - 3; c++)
     {
+        t = 0;
         for (int i = 0; i <= args->curve_tessellation; i++)
         {
             curve_pt = GBT(c, t);
@@ -143,7 +145,7 @@ void BSplineCurve::OutputBezier(FILE *file)
     }
     for (Vec3f *spl : splines)
     {
-        fprintf(file, "%s", "bspline num_vertices 4 ");
+        fprintf(file, "%s", "bezier num_vertices 4 ");
         fprintf(file, "%.1f %.1f %.1f ", spl[0].x(), spl[0].y(), spl[0].z());
         fprintf(file, "%.1f %.1f %.1f ", spl[1].x(), spl[1].y(), spl[1].z());
         fprintf(file, "%.1f %.1f %.1f ", spl[2].x(), spl[2].y(), spl[2].z());
