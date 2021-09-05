@@ -48,4 +48,5 @@ TriangleMesh *BezierPatch ::OutputTriangles(ArgParser *args)
         }
         s += delta;
     }
+    return tn;
 }
