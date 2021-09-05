@@ -5,7 +5,8 @@ using namespace std;
 #include "glCanvas.h"
 #include "parser.h"
 #include <cstring>
-
+#include <GL/gl.h>
+#include <GL/glut.h>
 // ====================================================================
 // ====================================================================
 
@@ -70,6 +71,7 @@ int main(int argc, char *argv[])
 
     // launch viewer!   and it never returns...
     GLCanvas glcanvas;
+    glutInit(&argc, argv);
     glcanvas.initialize(parser, refresh, dt, integrator_color,
                         draw_vectors, acceleration_scale, motion_blur);
     return 0;
