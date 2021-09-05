@@ -31,11 +31,11 @@ include_directories(${INCLUDE_DIRS})
 # Search all the .h files in the directory where CMakeLists lies and set them to ${INCLUDE_FILES}.
 file(GLOB SOURCE_FILES src/*.cpp)
 # Add the executable Example to be built from the source files
-add_executable(curve_editor ${SOURCE_FILES})
+add_executable(particle_system ${SOURCE_FILES})
 # Link the executable to the libraries
-target_link_libraries(curve_editor ${LIBRARIES})
+target_link_libraries(particle_system ${LIBRARIES})
 
-target_include_directories(curve_editor
+target_include_directories(particle_system
     PRIVATE 
         ${PROJECT_SOURCE_DIR}/include
 )

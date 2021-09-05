@@ -92,5 +92,4 @@ public:
 
     // for the gui
     virtual void Paint() const;
-    virtual void Restart();
 };
