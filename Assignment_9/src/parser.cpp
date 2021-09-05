@@ -200,10 +200,10 @@ Integrator *Parser::ParseIntegrator()
     {
         answer = new MidpointIntegrator();
     }
-    else if (!strcmp(type, "rungekutta_integrator"))
-    {
-        answer = new RungeKuttaIntegrator();
-    }
+    // else if (!strcmp(type, "rungekutta_integrator"))
+    // {
+    //     answer = new RungeKuttaIntegrator();
+    // }
     else
     {
         printf("WARNING:  unknown integrator type '%s'\n", type);
@@ -275,10 +275,10 @@ ForceField *Parser::ParseForceField()
     {
         answer = new VerticalForceField(magnitude);
     }
-    else if (!strcmp(type, "wind_forcefield"))
-    {
-        answer = new WindForceField(magnitude);
-    }
+    // else if (!strcmp(type, "wind_forcefield"))
+    // {
+    //     answer = new WindForceField(magnitude);
+    // }
     else
     {
         printf("WARNING:  unknown forcefield type '%s'\n", type);

@@ -1,4 +1,6 @@
 #include "generator.h"
+#include "GL/gl.h"
+#include "GL/glu.h"
 int HoseGenerator::numNewParticles(float current_time, float dt) const
 {
     return dt * desired_num_particles / lifespan;
@@ -28,4 +30,13 @@ Particle *RingGenerator::Generate(float current_time, int i)
     float lf = this->lifespan + this->random->next() * this->mass_randomness;
     Particle *pt = new Particle(p, v, color, dead_color, m, lf);
     return pt;
+}
+void RingGenerator::Paint() const
+{
+    glBegin(GL_QUADS);
+    glVertex3f(-10.0, 0.0, 10.0);
+    glVertex3f(10.0, 0.0, 10.0);
+    glVertex3f(10.0, 0.0, -10.0);
+    glVertex3f(-10.0, 0.0, -10.0);
+    glEnd();
 }

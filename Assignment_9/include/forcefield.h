@@ -13,7 +13,7 @@ public:
     {
         this->g = gravity;
     };
-    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t)
+    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
     {
         return g;
     }
@@ -27,7 +27,7 @@ public:
     {
         this->f = force;
     };
-    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t)
+    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
     {
         return f * (1/mass);
     }
@@ -40,7 +40,7 @@ public:
     {
         this->mag = magnitude;
     };
-    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t)
+    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
     {
         return mag * (Vec3f(0, 0, 0) - position);
     }
@@ -53,16 +53,8 @@ public:
     {
         this->mag = magnitude;
     };
-    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t)
+    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
     {
         return mag * (Vec3f(0, -1*position.y(), 0));
     }
-};
-
-class WindForceField
-    : public ForceField
-{
-public:
-    WindForceField(float magnitude){};
-    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const { return Vec3f(); };
 };
