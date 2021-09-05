@@ -37,7 +37,15 @@ public:
     {
         return points[i];
     }
-    Vec3f GBT(int i, float t); 
+    virtual int getNumCurves()
+    {
+        return 0;
+    }
+    virtual vector<Vec3f> getPoints(ArgParser *args)
+    {
+        ;
+    }
+    Vec3f GBT(int i, float t);
 };
 class BezierCurve:public Curve
 {
@@ -53,6 +61,11 @@ public:
             }
         );
     };
+    virtual int getNumCurves()
+    {
+        return (num_p - 1) / 3;
+    }
+    virtual vector<Vec3f> getPoints(ArgParser *args);
     void Paint(ArgParser *args);
     void OutputBezier(FILE *file);
     void OutputBSpline(FILE *file);
@@ -69,6 +82,11 @@ public:
             1, 0, 0, 0});
         B *= (1 / 6.0f);
     };
+    virtual int getNumCurves()
+    {
+        return num_p - 3;
+    }
+    virtual vector<Vec3f> getPoints(ArgParser *args);
     void Paint(ArgParser *args);
     void OutputBezier(FILE *file);
     void OutputBSpline(FILE *file);

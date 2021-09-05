@@ -49,6 +49,25 @@ void BezierCurve::Paint(ArgParser *args)
     glEnd();
 }
 
+vector<Vec3f> BezierCurve::getPoints(ArgParser *args)
+{
+    float t = 0;
+    float delta = 1.0f / args->curve_tessellation;
+    vector<Vec3f> curve_pts;
+    Vec3f curve_pt;
+    for (int c = 0; c < num_p - 3; c += 3)
+    {
+        t = 0;
+        for (int i = 0; i <= args->curve_tessellation; i++)
+        {
+            curve_pt = GBT(c, t);
+            curve_pts.push_back(curve_pt);
+            t += delta;
+        }
+    }
+    return curve_pts;
+}
+
 void BSplineCurve::Paint(ArgParser *args)
 {
     Curve::Paint(args);
@@ -70,6 +89,25 @@ void BSplineCurve::Paint(ArgParser *args)
         }
     }
     glEnd();
+}
+
+vector<Vec3f> BSplineCurve::getPoints(ArgParser *args)
+{
+    float t = 0;
+    float delta = 1.0f / args->curve_tessellation;
+    vector<Vec3f> curve_pts;
+    Vec3f curve_pt;
+    for (int c = 0; c < num_p - 3; c++)
+    {
+        t = 0;
+        for (int i = 0; i <= args->curve_tessellation; i++)
+        {
+            curve_pt = GBT(c, t);
+            curve_pts.push_back(curve_pt);
+            t += delta;
+        }
+    }
+    return curve_pts;
 }
 
 Vec3f Curve::GBT(int i, float t)
