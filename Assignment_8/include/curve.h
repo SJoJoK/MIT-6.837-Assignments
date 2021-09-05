@@ -46,6 +46,7 @@ public:
         ;
     }
     Vec3f GBT(int i, float t);
+    Vec3f GBT(Vec3f p0, Vec3f p1, Vec3f p2, Vec3f p3, float t);
 };
 class BezierCurve:public Curve
 {

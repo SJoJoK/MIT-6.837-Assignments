@@ -117,6 +117,13 @@ Vec3f Curve::GBT(int i, float t)
     return points[i] * T[0] + points[i + 1] * T[1] + points[i + 2] * T[2] + points[i + 3] * T[3];
 }
 
+Vec3f Curve::GBT(Vec3f p0, Vec3f p1, Vec3f p2, Vec3f p3, float t)
+{
+    Vec4f T(pow(t, 3), pow(t, 2), pow(t, 1), 1);
+    B.Transform(T);
+    return p0 * T[0] + p1 * T[1] + p2 * T[2] + p3 * T[3];
+}
+
 void BezierCurve::OutputBezier(FILE *file)
 {
     fprintf(file, "%s", "bezier\nnum_vertices ");

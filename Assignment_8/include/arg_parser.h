@@ -29,7 +29,7 @@ private:
     void DefaultValues()
     {
         input_file = (char *)"test.txt";
-        output_file = NULL;
+        output_file = (char *)"output.obj";
         output_bezier_file = (char *)"output_bezier.txt";
         output_bspline_file = (char *)"output_bspline.txt";
         gui = 0;

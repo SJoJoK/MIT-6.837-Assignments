@@ -27,5 +27,8 @@ public:
     // FOR GENERATING TRIANGLES
     virtual TriangleMesh *OutputTriangles(ArgParser *args) { return nullptr; };
 
-    virtual void set(int i, Vec3f v){};
+    virtual void set(int i, Vec3f v)
+    {
+        
+    };
 };

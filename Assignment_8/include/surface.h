@@ -7,7 +7,10 @@ public:
     Curve *c;
     Surface(){};
     Surface(Curve *c) : c(c){};
-
+    void set(int i, Vec3f v)
+    {
+        points[i] = v;
+    }
 };
 class SurfaceOfRevolution:public Surface
 {
@@ -18,4 +21,15 @@ public:
 };
 class BezierPatch:public Surface
 {
+public:
+    BezierPatch()
+    {
+        c = new BezierCurve(4);
+        points.resize(16);
+    };
+    BezierPatch(Curve *c) : Surface(c)
+    {
+        points.resize(16);
+    };
+    TriangleMesh *OutputTriangles(ArgParser *args);
 };
