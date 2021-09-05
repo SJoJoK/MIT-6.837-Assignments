@@ -1,3 +1,4 @@
+#pragma once
 #include "vectors.h"
 class ForceField
 {
