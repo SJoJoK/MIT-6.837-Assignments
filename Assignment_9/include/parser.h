@@ -2,6 +2,7 @@
 #define _PARSER_H_
 
 #include <assert.h>
+#include <cstring>
 #include "vectors.h"
 
 #define MAX_PARSER_TOKEN_LENGTH 100
