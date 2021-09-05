@@ -54,6 +54,14 @@ public:
     };
     virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t)
     {
-        return mag * (Vec3f(position.x(), 0, position.z()));
+        return mag * (Vec3f(0, -1*position.y(), 0));
     }
+};
+
+class WindForceField
+    : public ForceField
+{
+public:
+    WindForceField(float magnitude){};
+    virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const { return Vec3f(); };
 };
