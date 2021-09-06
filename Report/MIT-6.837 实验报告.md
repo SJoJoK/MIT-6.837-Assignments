@@ -403,7 +403,7 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 1
 
-Assignment 1是整个Ray Tracer的基础，非常重要。我初学MIT-6.837时，还认为作业会是使用OpenGL等图形API做一些图形流水线方面的工作，但果然基于物理的Ray Tracer
+Assignment 1是整个Ray Tracer的基础，虽然简单但非常重要，非常有利于理解光线追踪的本质。我初学MIT-6.837时，还认为作业会是使用OpenGL等图形API做一些图形流水线方面的工作，但果然基于物理和直觉的的Ray Tracer才是图形学的精粹。第一次使用纯C++而没有使用任何图形接口实现3D模型的渲染，其成就感也非同小可
 
 ## Curve Editor (Assignment 8)
 
