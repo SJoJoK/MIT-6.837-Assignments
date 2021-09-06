@@ -1,4 +1,3 @@
-#pragma once
 #include <vector>
 #include "image.h"
 #include "matrix.h"
