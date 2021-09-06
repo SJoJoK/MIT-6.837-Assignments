@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     Image img(size, size);
     ifs.ifs_read(input_file);
     ifs.ifs_render(img, num_points, num_iters);
-    img.SaveTGA(output_file);
+    img.SavePPM(output_file);
     cout << "Times of trans:";
     for (int i = 0; i < ifs.n_trans; i++)
         cout << ifs.trans_cnts[i] << " ";
