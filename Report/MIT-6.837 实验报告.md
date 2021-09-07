@@ -2,6 +2,10 @@
 
 孙嘉锴，3180105871
 
+## 目录
+
+[TOC]
+
 ## Iterated Function Systems (Assigment 0)
 
 ### 实验要求
@@ -149,6 +153,22 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 实现一个非常基础的Ray Caster，只有正交相机，物体只有球体，也只有恒定的颜色，支持渲染深度图
 
+#### Assignment 2
+
+在Assignment 1的基础上，增加透视相机，增加平面、三角形、增加漫反射着色，支持渲染法向量图
+
+#### Assignment 3
+
+在之前作业的基础上，使用OpenGL来预览自己的Ray Tracer
+
+#### Assignment 4
+
+#### Assignment 5
+
+#### Assignment 6
+
+#### Assignment 7
+
 ### 实验原理
 
 #### Assignment 1
@@ -168,6 +188,62 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
   * Geometric
 
     ![image-20210906213936009](MIT-6.837 实验报告.assets/image-20210906213936009.png)
+
+#### Assignment 2
+
+* 透视相机
+
+  ![image-20210907152049335](MIT-6.837 实验报告.assets/image-20210907152049335.png)
+
+* 平面求交
+
+  ![image-20210907152927095](MIT-6.837 实验报告.assets/image-20210907152927095.png)
+
+* 三角求交
+
+  ![image-20210907153100088](MIT-6.837 实验报告.assets/image-20210907153100088.png)
+
+  ![image-20210907153108976](MIT-6.837 实验报告.assets/image-20210907153108976.png)
+
+  ![image-20210907153131167](MIT-6.837 实验报告.assets/image-20210907153131167.png)
+
+  ![image-20210907153141311](MIT-6.837 实验报告.assets/image-20210907153141311.png)
+
+* Transform
+
+  对物体的变换
+
+  ![image-20210907153620302](MIT-6.837 实验报告.assets/image-20210907153620302.png)
+
+  ![image-20210907153634583](MIT-6.837 实验报告.assets/image-20210907153634583.png)
+
+  ![image-20210907153702334](MIT-6.837 实验报告.assets/image-20210907153702334.png)
+
+  对光线的变换
+
+  ![image-20210907153458030](MIT-6.837 实验报告.assets/image-20210907153458030.png)
+
+  ![image-20210907153518094](MIT-6.837 实验报告.assets/image-20210907153518094.png)
+
+  对法向量的变换
+
+  ![image-20210907153844901](MIT-6.837 实验报告.assets/image-20210907153844901.png)
+
+  ![image-20210907153857189](MIT-6.837 实验报告.assets/image-20210907153857189.png)
+
+* 漫反射着色
+
+  ![image-20210907154355829](MIT-6.837 实验报告.assets/image-20210907154355829.png)
+
+#### Assignment 3
+
+#### Assignment 4
+
+#### Assignment 5
+
+#### Assignment 6
+
+#### Assignment 7
 
 ### 源代码与分析
 
@@ -397,13 +473,211 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
   核心的渲染方程就是上述的二层循环，根据像素计算世界坐标系中的位置，再生成光线去检测相交即可，简单易懂
 
+#### Assignment 2
+
+* perspectiveCamera.cpp
+
+  ```c++
+  #include "camera.h"
+  Ray PerspectiveCamera::generateRay(Vec2f point)
+  {
+      const float dist = 1.0;
+      Vec3f dy = 2 * tan(fov / 2.0) * dist * this->up;
+      Vec3f dx = 2 * tan(fov / 2.0) * dist * ratio *this->horizontal;
+      Vec3f pt = this->center + dist * this->direction - 0.5 * dx + point.x() * dx - 0.5 * dy + point.y() * dy;
+      Vec3f dir = pt - this->center;
+      dir.Normalize();
+      return Ray(this->center, dir);
+  }
+  float PerspectiveCamera::getTMin() const
+  {
+      return -1 * MAXFLOAT;
+  }
+  ```
+
+  于之前有过OpenGL/WebGL开发经验，所以实现透视相机也比较容易，通过up、horizontal、center和三角函数计算射线上的另一个点并引出射线即可
+
+* plane.cpp
+
+  ```c++
+  #include "object3d.h"
+  bool Plane::intersect(const Ray &r, Hit &h, float tmin)
+  {
+      Vec3f Rd = r.getDirection();
+      Vec3f Ro = r.getOrigin();
+      float t = -1.0f * (distance + Ro.Dot3(this->normal)) / Rd.Dot3(this->normal);
+      if (t > max(tmin,0.0f) && t < h.getT())
+      {
+          h.set(t, this->material, this->normal, r);
+          return true;
+      }
+      return false;
+  }
+  ```
+
+* triangle.cpp
+
+  ```c++
+  #include "object3d.h"
+  bool Triangle::intersect(const Ray &r, Hit &h, float tmin)
+  {
+      Vec3f e1 = b - a;
+      Vec3f e2 = c - a;
+      Vec3f s = r.getOrigin() - a;
+      Vec3f d = r.getDirection();
+      Vec3f s1;
+      Vec3f::Cross3(s1, d, e2);
+      Vec3f s2;
+      Vec3f::Cross3(s2, s, e1);
+      float det = e1.Dot3(s1);
+      if (det == 0)
+          return false;
+      else
+      {
+          float t = s2.Dot3(e2) / det;
+          float b1 = s1.Dot3(s) / det;
+          float b2 = s2.Dot3(d) / det;
+          if (t > max(0.0f, tmin) && b1 + b2 < 1 && b1 > 0 && b2 > 0 && t < h.getT())
+          {
+              h.set(t, this->material, this->normal, r);
+              return true;
+          }
+      }
+      return false;
+  }
+  ```
+
+* transform.cpp
+
+  ```c++
+  #include "object3d.h"
+  bool Transform::intersect(const Ray &r, Hit &h, float tmin)
+  {
+      bool res = false;
+      Matrix tmp = this->transform_mat;
+      if (tmp.Inverse())
+      {
+          Vec3f dir = r.getDirection();
+          Vec3f o = r.getOrigin();
+          tmp.Transform(o);
+          tmp.TransformDirection(dir);
+          //Without Normalization
+          Ray nr(o, dir);
+          res = obj->intersect(nr, h, tmin);
+          if (res)
+          {
+              Vec3f n = h.getNormal();
+              tmp.Transpose();
+              tmp.TransformDirection(n);
+              n.Normalize();
+              h.set(h.getT(), h.getMaterial(), n, r);
+          }
+      }
+      return res;
+  }
+  ```
+
+  平面、三角形和变换的求交都是直接翻译课件上的算法，简单易懂
+
+* main.cpp
+
+  ```c++
+  for (int x = 0; x < width; x++)
+          for (int y = 0; y < height; y++)
+          {
+              float fx = x / (float)width;
+              float fy = y / (float)height;
+              // #if DEBUG
+              if (x == 150 && y == 150)
+              {
+                  cout << "(x,y) = (100, 200)" << endl;
+              }
+              // #endif
+              Ray r = camera->generateRay(Vec2f(fx, fy));
+              Hit h = Hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
+              if (group->intersect(r, h, camera->getTMin()))
+              {
+                  Vec3f pt = h.getIntersectionPoint();
+                  Vec3f pt_normal = h.getNormal();
+                  if (shade_back && pt_normal.Dot3(r.getDirection()) > 0)
+                  {
+                      pt_normal = -1 * pt_normal;
+                  }
+                  Vec3f color = Vec3f(0, 0, 0);
+                  Vec3f dir2light;
+                  Vec3f diffM = h.getMaterial()->getDiffuseColor();
+                  color += ambient;
+                  for (int l = 0; l < n_light; l++)
+                  {
+                      Vec3f tmp;
+                      lights[l]->getIllumination(pt, dir2light, tmp);
+                      color += tmp * max((pt_normal.Dot3(dir2light)), 0.0f);
+                  }
+  
+                  color.Set(color.x() * diffM.x(), color.y() * diffM.y(), color.z() * diffM.z());
+                  img.SetPixel(x, y, color);
+                  float depth = h.getT();
+                  depth = max(depth, depth_min);
+                  depth = min(depth, depth_max);
+                  float gray = 1 - (depth - depth_min) / gray_scale;
+                  depth_img.SetPixel(x, y, Vec3f(gray, gray, gray));
+  
+                  normal_img.SetPixel(x, y, Vec3f(fabs(pt_normal.r()),fabs(pt_normal.g()),fabs(pt_normal.b())));
+              }
+          }
+  ```
+
+  在Assignment 1的基础上增加了漫反射着色与法向量绘制，漫反射着色使用
+
+  ![image-20210907160630852](MIT-6.837 实验报告.assets/image-20210907160630852.png)
+
+  方程进行计算，同时，当法向量方向与光线方向（从原摄像机开始）成锐角时，根据是否开启shadeback选择是否反转法向量
+
+#### Assignment 3
+
+#### Assignment 4
+
+#### Assignment 5
+
+#### Assignment 6
+
+#### Assignment 7
+
 ### 实验结果
+
+#### Assignment 1
+
+#### Assignment 2
+
+#### Assignment 3
+
+#### Assignment 4
+
+#### Assignment 5
+
+#### Assignment 6
+
+#### Assignment 7
 
 ### 实验小结
 
 #### Assignment 1
 
 Assignment 1是整个Ray Tracer的基础，虽然简单但非常重要，非常有利于理解光线追踪的本质。我初学MIT-6.837时，还认为作业会是使用OpenGL等图形API做一些图形流水线方面的工作，但果然基于物理和直觉的的Ray Tracer才是图形学的精粹。第一次使用纯C++而没有使用任何图形接口实现3D模型的渲染，其成就感也非同小可
+
+#### Assignment 2
+
+Assignment 2基本实现了一个简单的Ray Tracer，但它还没有阴影、反射、折射和各种高级的着色方法，以及各种加速方法。我在做Assignment 2时遇到的最大的问题是我在Assignment 1中给自己留下的坑，这说明一个完善的项目打好基础是非常重要的，同时也要能学会怀疑自己的代码——并没有覆盖所有测试点的试例，所以过去的代码就算能跑过试例，也不代表就是正确的
+
+#### Assignment 3
+
+#### Assignment 4
+
+#### Assignment 5
+
+#### Assignment 6
+
+#### Assignment 7
 
 ## Curve Editor (Assignment 8)
 
