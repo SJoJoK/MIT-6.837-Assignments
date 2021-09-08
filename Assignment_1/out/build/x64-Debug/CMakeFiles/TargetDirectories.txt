@@ -1,3 +1,0 @@
-D:/Programs/MIT_CG/Assignment_1/out/build/x64-Debug/CMakeFiles/raytracer.dir
-D:/Programs/MIT_CG/Assignment_1/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-D:/Programs/MIT_CG/Assignment_1/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
