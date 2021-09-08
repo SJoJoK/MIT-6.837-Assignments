@@ -159,9 +159,11 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 3
 
-在之前作业的基础上，使用OpenGL来预览自己的Ray Tracer
+在之前作业的基础上，使用OpenGL来预览自己的Ray Caster，并增加Phong Shading
 
 #### Assignment 4
+
+在之前作业的基础上，增加阴影、反射与折射，在OpenGL预览中增加Ray Tree
 
 #### Assignment 5
 
@@ -237,7 +239,37 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 3
 
+* Phong Shading
+
+  ![image-20210908172433807](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908172433807.png)
+
+* Blinn-Torrance Variation
+
+  ![1631093095669](C:\Users\45098\AppData\Local\Temp\utools-clipboard\1631093095669.png)
+
 #### Assignment 4
+
+* Shadow
+
+  ![image-20210908220746016](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908220746016.png)
+
+  ![image-20210908220905053](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908220905053.png)
+
+* Mirror Reflection
+
+  ![image-20210908220955086](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908220955086.png)
+
+  ![image-20210908221009838](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221009838.png)
+
+* Refraction
+
+  ![image-20210908221132110](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221132110.png)
+
+  ![image-20210908221144976](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221144976.png)
+
+* Ray Tracing
+
+  ![image-20210908221254870](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221254870.png)
 
 #### Assignment 5
 
@@ -635,7 +667,423 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 3
 
+* material.h
+
+  ```c++
+  class PhongMaterial : public Material
+  {
+  private:
+      Vec3f specularColor;
+      float exponent;
+  
+  public:
+      PhongMaterial(const Vec3f &diffuseColor, const Vec3f &specularColor, float exponent) : Material(diffuseColor), specularColor(specularColor), exponent(exponent){};
+      Vec3f getSpecularColor() const
+      {
+          return specularColor;
+      }
+      virtual void glSetMaterial(void) const
+      {
+  
+          GLfloat one[4] = {1.0, 1.0, 1.0, 1.0};
+          GLfloat zero[4] = {0.0, 0.0, 0.0, 0.0};
+          GLfloat specular[4] = {
+              getSpecularColor().r(),
+              getSpecularColor().g(),
+              getSpecularColor().b(),
+              1.0};
+          GLfloat diffuse[4] = {
+              getDiffuseColor().r(),
+              getDiffuseColor().g(),
+              getDiffuseColor().b(),
+              1.0};
+  
+          // NOTE: GL uses the Blinn Torrance version of Phong...
+          float glexponent = exponent;
+          if (glexponent < 0)
+              glexponent = 0;
+          if (glexponent > 128)
+              glexponent = 128;
+  
+  #if !SPECULAR_FIX
+  
+          glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+          glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, diffuse);
+          glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+          glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &glexponent);
+  
+  #else
+  
+          // OPTIONAL: 3 pass rendering to fix the specular highlight
+          // artifact for small specular exponents (wide specular lobe)
+  
+          if (SPECULAR_FIX_WHICH_PASS == 0)
+          {
+              // First pass, draw only the specular highlights
+              glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, zero);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, zero);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &glexponent);
+          }
+          else if (SPECULAR_FIX_WHICH_PASS == 1)
+          {
+              // Second pass, compute normal dot light
+              glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, one);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, zero);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, zero);
+          }
+          else
+          {
+              // Third pass, add ambient & diffuse terms
+              assert(SPECULAR_FIX_WHICH_PASS == 2);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, diffuse);
+              glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, zero);
+          }
+  
+  #endif
+      }
+      virtual Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
+      {
+          Vec3f normal = hit.getNormal();
+          //Ray is Camera to Point
+          Vec3f dirToCamera = ray.getDirection();
+          if (shade_back && normal.Dot3(dirToCamera) > 0)
+          {
+              normal.Negate();
+          }
+          //Clamping
+          float clamping = max(normal.Dot3(dirToLight), 0.0f);
+          float distToLight = 1.0f;
+          dirToCamera.Negate();
+          Vec3f half = dirToCamera + dirToLight;
+          half.Normalize();
+          float r = 1.0f;
+          float diffuse = max(dirToLight.Dot3(normal), 0.0f);
+          float specular = max(normal.Dot3(half), 0.0f);
+          float shiness = pow(specular, exponent);
+          Vec3f color = diffuseColor * diffuse + specularColor * shiness;
+          color = color * lightColor * (1 / pow(distToLight, 2));
+          color = color * clamping;
+          return color;
+      }
+  };
+  ```
+  
+  实现Phong Shading的一个pitfall是BRDF中的Li与Lo都是从入射点出发的，而我们的Ray是从相机出发的，所以需要进行一下转换，此外，因为Blinn变种采用的是半角向量，所以当法向量和指向光的向量夹角为钝角时，高光也可能为正值，所以需要进行滤除
+  
+* Triangle.cpp
+
+  ```c++
+  void Triangle::paint()
+  {
+      material->glSetMaterial();
+      glBegin(GL_TRIANGLES);
+      glNormal3f(normal.x(), normal.y(), normal.z());
+      glVertex3f(a.x(), a.y(), a.z());
+      glVertex3f(b.x(), b.y(), b.z());
+      glVertex3f(c.x(), c.y(), c.z());
+      glEnd();
+  }
+  ```
+
+* Plane.cpp
+
+  ```c++
+  void Plane::paint()
+  {
+      Vec3f d1, d2, v(1, 0, 0);
+      if (normal.Dot3(v) == 0)
+      {
+          v = Vec3f(0, 1, 0);
+      }
+      Vec3f::Cross3(d1, v, normal);
+      d1.Normalize();
+      Vec3f::Cross3(d2, normal, d1);
+      d2.Normalize();
+      d1 *= 10000;
+      d2 *= 10000;
+      Vec3f e1 = d1 + d2, e2 = d1 * (-1) + d2, e3 = d1 * (-1) - d2, e4 = d1 - d2;
+      e1 -= distance * normal;
+      e2 -= distance * normal;
+      e3 -= distance * normal;
+      e4 -= distance * normal;
+      material->glSetMaterial();
+      glBegin(GL_QUADS);
+      glNormal3f(normal.x(), normal.y(), normal.z());
+      glVertex3f(e1.x(), e1.y(), e1.z());
+      glVertex3f(e2.x(), e2.y(), e2.z());
+      glVertex3f(e3.x(), e3.y(), e3.z());
+      glVertex3f(e4.x(), e4.y(), e4.z());
+      glEnd();
+  }
+  ```
+
+  绘制平面即是绘制两个非常大的三角形，当然指定GL_QUADS也可以
+
+* Sphere.cpp
+
+  ```cpp
+  void Sphere::paint()
+  {
+      //P(r, theta, phi)
+      //theta 0-PI
+      //phi 0-2PI
+      float dtheta = PI / (float)theta_steps;
+      float dphi = 2 * PI / (float)phi_steps;
+      float theta = 0;
+      glBegin(GL_QUADS);
+      this->material->glSetMaterial();
+      glPushMatrix();
+      glTranslatef(center.x(), center.y(), center.z());
+      for (int i = 0; i < theta_steps; i++)
+      {
+          float phi = 0;
+          float theta_next = theta + dtheta;
+          Vec3f pt0 = getSphereCoord(theta, phi);
+          Vec3f pt1 = getSphereCoord(theta_next, phi);
+          Vec3f pt2 = getSphereCoord(theta_next, phi + dphi);
+          Vec3f pt3 = getSphereCoord(theta, phi + dphi);
+          for (int j = 0; j < phi_steps ; j++)
+          {
+              if (j != 0)
+              {
+                  pt0 = pt3;
+                  pt1 = pt2;
+                  pt2 = getSphereCoord(theta_next, phi + dphi);
+                  pt3 = getSphereCoord(theta, phi + dphi);
+              }
+              Vec3f normal;
+              //Normals of Vertexs
+              if (gouraud)
+              {
+                  normal = pt0 - this->center;
+                  normal.Normalize();
+                  glNormal3f(normal.x(), normal.y(), normal.z());
+                  glVertex3f(pt0.x(), pt0.y(), pt0.z());
+                  normal = pt1 - this->center;
+                  normal.Normalize();
+                  glNormal3f(normal.x(), normal.y(), normal.z());
+                  glVertex3f(pt1.x(), pt1.y(), pt1.z());
+                  normal = pt2 - this->center;
+                  normal.Normalize();
+                  glNormal3f(normal.x(), normal.y(), normal.z());
+                  glVertex3f(pt2.x(), pt2.y(), pt2.z());
+                  normal = pt3 - this->center;
+                  normal.Normalize();
+                  glNormal3f(normal.x(), normal.y(), normal.z());
+                  glVertex3f(pt3.x(), pt3.y(), pt3.z());
+              }
+              else
+              {
+                  Vec3f a = pt3 - pt0;
+                  Vec3f b = pt1 - pt0;
+                  Vec3f::Cross3(normal, b, a);
+                  normal.Normalize();
+                  glNormal3f(normal.x(), normal.y(), normal.z());
+                  glVertex3f(pt0.x(), pt0.y(), pt0.z());
+                  glVertex3f(pt1.x(), pt1.y(), pt1.z());
+                  glVertex3f(pt2.x(), pt2.y(), pt2.z());
+                  glVertex3f(pt3.x(), pt3.y(), pt3.z());
+              }
+              phi += dphi;
+          }
+          theta += dtheta;
+      }
+      glPopMatrix();
+      glEnd();
+  ```
+
+  绘制球体有两个需要注意的点：物理上和数学上对球座标的约定不一致，在我的实现中，$$\theta$$为天顶角，$$\phi$$为方位角，而MIT的作业中的约定与我的实现刚好相反，此外，需要注意要根据center的位置进行Transform
+
+* Transform.cpp
+
+  ```c++
+  void Transform::paint()
+  {
+      glPushMatrix();
+      GLfloat *glMatrix = this->transform_mat.glGet();
+      glMultMatrixf(glMatrix);
+      delete[] glMatrix;
+      this->obj->paint();
+      glPopMatrix();
+  }
+  ```
+
 #### Assignment 4
+
+* RayTracer.h
+
+  ```c++
+  class RayTracer
+  {
+  private:
+      SceneParser *sp;
+      Camera *camera;
+      Group *group;
+      Vec3f background_color;
+      Vec3f ambient_light;
+      vector<Material *> materials;
+      vector<Light *> lights;
+  
+  public:
+      RayTracer(SceneParser *s) : sp(s)
+      {
+          camera = sp->getCamera();
+          group = sp->getGroup();
+          background_color = sp->getBackgroundColor();
+          ambient_light = sp->getAmbientLight();
+          int n_material = sp->getNumMaterials();
+          int n_light = sp->getNumLights();
+          for (int i = 0; i < n_material; i++)
+          {
+              materials.push_back(sp->getMaterial(i));
+          }
+  
+          for (int i = 0; i < n_light; i++)
+          {
+              lights.push_back(sp->getLight(i));
+          }
+      }
+      ~RayTracer(){};
+      Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight,
+                     float indexOfRefraction, Hit &hit, bool main, bool debug=false) const;
+      Vec3f mirrorDirection(const Vec3f &normal, const Vec3f &incoming) const;
+      bool transmittedDirection(const Vec3f &normal, const Vec3f &incoming, float index_i, float index_t, Vec3f &transmitted) const;
+  };
+  
+  ```
+
+* RayTracer.cpp
+
+  ```c++
+  #include "rayTracer.h"
+  #include "rayTree.h"
+  #include "object3d.h"
+  #include "camera.h"
+  #include "light.h"
+  Vec3f RayTracer::mirrorDirection(const Vec3f &normal, const Vec3f &incoming) const
+  {
+      //out = incoming – 2 (incoming · normal) normal
+      //里外是一致的
+      Vec3f out = (incoming - normal * 2.0f * incoming.Dot3(normal));
+      out.Normalize();
+      return out;
+  }
+  bool RayTracer::transmittedDirection(const Vec3f &normal, const Vec3f &incoming, float index_i, float index_t, Vec3f &transmitted) const
+  {
+      //ηr = ηi / ηt = index_i / index_t
+      //I = -incoming
+      //N = normal
+      Vec3f n = normal;
+      float NI = n.Dot3(incoming * -1.0f);
+  
+      if (index_t > 0.0f)
+      {
+          float index_r = index_i / index_t;
+          float tmp = 1.0f - pow(index_r, 2.0f) * (1.0f - pow(NI, 2.0f));
+          //非全反射
+          if (tmp >= 0)
+          {
+              transmitted = n * (float)(index_r * NI - sqrt(tmp)) + incoming * index_r;
+              transmitted.Normalize();
+              return true;
+          }
+      }
+      return false;
+  }
+  Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
+                            float indexOfRefraction, Hit &hit, bool main, bool debug) const
+  {
+      if (bounces > max_bounces)
+          return Vec3f(0, 0, 0);
+      if (weight < cutoff_weight)
+          return Vec3f(0, 0, 0);
+      if (group->intersect(ray, hit, epsilon))
+      {
+          if (main)
+          {
+              RayTree::SetMainSegment(ray, 0.0f, hit.getT());
+          }
+          Vec3f pt = hit.getIntersectionPoint();
+          Vec3f pt_normal = hit.getNormal();
+          pt_normal.Normalize();
+          Vec3f color = hit.getMaterial()->getDiffuseColor() * ambient_light;
+          Vec3f dir2light;
+          float dist2light;
+          //Shadow
+          for (int l = 0; l < lights.size(); l++)
+          {
+              Vec3f light_color;
+              lights[l]->getIllumination(pt, dir2light, light_color, dist2light);
+              if (shadows)
+              {
+                  Ray shadow_ray(pt, dir2light);
+                  Hit shadow_hit(dist2light, materials[0], Vec3f(0, 0, 0));
+                  Vec3f tmp;
+                  if (!group->intersectShadowRay(shadow_ray, shadow_hit, epsilon))
+                  {
+                      tmp = hit.getMaterial()->Shade(ray, hit, dir2light, light_color);
+                  }
+                  color += tmp;
+                  RayTree::AddShadowSegment(shadow_ray, 0.0f, shadow_hit.getT());
+              }
+              else
+              {
+                  color += hit.getMaterial()->Shade(ray, hit, dir2light, light_color);
+              }
+          }
+          //Mirror
+          Vec3f mirror_color = hit.getMaterial()->getReflectiveColor();
+          if (mirror_color != Vec3f(0, 0, 0))
+          {
+              Vec3f mirror_dir = mirrorDirection(pt_normal, ray.getDirection());
+              Ray mirror_ray(pt, mirror_dir);
+              Hit mirror_hit(dist2light, materials[0], Vec3f(0, 0, 0));
+              Vec3f mirror_shade = traceRay(mirror_ray, epsilon, bounces + 1, weight * mirror_color.Length(),
+                                            indexOfRefraction, mirror_hit, false, debug);
+              color += mirror_color * mirror_shade;
+              RayTree::AddReflectedSegment(mirror_ray, 0.0f, mirror_hit.getT());
+          }
+          //Transparent
+          Vec3f trans_color = hit.getMaterial()->getTransparentColor();
+          if (trans_color != Vec3f(0, 0, 0))
+          {
+              Vec3f trans_dir;
+              float index_t;
+              float index_i;
+              //Outside
+              if (pt_normal.Dot3(ray.getDirection()) < 0)
+              {
+                  index_i = 1.0f;
+                  index_t = hit.getMaterial()->getindexOfRefraction();
+              }
+              //Inside
+              else
+              {
+                  index_t = 1.0f;
+                  index_i = hit.getMaterial()->getindexOfRefraction();
+                  pt_normal.Negate();
+              }
+              //If transmitted
+              if (transmittedDirection(pt_normal, ray.getDirection(), index_i, index_t, trans_dir))
+              {
+                  Ray trans_ray(pt, trans_dir);
+                  Hit trans_hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
+                  Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit, false, debug);
+                  color += trans_color * trans_shade;
+                  RayTree::AddTransmittedSegment(trans_ray, 0.0f, trans_hit.getT());
+              }
+          }
+          return color;
+      }
+      return this->background_color;
+  }
+  ```
+
+  整个光线追踪里我个人认为最棘手的获取折射光线，要考虑内外介质的折射率、全反射、表面法向量种种问题，只有考虑清楚了才能写好。为了优化性能，还专门写了一个intersectShadowRay，只要有一次距离小于到光源的相交就return true
+
+  此外，比较影响效果的是epsilon的选取，但它其实和整个光线追踪的流程没太大关系，但还是比较麻烦
 
 #### Assignment 5
 
@@ -667,11 +1115,15 @@ Assignment 1是整个Ray Tracer的基础，虽然简单但非常重要，非常�
 
 #### Assignment 2
 
-Assignment 2基本实现了一个简单的Ray Tracer，但它还没有阴影、反射、折射和各种高级的着色方法，以及各种加速方法。我在做Assignment 2时遇到的最大的问题是我在Assignment 1中给自己留下的坑，这说明一个完善的项目打好基础是非常重要的，同时也要能学会怀疑自己的代码——并没有覆盖所有测试点的试例，所以过去的代码就算能跑过试例，也不代表就是正确的
+Assignment 2基本实现了一个简单的Caster，但它还没有阴影、反射、折射和各种高级的着色方法，以及各种加速方法。我在做Assignment 2时遇到的最大的问题是我在Assignment 1中给自己留下的坑，这说明一个完善的项目打好基础是非常重要的，同时也要能学会怀疑自己的代码——并没有覆盖所有测试点的试例，所以过去的代码就算能跑过试例，也不代表就是正确的
 
 #### Assignment 3
 
+Assignment 3最重要的就是实现了Phong Shading，拥有高光之后，我们的渲染就更加真实了。OpenGL的实现更像是一个填头，一方面可以让我们大概看出应该实现效果的“Ground Truth”，另一方面可以让我们领略到图形流水线的威力——CPU写的软光追还需要一定时间才能渲染出来的图，OpenGL可以实时浏览
+
 #### Assignment 4
+
+Assignment 4直接把我们的Ray Caster升格为Ray Tracer，我们的项目不再是一个光线投射器，而是一个可以（反向）追踪光线的光线追踪器，加入了阴影、反射和折射后的渲染质量也更上一个台阶。我在这个作业中遇到的坑主要有两个，一个是在处理阴影时，将向光源射线的循环放在外边了，导致反射和折射都被计算了（num_lights）次，后来靠自己添加调试信息才发现这个问题，另一个是epsilon的选取，太小的话会有自阴影等问题，但太大的话算法的准确性就难以保证，是一个很tricky的问题。总得来说，加入了阴影、反射和折射后，就是实现了一个暂时没有任何优化的软光追，还是很有成就感的。
 
 #### Assignment 5
 
