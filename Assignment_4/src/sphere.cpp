@@ -27,7 +27,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
     if (t_p < 0)
         return false;
     double tmp = h.getT();
-    if (t_n < 0)
+    if (t_n < tmin)
     {
         if (t_p < tmp && t_p > tmin)
         {
@@ -62,7 +62,6 @@ void Sphere::paint()
     // glBegin(GL_QUADS);
     this->material->glSetMaterial();
     glPushMatrix();
-    cout << center << endl;
     glTranslatef(center.x(), center.y(), center.z());
     glutSolidSphere(radius, 100, 100);
     // for (int i = 0; i < theta_steps; i++)
