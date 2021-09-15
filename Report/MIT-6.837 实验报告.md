@@ -503,7 +503,7 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
       if (t_p < 0)
           return false;
       double tmp = h.getT();
-      if (t_n < 0)
+      if (t_n < tmin)
       {
           if (t_p < tmp && t_p > tmin)
           {
@@ -2382,7 +2382,212 @@ raytracer -input scene2_16_t_scale.txt -size 200 200 -output output2_16.tga -dep
 
 #### Assignment 3
 
+```zsh
+raytracer -input scene3_01_cube_orthographic.txt -size 200 200 -output output3_01.tga -gui
+```
+
+![image-20210915191559937](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191559937.png)
+
+![image-20210915191611814](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191611814.png)
+
+```zsh
+raytracer -input scene3_02_cube_perspective.txt -size 200 200 -output output3_02.tga -gui
+```
+
+![image-20210915191632328](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191632328.png)
+
+![image-20210915191649040](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191649040.png)
+
+```zsh
+raytracer -input scene3_03_bunny_mesh_200.txt -size 200 200 -output output3_03.tga -gui
+raytracer -input scene3_04_bunny_mesh_1k.txt -size 200 200 -output output3_04.tga -gui
+```
+
+![image-20210915191709176](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191709176.png)
+
+![image-20210915193220134](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193220134.png)
+
+![image-20210915193335008](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193335008.png)
+
+![image-20210915193353761](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193353761.png)
+
+```zsh
+raytracer -input scene3_05_axes_cube.txt -size 200 200 -output output3_05.tga -gui
+```
+
+![image-20210915191943766](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191943766.png)
+
+![image-20210915193239854](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193239854.png)
+
+```zsh
+raytracer -input scene3_06_crazy_transforms.txt -size 200 200 -output output3_06.tga -gui
+```
+
+![image-20210915191957528](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191957528.png)
+
+![image-20210915194106208](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194106208.png)
+
+```zsh
+raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui -tessellation 10 5
+raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui -tessellation 20 10
+raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui -tessellation 10 5 -gouraud
+raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui -tessellation 20 10 -gouraud
+```
+
+![image-20210915193507963](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193507963.png)
+
+![image-20210915193527344](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193527344.png)
+
+![image-20210915193600355](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193600355.png)
+
+![image-20210915193621835](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193621835.png)
+
+![image-20210915194140680](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194140680.png)
+
+```zsh
+raytracer -input scene3_09_exponent_variations.txt -size 300 300 -output output3_09.tga -gui -tessellation 100 50 -gouraud
+```
+
+![image-20210915193943759](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193943759.png)
+
+![image-20210915194150774](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194150774.png)
+
+```zsh
+raytracer -input scene3_10_exponent_variations_back.txt -size 300 300 -output output3_10.tga -gui -tessellation 100 50 -gouraud
+```
+
+![image-20210915193957468](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193957468.png)
+
+![image-20210915194201356](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194201356.png)
+
+```zsh
+raytracer -input scene3_11_weird_lighting_diffuse.txt -size 200 200 -output output3_11.tga -gui -tessellation 100 50 -gouraud
+```
+
+![image-20210915194012549](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194012549.png)
+
+![image-20210915194212923](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194212923.png)
+
+```zsh
+raytracer -input scene3_12_weird_lighting_specular.txt -size 200 200 -output output3_12.tga -gui -tessellation 100 50 -gouraud
+```
+
+![image-20210915194025596](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194025596.png)
+
+![image-20210915194225837](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194225837.png)
+
 #### Assignment 4
+
+```zsh
+raytracer -input scene4_01_sphere_shadow.txt -size 200 200 -output output4_01.tga -shadows
+```
+
+![image-20210915205630862](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205630862.png)
+
+```zsh
+raytracer -input scene4_02_colored_shadows.txt -size 200 200 -output output4_02.tga -shadows -gui -tessellation 50 25 -gouraud
+```
+
+![image-20210915195221070](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195221070.png)
+
+```zsh
+raytracer -input scene4_03_mirrored_floor.txt -size 200 200 -output output4_03.tga -shadows -bounces 1 -weight 0.01 -gui
+```
+
+![image-20210915195229423](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195229423.png)
+
+```zsh
+raytracer -input scene4_04_reflective_sphere.txt -size 200 200 -output output4_04a.tga -shadows -bounces 0 -weight 0.01
+raytracer -input scene4_04_reflective_sphere.txt -size 200 200 -output output4_04b.tga -shadows -bounces 1 -weight 0.01
+raytracer -input scene4_04_reflective_sphere.txt -size 200 200 -output output4_04c.tga -shadows -bounces 2 -weight 0.01
+raytracer -input scene4_04_reflective_sphere.txt -size 200 200 -output output4_04d.tga -shadows -bounces 3 -weight 0.01
+```
+
+* a
+
+  ![image-20210915205720237](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205720237.png)
+
+* d
+
+  ![image-20210915205731852](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205731852.png)
+
+```zsh
+raytracer -input scene4_05_transparent_bar.txt -size 200 200 -output output4_05.tga -shadows -bounces 10 -weight 0.01 -shade_back -gui
+```
+
+![image-20210915195318495](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195318495.png)
+
+```zsh
+raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06a.tga -shadows -bounces 0 -weight 0.01 -shade_back -gui
+raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06b.tga -shadows -bounces 1 -weight 0.01 -shade_back -gui
+raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06c.tga -shadows -bounces 2 -weight 0.01 -shade_back -gui
+raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06d.tga -shadows -bounces 3 -weight 0.01 -shade_back -gui
+raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06e.tga -shadows -bounces 4 -weight 0.01 -shade_back -gui
+raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06f.tga -shadows -bounces 5 -weight 0.01 -shade_back -gui
+```
+
+* a
+
+  ![image-20210915195334999](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195334999.png)
+
+* d
+
+  ![image-20210915195351289](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195351289.png)
+
+* f
+
+  ![image-20210915195406529](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195406529.png)
+
+```zsh
+raytracer -input scene4_07_transparent_sphere_1.0.txt -size 200 200 -output output4_07.tga -shadows -bounces 5 -weight 0.01 -shade_back -gui -tessellation 30 15
+raytracer -input scene4_08_transparent_sphere_1.1.txt -size 200 200 -output output4_08.tga -shadows -bounces 5 -weight 0.01 -shade_back -gui -tessellation 30 15
+raytracer -input scene4_09_transparent_sphere_2.0.txt -size 200 200 -output output4_09.tga -shadows -bounces 5 -weight 0.01 -shade_back -gui -tessellation 30 15
+```
+
+![image-20210915204810343](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915204810343.png)
+
+![image-20210915205415239](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205415239.png)
+
+![image-20210915205422998](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205422998.png)
+
+```zsh
+raytracer -input scene4_10_point_light_distance.txt -size 200 200 -output output4_10.tga -shadows -gui
+```
+
+![image-20210915205459611](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205459611.png)
+
+```zsh
+raytracer -input scene4_11_point_light_circle.txt -size 200 200 -output output4_11.tga -shadows 
+raytracer -input scene4_12_point_light_circle_d_attenuation.txt -size 200 200 -output output4_12.tga -shadows 
+raytracer -input scene4_13_point_light_circle_d2_attenuation.txt -size 200 200 -output output4_13.tga -shadows
+```
+
+![image-20210915205508243](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205508243.png)
+
+![image-20210915205517395](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205517395.png)
+
+![image-20210915205525965](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205525965.png)
+
+```zsh
+raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14a.tga -shadows -shade_back -bounces 0 -weight 0.01 
+raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14b.tga -shadows -shade_back -bounces 1 -weight 0.01 
+raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14c.tga -shadows -shade_back -bounces 2 -weight 0.01 
+raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14d.tga -shadows -shade_back -bounces 3 -weight 0.01 
+raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14e.tga -shadows -shade_back -bounces 4 -weight 0.01 
+raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14f.tga -shadows -shade_back -bounces 5 -weight 0.01
+```
+
+* a
+
+  ![image-20210915205751708](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205751708.png)
+
+* d
+
+  ![image-20210915205808124](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205808124.png)
+
+* f
+
+  ![image-20210915205819357](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205819357.png)
 
 #### Assignment 5
 
@@ -2406,7 +2611,7 @@ Assignment 3最重要的就是实现了Phong Shading，拥有高光之后，我�
 
 #### Assignment 4
 
-Assignment 4直接把我们的Ray Caster升格为Ray Tracer，我们的项目不再是一个光线投射器，而是一个可以（反向）追踪光线的光线追踪器，加入了阴影、反射和折射后的渲染质量也更上一个台阶。我在这个作业中遇到的坑主要有两个，一个是在处理阴影时，将向光源射线的循环放在外边了，导致反射和折射都被计算了（num_lights）次，后来靠自己添加调试信息才发现这个问题，另一个是epsilon的选取，太小的话会有自阴影等问题，但太大的话算法的准确性就难以保证，是一个很tricky的问题。总得来说，加入了阴影、反射和折射后，就是实现了一个暂时没有任何优化的软光追，还是很有成就感的。
+Assignment 4直接把我们的Ray Caster升格为Ray Tracer，我们的项目不再是一个光线投射器，而是一个可以（反向）追踪光线的光线追踪器，加入了阴影、反射和折射后的渲染质量也更上一个台阶。我在这个作业中遇到的坑主要有两个，一个是在处理阴影时，将向光源射线的循环放在外边了，导致反射和折射都被计算了（num_lights）次，后来靠自己添加调试信息才发现这个问题，另一个是epsilon的选取，太小的话会有自阴影等问题，但太大的话算法的准确性就难以保证，是一个很tricky的问题。同时也要注意与epsilon比较的时机——我之前的球体求交中因为与epsilon比较时机不对导致了渲染的问题（应该判断t_n<tmin而非0以保证折射光线在球体内部时不会与临近的表面相交）总得来说，加入了阴影、反射和折射后，就是实现了一个暂时没有任何优化的软光追，还是很有成就感的。
 
 #### Assignment 5
 
