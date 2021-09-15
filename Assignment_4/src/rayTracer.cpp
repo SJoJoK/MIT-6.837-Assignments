@@ -127,7 +127,7 @@ Vec3f RayTracer::traceRay(Ray &ray, float tmin, int bounces, float weight,
             {
                 Ray trans_ray(pt, trans_dir);
                 Hit trans_hit(MAXFLOAT, materials[0], Vec3f(0, 0, 0));
-                Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces + 1, weight * trans_color.Length(), index_t, trans_hit, false, debug);
+                Vec3f trans_shade = traceRay(trans_ray, epsilon, bounces, weight * trans_color.Length(), index_t, trans_hit, false, debug);
                 if (debug && main)
                 {
                     for (int i = 0; i < bounces; i++)
