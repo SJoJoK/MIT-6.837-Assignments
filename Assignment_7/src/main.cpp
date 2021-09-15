@@ -308,7 +308,7 @@ int main(int argc, char *argv[])
         }
     if (sample_file == nullptr)
     {
-        film->renderSamples((char *)"test_sample.ppm", zoom_factor);
+        film->renderSamples((char *)"test_sample.tga", zoom_factor);
     }
     else
     {
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
     }
     if (filter_file == nullptr)
     {
-        film->renderFilter((char *)"test_filter.ppm", zoom_factor_1, fltr);
+        film->renderFilter((char *)"test_filter.tga", zoom_factor_1, fltr);
     }
     else
     {
@@ -324,19 +324,11 @@ int main(int argc, char *argv[])
     }
     if (output_file == nullptr)
     {
-        image->SavePPM((char *)"test.ppm");
+        image->SaveTGA((char *)"test.tga");
     }
     else
     {
-        image->SavePPM(output_file);
-    }
-    if (depth_file != nullptr)
-    {
-        depth_image->SavePPM(depth_file);
-    }
-    if (normal_file != nullptr)
-    {
-        normal_image->SavePPM(normal_file);
+        image->SaveTGA(output_file);
     }
     if (gui)
     {
