@@ -6,7 +6,7 @@ bool Group::intersect(const Ray &r, Hit &h, float tmin)
     {
         if (objs[i] == nullptr)
             continue;
-        res = res || objs[i]->intersect(r, h, tmin);
+        res = objs[i]->intersect(r, h, tmin) || res;
     }
     return res;
 }

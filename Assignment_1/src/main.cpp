@@ -12,13 +12,13 @@
 int main(int argc, char *argv[])
 {
 
-    char *input_file = "scene1_02.txt";
+    char *input_file = "scene1_06.txt";
     int width = 200;
     int height = 200;
-    char *output_file = "output1_02.tga";
+    char *output_file = "output1_06.tga";
     float depth_min = 8;
     float depth_max = 12;
-    char *depth_file = "depth1_02.tga";
+    char *depth_file = "depth1_06.tga";
 
     for (int i = 1; i < argc; i++)
     {
@@ -78,6 +78,10 @@ int main(int argc, char *argv[])
     for (int x = 0; x < width; x++)
         for (int y = 0; y < height; y++)
         {
+            if(x==110&&y==100)
+            {
+                cout << "F";
+            }
             float fx = x / (float)width;
             float fy = y / (float)height;
             Ray r = camera->generateRay(Vec2f(fx, fy));
