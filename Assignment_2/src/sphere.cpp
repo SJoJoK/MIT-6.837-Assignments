@@ -20,7 +20,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
         if (t_p < tmp && t_p > tmin)
         {
             Vec3f h_pt = Ro + t_p * Rd;
-            Vec3f normal = h_pt - this->center;
+            Vec3f normal = h_pt;
             normal.Normalize();
             h.set(t_p, this->material, normal, r);
             return true;
@@ -31,7 +31,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
         if (t_n < tmp && t_n > tmin)
         {
             Vec3f h_pt = Ro + t_n * Rd;
-            Vec3f normal = h_pt - this->center;
+            Vec3f normal = h_pt;
             normal.Normalize();
             h.set(t_n, this->material, normal, r);
             return true;
