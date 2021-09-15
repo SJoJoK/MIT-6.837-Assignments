@@ -476,7 +476,7 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
       {
           if (objs[i] == nullptr)
               continue;
-          res = res || objs[i]->intersect(r, h, tmin);
+          res = objs[i]->intersect(r, h, tmin) || res;
       }
       return res;
   }
@@ -523,7 +523,7 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
   }
   ```
 
-  Group的intersect是调用Group中每一个Object的intersect方法（这里留下了一个很大的坑：我使用了```res = res || objs[i]->intersect(r, h, tmin);```，但根据C++的短路或，如果res为true，则后边的条件会被直接忽略，即不会继续与其他物体相交，我在后续的Assignment中才发现这个问题），而Sphere的相交算法我采取了比较符合直觉的代数方法，直接翻译方程为代码即可（此处默认a=1也为后续的Assignment留下了很大的坑）
+  Group的intersect是调用Group中每一个Object的intersect方法（这里留下了一个很大的坑：我使用了```res = res || objs[i]->intersect(r, h, tmin);```，但根据C++的短路或，如果res为true，则后边的条件会被直接忽略，即不会继续与其他物体相交，我调试了很久才发现这个问题），而Sphere的相交算法我采取了比较符合直觉的代数方法，直接翻译方程为代码即可（此处默认a=1也为后续的Assignment留下了很大的坑）
 
 * main.cpp
 
@@ -2205,14 +2205,180 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 #### Assignment 1
 
 ```zsh
-./raytracer -input scene1_01.txt -size 200 200 -output output1_01.tga -depth 9 10 depth1_01.tga
+raytracer -input scene1_01.txt -size 200 200 -output output1_01.tga -depth 9 10 depth1_01.tga
 ```
 
 ![image-20210915175543258](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175543258.png)
 
 ![image-20210915175605992](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175605992.png)
 
+```zsh
+raytracer -input scene1_02.txt -size 200 200 -output output1_02.tga -depth 8 12 depth1_02.tga
+```
+
+![image-20210915175857743](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175857743.png)
+
+![image-20210915180007059](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180007059.png)
+
+```zsh
+raytracer -input scene1_03.txt -size 200 200 -output output1_03.tga -depth 8 12 depth1_03.tga
+```
+
+![image-20210915180130103](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180130103.png)
+
+![image-20210915180140202](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180140202.png)
+
+```zsh
+raytracer -input scene1_04.txt -size 200 200 -output output1_04.tga -depth 12 17 depth1_04.tga
+```
+
+![image-20210915180154889](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180154889-16317001160981.png)
+
+![image-20210915180205387](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180205387.png)
+
+```zsh
+raytracer -input scene1_05.txt -size 200 200 -output output1_05.tga -depth 14.5 19.5 depth1_05.tga
+```
+
+![image-20210915180219459](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180219459.png)
+
+![image-20210915180229979](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180229979.png)
+
+```zsh
+raytracer -input scene1_06.txt -size 200 200 -output output1_06.tga -depth 3 7 depth1_06.tga
+```
+
+![image-20210915180248534](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180248534.png)
+
+![image-20210915180302233](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180302233.png)
+
+```zsh
+raytracer -input scene1_07.txt -size 200 200 -output output1_07.tga -depth -2 2 depth1_07.tga
+```
+
+原场景的相机位置有问题，需要调整
+
+![image-20210915180338517](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180338517.png)
+
+![image-20210915180354106](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180354106.png)
+
 #### Assignment 2
+
+```zsh
+raytracer -input scene2_01_diffuse.txt -size 200 200 -output output2_01.tga
+raytracer -input scene2_02_ambient.txt -size 200 200 -output output2_02.tga
+```
+
+![image-20210915180647251](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180647251.png)
+
+![image-20210915180700516](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180700516.png)
+
+```zsh
+raytracer -input scene2_03_colored_lights.txt -size 200 200 -output output2_03.tga -normals normals2_03.tga
+```
+
+![image-20210915180721412](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180721412.png)
+
+![image-20210915180736448](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180736448.png)
+
+```zsh
+raytracer -input scene2_04_perspective.txt -size 200 200 -output output2_04.tga -normals normals2_04.tga
+```
+
+![image-20210915180818465](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180818465.png)
+
+![image-20210915180844650](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180844650.png)
+
+```zsh
+raytracer -input scene2_05_inside_sphere.txt -size 200 200 -output output2_05.tga -depth 9 11 depth2_05.tga -normals normals2_05.tga -shade_back
+raytracer -input scene2_05_inside_sphere.txt -size 200 200 -output output2_05_no_back.tga
+```
+
+![image-20210915182716242](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182716242.png)
+
+![image-20210915182734654](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182734654.png)
+
+![image-20210915182805018](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182805018.png)
+
+![image-20210915182835999](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182835999.png)
+
+```zsh
+raytracer -input scene2_06_plane.txt -size 200 200 -output output2_06.tga -depth 8 20 depth2_06.tga -normals normals2_06.tga
+```
+
+![image-20210915185800217](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915185800217.png)
+
+![image-20210915185820074](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915185820074.png)
+
+![image-20210915185829483](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915185829483.png)
+
+```zsh
+raytracer -input scene2_07_sphere_triangles.txt -size 200 200 -output output2_07.tga -depth 9 11 depth2_07.tga -normals normals2_07.tga -shade_back
+raytracer -input scene2_07_sphere_triangles.txt -size 200 200 -output output2_07_no_back.tga
+```
+
+![image-20210915190000110](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190000110.png)
+
+![image-20210915190014479](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190014479.png)
+
+![image-20210915190025303](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190025303.png)
+
+![image-20210915190213426](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190213426.png)
+
+```zsh
+raytracer -input scene2_08_cube.txt -size 200 200 -output output2_08.tga
+raytracer -input scene2_09_bunny_200.txt -size 200 200 -output output2_09.tga
+raytracer -input scene2_10_bunny_1k.txt -size 200 200 -output output2_10.tga
+```
+
+![image-20210915190230164](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190230164.png)
+
+![image-20210915190239173](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190239173.png)
+
+![image-20210915190249040](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190249040.png)
+
+```zsh
+raytracer -input scene2_11_squashed_sphere.txt -size 200 200 -output output2_11.tga -normals normals2_11.tga
+```
+
+![image-20210915190258956](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190258956.png)
+
+![image-20210915190308509](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190308509.png)
+
+```zsh
+raytracer -input scene2_12_rotated_sphere.txt -size 200 200 -output output2_12.tga -normals normals2_12.tga
+```
+
+![image-20210915190322711](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190322711.png)
+
+![image-20210915190333165](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190333165.png)
+
+```zsh
+raytracer -input scene2_13_rotated_squashed_sphere.txt -size 200 200 -output output2_13.tga -normals normals2_13.tga
+```
+
+![image-20210915190358565](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190358565.png)
+
+![image-20210915190407271](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190407271.png)
+
+```zsh
+raytracer -input scene2_14_axes_cube.txt -size 200 200 -output output2_14.tga
+raytracer -input scene2_15_crazy_transforms.txt -size 200 200 -output output2_15.tga
+```
+
+![image-20210915190423431](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190423431.png)
+
+![image-20210915190822223](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190822223.png)
+
+右侧三角形中间的绿线应该是精度问题或边界问题
+
+```zsh
+raytracer -input scene2_16_t_scale.txt -size 200 200 -output output2_16.tga -depth 2 7 depth2_16.tga
+```
+
+![image-20210915190932329](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190932329.png)
+
+![image-20210915191026121](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191026121.png)
 
 #### Assignment 3
 
