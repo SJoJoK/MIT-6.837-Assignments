@@ -13,8 +13,8 @@
 #include <vector>
 
 char *input_file = (char *)"test.txt";
-int width = 500;
-int height = 500;
+int width = 200;
+int height = 200;
 char *output_file = nullptr;
 float depth_min = 8;
 float depth_max = 12;
