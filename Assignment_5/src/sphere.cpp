@@ -41,30 +41,24 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
         int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
         int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
 
-        if (_start_i == _end_i)
-            _start_i--;
-        if (_start_j == _end_j)
-            _start_j--;
-        if (_start_k == _end_k)
-            _start_k--;
-        if (_start_i > _end_i)
-            swap(_start_i, _end_i);
-        if (_start_j > _end_j)
-            swap(_start_j, _end_j);
-        if (_start_k > _end_k)
-            swap(_start_k, _end_k);
-        if (_end_i > x)
-            _end_i--;
-        if (_end_j > y)
-            _end_j--;
-        if (_end_k > z)
-            _end_k--;
-
-        for (int _i = _start_i; _i < _end_i; _i++)
+        if (_end_i >= x)
         {
-            for (int _j = _start_j; _j < _end_j; _j++)
+            _end_i = x - 1;
+        }
+
+        if (_end_j >= y)
+        {
+            _end_j = y - 1;
+        }
+        if (_end_k >= z)
+        {
+            _end_k = z - 1;
+        }
+        for (int _i = _start_i; _i <= _end_i; _i++)
+        {
+            for (int _j = _start_j; _j <= _end_j; _j++)
             {
-                for (int _k = _start_k; _k < _end_k; _k++)
+                for (int _k = _start_k; _k <= _end_k; _k++)
                 {
                     g->insertIntoThis((_i * y + _j) * z + _k, true, this);
                 }
@@ -83,6 +77,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
     float grid_x = size.x() / x;
     float grid_y = size.y() / y;
     float grid_z = size.z() / z;
+    float diag = sqrt(pow(grid_x, 2) + pow(grid_y, 2) + pow(grid_z, 2));
     Vec3f cen = center - min;
     Vec3f _voxel;
     for (int _i = 0; _i < x; _i++)
@@ -95,7 +90,7 @@ void Sphere::insertIntoGrid(Grid *g, Matrix *m)
                 float _y1 = (_j + 0.5f) * grid_y;
                 float _z1 = (_k + 0.5f) * grid_z;
                 _voxel.Set(_x1, _y1, _z1);
-                if ((_voxel - cen).Length() <= radius)
+                if ((_voxel - cen).Length() <= radius + 0.5 * diag)
                 {
                     g->insertIntoThis((_i * y + _j) * z + _k, true, this);
                 }
