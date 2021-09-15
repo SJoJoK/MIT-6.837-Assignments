@@ -2621,14 +2621,12 @@ raytracer -input scene5_03_offcenter_spheres.txt -size 200 200 -output output5_0
 （题目提供场景即为正交相机，所以渲染结果是正确的）
 
 ```zsh
-raytracer -input scene5_04_plane_test.txt -size 200 200 -gui -tessellation 30 15 -gouraud
 raytracer -input scene5_04_plane_test.txt -size 200 200 -output output5_04.tga -gui -grid 15 15 15 -visualize_grid
 ```
 
 ![image-20210915210919496](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210919496.png)
 
 ```zsh
-raytracer -input scene5_05_sphere_triangles.txt -size 200 200 -gui -tessellation 30 15 -gouraud
 raytracer -input scene5_05_sphere_triangles.txt -size 200 200 -output output5_05.tga -gui -grid 20 20 10 -visualize_grid
 ```
 
@@ -2650,27 +2648,125 @@ raytracer -input scene5_09_bunny_mesh_40k.txt -size 200 200 -output output5_09.t
 ![image-20210915211544733](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211544733.png)
 
 ```zsh
-raytracer -input scene5_10_scale_translate.txt -size 200 200 -gui -tessellation 30 15 -gouraud
 raytracer -input scene5_10_scale_translate.txt -size 200 200 -output output5_10.tga -gui -grid 15 15 15 -visualize_grid
 ```
 
 ![image-20210915211627487](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211627487.png)
 
 ```zsh
-raytracer -input scene5_11_rotated_triangles.txt -size 200 200 -gui
 raytracer -input scene5_11_rotated_triangles.txt -size 200 200 -output output5_11.tga -gui -grid 15 15 9 -visualize_grid
 ```
 
 ![image-20210915211652804](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211652804.png)
 
 ```zsh
-raytracer -input scene5_12_nested_transformations.txt -size 200 200 -gui
 raytracer -input scene5_12_nested_transformations.txt -size 200 200 -output output5_12.tga -gui -grid 30 30 30 -visualize_grid
 ```
 
 ![image-20210915212139787](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915212139787.png)
 
 #### Assignment 6
+
+```zsh
+raytracer -input scene6_01_sphere.txt -output output6_01b.tga -size 200 200 -grid 10 10 10 -stats
+```
+
+![image-20210915213155179](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213155179.png)
+
+```zsh
+raytracer -input scene6_02_sphere_triangles.txt -output output6_02b.tga -size 200 200 -grid 10 10 10 -stats 
+raytracer -input scene6_02_sphere_triangles.txt -output output6_02d.tga -size 200 200 -grid 10 10 10 -stats -shadows 
+```
+
+![image-20210915213237764](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213237764.png)
+
+![image-20210915213249557](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213249557.png)
+
+```zsh
+raytracer -input scene6_03_sphere_plane.txt -output output6_03b.tga -size 200 200 -grid 10 10 10 -stats
+raytracer -input scene6_03_sphere_plane.txt -output output6_03d.tga -size 200 200 -grid 10 10 10 -stats -shadows
+```
+
+![image-20210915213342462](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213342462.png)
+
+![image-20210915213355369](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213355369.png)
+
+```zsh
+raytracer -input scene6_04_bunny_mesh_200.txt -output output6_04b.tga -size 200 200 -grid 10 10 7 -stats
+raytracer -input scene6_04_bunny_mesh_200.txt -output output6_04d.tga -size 200 200 -grid 10 10 7 -stats -shadows
+raytracer -input scene6_05_bunny_mesh_1k.txt  -output output6_05.tga -size 200 200 -grid 15 15 12 -stats -shadows
+raytracer -input scene6_06_bunny_mesh_5k.txt  -output output6_06.tga -size 200 200 -grid 20 20 15 -stats -shadows
+raytracer -input scene6_07_bunny_mesh_40k.txt -output output6_07.tga -size 200 200 -grid 40 40 33 -stats -shadows
+```
+
+![image-20210915213503730](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213503730.png)
+
+![image-20210915213558838](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213558838.png)
+
+![image-20210915213651077](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213651077.png)
+
+![image-20210915213728749](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213728749.png)
+
+![image-20210915213810479](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213810479.png)
+
+```zsh
+raytracer -input scene6_08_scale_translate.txt -size 200 200 -output output6_08b.tga -grid 15 15 15
+```
+
+![image-20210915213903372](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213903372.png)
+
+```zsh
+raytracer -input scene6_09_rotated_triangles.txt -size 200 200 -output output6_09b.tga -grid 15 15 9 
+```
+
+![image-20210915213926545](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213926545.png)
+
+```zsh
+raytracer -input scene6_10_nested_transformations.txt -size 200 200 -output output6_10b.tga -grid 30 30 30
+```
+
+![image-20210915213952634](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213952634.png)
+
+```zsh
+raytracer -input scene6_11_mirrored_floor.txt -size 200 200 -output output6_11b.tga -shadows -bounces 1 -weight 0.01 -grid 40 10 40 -stats
+```
+
+![image-20210915214046717](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214046717.png)
+
+```zsh
+raytracer -input scene6_12_faceted_gem.txt -size 200 200 -output output6_12b.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 20 20 20 -stats
+```
+
+![image-20210915214201647](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214201647.png)
+
+```zsh
+raytracer -input scene6_13_checkerboard.txt -size 200 200 -output output6_13.tga -shadows 
+raytracer -input scene6_14_glass_sphere.txt -size 200 200 -output output6_14.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 20 20 20
+```
+
+![image-20210915214238719](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214238719.png)
+
+![image-20210915214319224](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214319224.png)
+
+```zsh
+raytracer -input scene6_15_marble_cubes.txt -size 300 300 -output output6_15.tga
+```
+
+![image-20210915214359237](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214359237.png)
+
+```zsh
+raytracer -input scene6_17_marble_vase.txt -size 300 300 -output output6_17a.tga -grid 15 30 15 -bounces 1 -shadows
+```
+
+![image-20210915213033603](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213033603.png)
+
+```zsh
+raytracer -input scene6_18_6.837_logo.txt -size 400 200 -output output6_18a.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 80 30 3
+```
+
+![image-20210915214842586](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214842586.png)
+
+由于我没有实现Wood材质，所以用Marble代替
 
 #### Assignment 7
 
