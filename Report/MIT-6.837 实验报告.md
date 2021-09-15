@@ -167,9 +167,15 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 5
 
+实现立体网格结构与各种几何体的包围盒，利用3DDDA算法进行光线投射
+
 #### Assignment 6
 
+利用Assignment 5的Voxel Rendering，实现光追加速。此外，实现Soild Texture
+
 #### Assignment 7
+
+利用超采样和filter实现抗锯齿，并运用在过去实现的光追系统上
 
 ### 实验原理
 
@@ -273,9 +279,47 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 5
 
+* Bounding Box
+
+  ![image-20210915155042419](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155042419.png)
+
+  ![image-20210915155059876](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155059876.png)
+
+  ![image-20210915155108199](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155108199.png)
+
+  ![image-20210915155118799](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155118799.png)
+
+  ![image-20210915155128614](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155128614.png)
+
+  ![image-20210915155138221](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155138221.png)
+
+* Grid
+
+  ![image-20210915155321826](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155321826.png)
+
+  ![image-20210915155347749](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155347749.png)
+
 #### Assignment 6
 
+* Soild Texture
+
+  ![image-20210915163252035](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915163252035.png)
+
 #### Assignment 7
+
+* Sampling
+
+  ![image-20210915172309481](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915172309481.png)
+
+  ![image-20210915172346990](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915172346990.png)
+
+* Filter
+
+  ![image-20210915172643762](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915172643762.png)
+
+  ![image-20210915172653124](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915172653124.png)
+
+  ![image-20210915172705252](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915172705252.png)
 
 ### 源代码与分析
 
@@ -1087,13 +1131,1086 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 #### Assignment 5
 
+* boundingbox.h
+
+  ```c++
+  #ifndef _BOUNDING_BOX_H_
+  #define _BOUNDING_BOX_H_
+  
+  #include "vectors.h"
+  
+  #include <assert.h>
+  
+  #define min2(a, b) (((a) < (b)) ? (a) : (b))
+  #define max2(a, b) (((a) > (b)) ? (a) : (b))
+  
+  // ====================================================================
+  // ====================================================================
+  
+  class BoundingBox
+  {
+  
+  public:
+      // CONSTRUCTOR & DESTRUCTOR
+      BoundingBox(Vec3f _min, Vec3f _max)
+      {
+          Set(_min, _max);
+      }
+      ~BoundingBox() {}
+  
+      // ACCESSORS
+      void Get(Vec3f &_min, Vec3f &_max) const
+      {
+          _min = min;
+          _max = max;
+      }
+      Vec3f getMin() const { return min; }
+      Vec3f getMax() const { return max; }
+  
+      // MODIFIERS
+      void Set(BoundingBox *bb)
+      {
+          assert(bb != NULL);
+          min = bb->min;
+          max = bb->max;
+      }
+      void Set(Vec3f _min, Vec3f _max)
+      {
+          assert(min.x() <= max.x() &&
+                 min.y() <= max.y() &&
+                 min.z() <= max.z());
+          min = _min;
+          max = _max;
+      }
+      void Extend(const Vec3f v)
+      {
+          min = Vec3f(min2(min.x(), v.x()),
+                      min2(min.y(), v.y()),
+                      min2(min.z(), v.z()));
+          max = Vec3f(max2(max.x(), v.x()),
+                      max2(max.y(), v.y()),
+                      max2(max.z(), v.z()));
+      }
+      void Extend(BoundingBox *bb)
+      {
+          assert(bb != NULL);
+          Extend(bb->min);
+          Extend(bb->max);
+      }
+  
+      // DEBUGGING
+      void Print() const
+      {
+          printf("%f %f %f  -> %f %f %f\n", min.x(), min.y(), min.z(),
+                 max.x(), max.y(), max.z());
+      }
+      void paint() const;
+  
+  private:
+      BoundingBox() { assert(0); } // don't use this constructor
+  
+      // REPRESENTATION
+      Vec3f min;
+      Vec3f max;
+  };
+  
+  // ====================================================================
+  // ====================================================================
+  
+  #endif
+  ```
+
+  boundingBox的类与实现没有太多好说的，更关键的是每种Object3d如何过去包围盒和如何插入到grid中
+
+* grid.h
+
+  ```c++
+  class Grid: public Object3D
+  {
+  private:
+      int nx;
+      int ny;
+      int nz;
+      vector<bool> m_is_voxel_opaque;
+      vector<vector<Object3D *>> objs;
+      bool visualize;
+  
+  public:
+      Grid(){};
+      Grid(BoundingBox *bb, int nx, int ny, int nz) : nx(nx), ny(ny), nz(nz)
+      {
+          this->boundingBox = bb;
+          m_is_voxel_opaque.assign(nx * ny * nz, false);
+          objs.resize(nx * ny * nz);
+      }
+      BoundingBox *getBoundingBox();
+      Vec3f getGird();
+      void initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const;
+      void insertIntoThis(int i, bool v, Object3D *obj);
+      virtual bool intersect(const Ray &r, Hit &h, float tmin);
+      virtual void paint();
+  };
+  ```
+
+* grid.cpp
+
+  ```c++
+  #include "object3d.h"
+  
+  Vec3f Grid::getGird()
+  {
+      return Vec3f(nx, ny, nz);
+  }
+  
+  BoundingBox *Grid::getBoundingBox()
+  {
+      return boundingBox;
+  }
+  
+  void Grid::insertIntoThis(int i, bool v, Object3D *obj)
+  {
+      m_is_voxel_opaque[i] = v;
+      objs[i].push_back(obj);
+  }
+  
+  void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
+  {
+      const Vec3f D = r.getDirection();
+      const Vec3f O = r.getOrigin();
+  
+      float _tnear = tmin;
+      float _tfar = INFINITY;
+      Vec3f _n(0.0f, 0.0f, 0.0f);
+  
+      assert(_tnear >= 0);
+  
+      // x axy
+      float _dx = D.x();
+      float _t1x = (boundingBox->getMin().x() - O.x()) / _dx;
+      float _t2x = (boundingBox->getMax().x() - O.x()) / _dx;
+      if (_t1x > _t2x)
+      {
+          float _tmp = _t1x;
+          _t1x = _t2x;
+          _t2x = _tmp;
+      }
+  
+      // y axy
+      float _dy = D.y();
+      float _t1y = (boundingBox->getMin().y() - O.y()) / _dy;
+      float _t2y = (boundingBox->getMax().y() - O.y()) / _dy;
+      if (_t1y > _t2y)
+      {
+          float _tmp = _t1y;
+          _t1y = _t2y;
+          _t2y = _tmp;
+      }
+  
+      // z axy
+      float _dz = D.z();
+      float _t1z = (boundingBox->getMin().z() - O.z()) / _dz;
+      float _t2z = (boundingBox->getMax().z() - O.z()) / _dz;
+      if (_t1z > _t2z)
+      {
+          float _tmp = _t1z;
+          _t1z = _t2z;
+          _t2z = _tmp;
+      }
+  
+      _tnear = (_t1x > _tnear) ? _t1x : _tnear;
+      _tnear = (_t1y > _tnear) ? _t1y : _tnear;
+      _tnear = (_t1z > _tnear) ? _t1z : _tnear;
+  
+      _tfar = (_t2x < _tfar) ? _t2x : _tfar;
+      _tfar = (_t2y < _tfar) ? _t2y : _tfar;
+      _tfar = (_t2z < _tfar) ? _t2z : _tfar;
+  
+      if (_tfar < _tnear)
+          return; // missed
+  
+      mi.sign_x = _dx > 0 ? 1 : -1;
+      mi.sign_y = _dy > 0 ? 1 : -1;
+      mi.sign_z = _dz > 0 ? 1 : -1;
+  
+      if (_tnear == _t1x)
+          _n += Vec3f(-1.0f, 0.0f, 0.0f) * mi.sign_x;
+      if (_tnear == _t1y)
+          _n += Vec3f(0.0f, -1.0f, 0.0f) * mi.sign_y;
+      if (_tnear == _t1z)
+          _n += Vec3f(0.0f, 0.0f, -1.0f) * mi.sign_z;
+      _n.Normalize();
+  
+      Vec3f min = boundingBox->getMin();
+      Vec3f max = Vec3f(boundingBox->getMax().x(), boundingBox->getMax().y() , boundingBox->getMax().z());
+      Vec3f size = max - min;
+      float grid_x = size.x() / nx;
+      float grid_y = size.y() / ny;
+      float grid_z = size.z() / nz;
+  
+      mi.tmin = _tnear;
+      mi.dt_x = fabs(grid_x / _dx);
+      mi.dt_y = fabs(grid_y / _dy);
+      mi.dt_z = fabs(grid_z / _dz);
+      if (_t1x > -INFINITY)
+      {
+          while (_t1x <= _tnear)
+          {
+              _t1x += mi.dt_x;
+          }
+          mi.tnext_x = _t1x;
+      }
+      if (_t1y > -INFINITY)
+      {
+          while (_t1y <= _tnear)
+          {
+              _t1y += mi.dt_y;
+          }
+          mi.tnext_y = _t1y;
+      }
+      if (_t1z > -INFINITY)
+      {
+          while (_t1z <= _tnear)
+          {
+              _t1z += mi.dt_z;
+          }
+          mi.tnext_z = _t1z;
+      }
+      Vec3f _rp = O + D * _tnear - boundingBox->getMin();
+      _rp.Divide(grid_x, grid_y, grid_z);
+      mi.i = static_cast<int>(_rp.x());
+      if (mi.sign_x < 0 && mi.i == nx)
+          mi.i--;
+      mi.j = static_cast<int>(_rp.y());
+      if (mi.sign_y < 0 && mi.j == ny)
+          mi.j--;
+      mi.k = static_cast<int>(_rp.z());
+      if (mi.sign_z < 0 && mi.k == nz)
+          mi.k--;
+      mi.normal = _n;
+  }
+  
+  bool Grid::intersect(const Ray &r, Hit &h, float tmin)
+  {
+      bool result = false;
+      MarchingInfo mi;
+      initializeRayMarch(mi, r, tmin);
+      if (mi.tmin < h.getT())
+      {
+          while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
+          {
+              if (m_is_voxel_opaque[(mi.i * ny + mi.j) * nz + mi.k])
+              {
+                  if (objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material == nullptr)
+                      objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material = new PhongMaterial(Vec3f(0.5,0.5,0.5));
+                  h.set(mi.tmin, objs[(mi.i * ny + mi.j) * nz + mi.k][0]->material, mi.normal, r);
+                  result = true;
+                  break;
+              }
+              mi.nextCell();
+          }
+      }
+      return result;
+  }
+  
+  void Grid::paint()
+  {
+      // material->glSetMaterial();
+      boundingBox->paint();
+      Vec3f size = boundingBox->getMax() - boundingBox->getMin();
+      float grid_x = size.x() / nx;
+      float grid_y = size.y() / ny;
+      float grid_z = size.z() / nz;
+      Vec3f center = boundingBox->getMin();
+      glPushMatrix();
+      glTranslatef(center.x(), center.y(), center.z());
+      for (int i = 0; i < nx * ny * nz; i++)
+      {
+          if (m_is_voxel_opaque[i])
+          {
+              int kk = i % nz;
+              int jj = ((i - kk) / nz) % ny;
+              int ii = (((i - kk) / nz) - jj) / ny;
+              glBegin(GL_QUADS);
+              glVertex3f(ii * grid_x, jj * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, jj * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, jj * grid_y, kk * grid_z);
+              glVertex3f(ii * grid_x, jj * grid_y, kk * grid_z);
+  
+              glVertex3f(ii * grid_x, jj * grid_y, (kk + 1) * grid_z);
+              glVertex3f(ii * grid_x, (jj + 1) * grid_y, (kk + 1) * grid_z);
+              glVertex3f(ii * grid_x, (jj + 1) * grid_y, kk * grid_z);
+              glVertex3f(ii * grid_x, jj * grid_y, kk * grid_z);
+  
+              glVertex3f(ii * grid_x, (jj + 1) * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, (jj + 1) * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, (jj + 1) * grid_y, kk * grid_z);
+              glVertex3f(ii * grid_x, (jj + 1) * grid_y, kk * grid_z);
+  
+              glVertex3f((ii + 1) * grid_x, (jj + 1) * grid_y, kk * grid_z);
+              glVertex3f((ii + 1) * grid_x, (jj + 1) * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, jj * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, jj * grid_y, kk * grid_z);
+  
+              glVertex3f(ii * grid_x, jj * grid_y, kk * grid_z);
+              glVertex3f(ii * grid_x, (jj + 1) * grid_y, kk * grid_z);
+              glVertex3f((ii + 1) * grid_x, (jj + 1) * grid_y, kk * grid_z);
+              glVertex3f((ii + 1) * grid_x, jj * grid_y, kk * grid_z);
+  
+              glVertex3f(ii * grid_x, jj * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, jj * grid_y, (kk + 1) * grid_z);
+              glVertex3f((ii + 1) * grid_x, (jj + 1) * grid_y, (kk + 1) * grid_z);
+              glVertex3f(ii * grid_x, (jj + 1) * grid_y, (kk + 1) * grid_z);
+              glEnd();
+          }
+      }
+      glPopMatrix();
+  }
+  ```
+
+  因为课程作业要求中对grid存储插入物品指针的要求发生了变化，所以同时存在一个bool vector和一个Object3D *的二维数组，grid中最关键的还是initializeRayMarch函数——与marchinginfo中的nextcell共同事先3DDDA算法，和intersect函数，用来“求交”
+
+* marchingInfo.cpp
+
+  ```c++
+  void MarchingInfo::nextCell()
+  {
+      assert(tnext_x >= 0 && tnext_y >= 0 && tnext_z >= 0);
+      assert(dt_x >= 0 && dt_y >= 0 && dt_z >= 0);
+  
+      if (tnext_x < tnext_y)
+      {
+          if (tnext_x < tnext_z)
+          {
+              i += sign_x;
+              tmin = tnext_x;
+              tnext_x += dt_x;
+              normal = Vec3f(-1.0f, 0.0f, 0.0f) * sign_x;
+          }
+          else
+          {
+              k += sign_z;
+              tmin = tnext_z;
+              tnext_z += dt_z;
+              normal = Vec3f(0.0f, 0.0f, -1.0f) * sign_z;
+          }
+      }
+      else
+      {
+          if (tnext_y < tnext_z)
+          {
+              j += sign_y;
+              tmin = tnext_y;
+              tnext_y += dt_y;
+              normal = Vec3f(0.0f, -1.0f, 0.0f) * sign_y;
+          }
+          else
+          {
+              k += sign_z;
+              tmin = tnext_z;
+              tnext_z += dt_z;
+              normal = Vec3f(0.0f, 0.0f, -1.0f) * sign_z;
+          }
+      }
+  }
+  ```
+
+  实现3DDDA算法的迭代部分
+
+* group.cpp
+
+  ```c++
+  BoundingBox *Group::getBoundingBox()
+  {
+      if (this->boundingBox)
+          return this->boundingBox;
+      float x_min = MAXFLOAT, y_min = MAXFLOAT, z_min = MAXFLOAT;
+      float x_max = -1 * MAXFLOAT, y_max = -1 * MAXFLOAT, z_max = -1 * MAXFLOAT;
+      for (int i = 0; i < this->n_objs; i++)
+      {
+          if (objs[i] == nullptr)
+              continue;
+          BoundingBox *bbox = objs[i]->getBoundingBox();
+          if (bbox == nullptr)
+              continue;
+          Vec3f _v1 = bbox->getMax();
+          Vec3f _v2 = bbox->getMin();
+          float _x1 = _v1.x(), _y1 = _v1.y(), _z1 = _v1.z();
+          float _x2 = _v2.x(), _y2 = _v2.y(), _z2 = _v2.z();
+          x_min = min<float>(x_min, _x2);
+          y_min = min<float>(y_min, _y2);
+          z_min = min<float>(z_min, _z2);
+          x_max = max<float>(x_max, _x1);
+          y_max = max<float>(y_max, _y1);
+          z_max = max<float>(z_max, _z1);
+      }
+      this->boundingBox = new BoundingBox(Vec3f(x_min, y_min, z_min), Vec3f(x_max, y_max, z_max));
+      return this->boundingBox;
+  }
+  void Group::insertIntoGrid(Grid *g, Matrix *m)
+  {
+      grid = g;
+      for (int i = 0; i < n_objs; i++)
+      {
+          if (objs[i]->getBoundingBox() == NULL)
+              continue;
+          objs[i]->insertIntoGrid(g, m);
+      }
+  }
+  ```
+
+  Group的包围盒是其内所有物体的包围盒的包围盒，而将group插入grid也只需要调用其内其他物件的insertIntoGrid即可
+
+* transform.cpp
+
+  ```c++
+  BoundingBox *Transform::getBoundingBox()
+  {
+      if (this->boundingBox)
+          return this->boundingBox;
+      Matrix m_matrix = transform_mat;
+      if (obj->_isTriangle)
+      {
+          Vec3f a = obj->_a;
+          Vec3f b = obj->_b;
+          Vec3f c = obj->_c;
+          m_matrix.Transform(a);
+          m_matrix.Transform(b);
+          m_matrix.Transform(c);
+          boundingBox = new BoundingBox(Vec3f(MIN3(a.x(), b.x(), c.x()), MIN3(a.y(), b.y(), c.y()), MIN3(a.z(), b.z(), c.z())), 
+                                      Vec3f(MAX3(a.x(), b.x(), c.x()), MAX3(a.y(), b.y(), c.y()), MAX3(a.z(), b.z(), c.z())));
+          return boundingBox;
+      }
+      BoundingBox *bb = obj->getBoundingBox();
+      Vec3f _v1 = bb->getMax();
+      Vec3f _v2 = bb->getMin();
+      float _x1 = _v1.x(), _y1 = _v1.y(), _z1 = _v1.z();
+      float _x2 = _v2.x(), _y2 = _v2.y(), _z2 = _v2.z();
+      Vec3f _v3(_x2, _y1, _z1);
+      Vec3f _v4(_x2, _y2, _z1);
+      Vec3f _v5(_x1, _y2, _z1);
+      Vec3f _v6(_x1, _y2, _z2);
+      Vec3f _v7(_x1, _y1, _z2);
+      Vec3f _v8(_x2, _y1, _z2);
+  
+      m_matrix.Transform(_v1);
+      m_matrix.Transform(_v2);
+      m_matrix.Transform(_v3);
+      m_matrix.Transform(_v4);
+      m_matrix.Transform(_v5);
+      m_matrix.Transform(_v6);
+      m_matrix.Transform(_v7);
+      m_matrix.Transform(_v8);
+  
+      _x1 = _v1.x(), _y1 = _v1.y(), _z1 = _v1.z();
+      _x2 = _v2.x(), _y2 = _v2.y(), _z2 = _v2.z();
+      float _x3 = _v3.x(), _y3 = _v3.y(), _z3 = _v3.z();
+      float _x4 = _v4.x(), _y4 = _v4.y(), _z4 = _v4.z();
+      float _x5 = _v5.x(), _y5 = _v5.y(), _z5 = _v5.z();
+      float _x6 = _v6.x(), _y6 = _v6.y(), _z6 = _v6.z();
+      float _x7 = _v7.x(), _y7 = _v7.y(), _z7 = _v7.z();
+      float _x8 = _v8.x(), _y8 = _v8.y(), _z8 = _v8.z();
+  
+      float _xmin = _x1 < _x2 ? _x1 : _x2;
+      _xmin = _xmin < _x3 ? _xmin : _x3;
+      _xmin = _xmin < _x4 ? _xmin : _x4;
+      _xmin = _xmin < _x5 ? _xmin : _x5;
+      _xmin = _xmin < _x6 ? _xmin : _x6;
+      _xmin = _xmin < _x7 ? _xmin : _x7;
+      _xmin = _xmin < _x8 ? _xmin : _x8;
+  
+      float _ymin = _y1 < _y2 ? _y1 : _y2;
+      _ymin = _ymin < _y3 ? _ymin : _y3;
+      _ymin = _ymin < _y4 ? _ymin : _y4;
+      _ymin = _ymin < _y5 ? _ymin : _y5;
+      _ymin = _ymin < _y6 ? _ymin : _y6;
+      _ymin = _ymin < _y7 ? _ymin : _y7;
+      _ymin = _ymin < _y8 ? _ymin : _y8;
+  
+      float _zmin = _z1 < _z2 ? _z1 : _z2;
+      _zmin = _zmin < _z3 ? _zmin : _z3;
+      _zmin = _zmin < _z4 ? _zmin : _z4;
+      _zmin = _zmin < _z5 ? _zmin : _z5;
+      _zmin = _zmin < _z6 ? _zmin : _z6;
+      _zmin = _zmin < _z7 ? _zmin : _z7;
+      _zmin = _zmin < _z8 ? _zmin : _z8;
+  
+      float _xmax = _x1 > _x2 ? _x1 : _x2;
+      _xmax = _xmax > _x3 ? _xmax : _x3;
+      _xmax = _xmax > _x4 ? _xmax : _x4;
+      _xmax = _xmax > _x5 ? _xmax : _x5;
+      _xmax = _xmax > _x6 ? _xmax : _x6;
+      _xmax = _xmax > _x7 ? _xmax : _x7;
+      _xmax = _xmax > _x8 ? _xmax : _x8;
+  
+      float _ymax = _y1 > _y2 ? _y1 : _y2;
+      _ymax = _ymax > _y3 ? _ymax : _y3;
+      _ymax = _ymax > _y4 ? _ymax : _y4;
+      _ymax = _ymax > _y5 ? _ymax : _y5;
+      _ymax = _ymax > _y6 ? _ymax : _y6;
+      _ymax = _ymax > _y7 ? _ymax : _y7;
+      _ymax = _ymax > _y8 ? _ymax : _y8;
+  
+      float _zmax = _z1 > _z2 ? _z1 : _z2;
+      _zmax = _zmax > _z3 ? _zmax : _z3;
+      _zmax = _zmax > _z4 ? _zmax : _z4;
+      _zmax = _zmax > _z5 ? _zmax : _z5;
+      _zmax = _zmax > _z6 ? _zmax : _z6;
+      _zmax = _zmax > _z7 ? _zmax : _z7;
+      _zmax = _zmax > _z8 ? _zmax : _z8;
+  
+      this->boundingBox = new BoundingBox(Vec3f(_xmin, _ymin, _zmin),Vec3f(_xmax, _ymax, _zmax));
+  
+      return this->boundingBox;
+  }
+  void Transform::insertIntoGrid(Grid *g, Matrix *m)
+  {
+      if(m==nullptr) obj->insertIntoGrid(g,&(this->transform_mat));
+      else 
+      {
+          Matrix* nm = new Matrix((*m)*this->transform_mat);
+          obj->insertIntoGrid(g,nm);
+      } 
+  }
+  ```
+
+  对transform后的三角形进行特殊处理，至于其于情况，只需变换原包围盒的八个顶点，构建新的包围盒即可
+
+  至于将Transform插入网格，我的做法是——如果之前已经有存在的变换矩阵，则将目前的变换矩阵相乘后调用insertIntoGrid方法将所属object与相应变换插入网格，否则直接将所属object与相应变换插入网格
+
+* sphere.cpp
+
+  ```c++
+  void Sphere::insertIntoGrid(Grid *g, Matrix *m)
+  {
+      if (m != nullptr)
+      {
+          this->boundingBox = (new Transform(*m, this))->getBoundingBox();
+          Vec3f m_min = boundingBox->getMin();
+          Vec3f m_max = boundingBox->getMax();
+          Vec3f v = g->getGird();
+          BoundingBox *bb = g->getBoundingBox();
+          Vec3f min = bb->getMin();
+          Vec3f max = bb->getMax();
+          int x = v.x();
+          int y = v.y();
+          int z = v.z();
+          Vec3f size = max - min;
+          float grid_x = size.x() / x;
+          float grid_y = size.y() / y;
+          float grid_z = size.z() / z;
+  
+          int _start_i = (fabs(m_min.x() - min.x())) * (1 / grid_x);
+          int _start_j = (fabs(m_min.y() - min.y())) * (1 / grid_y);
+          int _start_k = (fabs(m_min.z() - min.z())) * (1 / grid_z);
+          int _end_i = (fabs(m_max.x() - min.x())) * (1 / grid_x);
+          int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
+          int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
+  
+          if (_start_i == _end_i)
+              _start_i--;
+          if (_start_j == _end_j)
+              _start_j--;
+          if (_start_k == _end_k)
+              _start_k--;
+          if (_start_i > _end_i)
+              swap(_start_i, _end_i);
+          if (_start_j > _end_j)
+              swap(_start_j, _end_j);
+          if (_start_k > _end_k)
+              swap(_start_k, _end_k);
+          if (_end_i > x)
+              _end_i--;
+          if (_end_j > y)
+              _end_j--;
+          if (_end_k > z)
+              _end_k--;
+  
+          for (int _i = _start_i; _i < _end_i; _i++)
+          {
+              for (int _j = _start_j; _j < _end_j; _j++)
+              {
+                  for (int _k = _start_k; _k < _end_k; _k++)
+                  {
+                      g->insertIntoThis((_i * y + _j) * z + _k, true, this);
+                  }
+              }
+          }
+          return;
+      }
+      Vec3f v = g->getGird();
+      BoundingBox *bb = g->getBoundingBox();
+      Vec3f min = bb->getMin();
+      Vec3f max = Vec3f(bb->getMax().x(), bb->getMax().y(), bb->getMax().z());
+      int x = v.x();
+      int y = v.y();
+      int z = v.z();
+      Vec3f size = max - min;
+      float grid_x = size.x() / x;
+      float grid_y = size.y() / y;
+      float grid_z = size.z() / z;
+      Vec3f cen = center - min;
+      Vec3f _voxel;
+      for (int _i = 0; _i < x; _i++)
+      {
+          for (int _j = 0; _j < y; _j++)
+          {
+              for (int _k = 0; _k < z; _k++)
+              {
+                  float _x1 = (_i + 0.5f) * grid_x;
+                  float _y1 = (_j + 0.5f) * grid_y;
+                  float _z1 = (_k + 0.5f) * grid_z;
+                  _voxel.Set(_x1, _y1, _z1);
+                  if ((_voxel - cen).Length() <= radius)
+                  {
+                      g->insertIntoThis((_i * y + _j) * z + _k, true, this);
+                  }
+              }
+          }
+      }
+  }
+  BoundingBox *Sphere::getBoundingBox()
+  {
+      if (this->boundingBox)
+          return this->boundingBox;
+      this->boundingBox = new BoundingBox(Vec3f(center.x() - radius, center.y() - radius, center.z() - radius),
+                                          Vec3f(center.x() + radius, center.y() + radius, center.z() + radius));
+      return this->boundingBox;
+  }
+  ```
+
+  如果存在变换矩阵，则获得变换后的包围盒插入grid，否则直接按照圆心距cell中心距离来插入（需要注意的是，在assignment5中我的插入并不保守，这给我的assignment6带来了一些问题）
+
+  至于获取boundingbox，直接构建一个与球面相切的立方体即可
+
+* triangle.cpp
+
+  ```c++
+  BoundingBox *Triangle::getBoundingBox()
+  {
+      if (this->boundingBox)
+          return this->boundingBox;
+      this->boundingBox = new BoundingBox(Vec3f(MIN3(a.x(), b.x(), c.x()), MIN3(a.y(), b.y(), c.y()), MIN3(a.z(), b.z(), c.z())), 
+                                  Vec3f(MAX3(a.x(), b.x(), c.x()), MAX3(a.y(), b.y(), c.y()), MAX3(a.z(), b.z(), c.z())));
+      return this->boundingBox;
+  }
+  void Triangle::insertIntoGrid(Grid *g, Matrix *m)
+  {
+      if (m != nullptr)
+      {
+          this->boundingBox = (new Transform(*m, this))->getBoundingBox();
+      }
+      Vec3f m_min = boundingBox->getMin();
+      Vec3f m_max = boundingBox->getMax();
+      Vec3f v = g->getGird();
+      BoundingBox *bb = g->getBoundingBox();
+      Vec3f min = bb->getMin();
+      Vec3f max = Vec3f(bb->getMax().x(), bb->getMax().y(), bb->getMax().z());
+      int x = v.x();
+      int y = v.y();
+      int z = v.z();
+      Vec3f size = max - min;
+      float grid_x = size.x() / x;
+      float grid_y = size.y() / y;
+      float grid_z = size.z() / z;
+  
+      int _start_i = (fabs(m_min.x() - min.x())) * (1 / grid_x);
+      int _start_j = (fabs(m_min.y() - min.y())) * (1 / grid_y);
+      int _start_k = (fabs(m_min.z() - min.z())) * (1 / grid_z);
+      int _end_i = (fabs(m_max.x() - min.x())) * (1 / grid_x);
+      int _end_j = (fabs(m_max.y() - min.y())) * (1 / grid_y);
+      int _end_k = (fabs(m_max.z() - min.z())) * (1 / grid_z);
+  
+      if (_start_i > _end_i)
+          swap(_start_i, _end_i);
+      if (_start_j > _end_j)
+          swap(_start_j, _end_j);
+      if (_start_k > _end_k)
+          swap(_start_k, _end_k);
+  
+      if (_start_i == _end_i)
+          _end_i++;
+      if (_start_j == _end_j)
+          _end_j++;
+      if (_start_k == _end_k)
+          _end_k++;
+      
+      while(_end_i>x)
+      {
+          _end_i--;
+          _start_i--;
+      }
+  
+      while(_end_j>y)
+      {
+          _end_j--;
+          _start_j--;
+      }
+  
+          while(_end_k>z)
+      {
+          _end_k--;
+          _start_k--;
+      }
+      assert(_end_i <= x && _end_j <= y && _end_k <= z);
+  
+      for (int _i = _start_i; _i < _end_i; _i++)
+      {
+          for (int _j = _start_j; _j < _end_j; _j++)
+          {
+              for (int _k = _start_k; _k < _end_k; _k++)
+              {
+                  g->insertIntoThis((_i * y + _j) * z + _k, true, this);
+              }
+          }
+      }
+  }
+  ```
+
+  三角形的包围盒由它的三个顶点的xyz坐标的最大最小值构成，至于插入grid其实也只是将包围盒插入grid
+
 #### Assignment 6
 
+* grid.cpp
+
+  ```c++
+  bool Grid::intersect(const Ray &r, Hit &h, float tmin)
+  {
+      bool result = false;
+      MarchingInfo mi;
+      initializeRayMarch(mi, r, tmin);
+      Vec3f g_min = this->boundingBox->getMin();
+      Vec3f g_max = this->boundingBox->getMax();
+      Vec3f g_size = g_max - g_min;
+      float grid_x = g_size.x() / this->nx;
+      float grid_y = g_size.y() / this->ny;
+      float grid_z = g_size.z() / this->nz;
+      for (int i = 0; i < this->inf_objs.size(); i++)
+      {
+          result = inf_objs[i]->intersect(r, h, tmin) || result;
+      }
+      Hit pri_h(h);
+      if (mi.tmin < h.getT())
+      {
+          if (visualize_grid)
+          {
+              while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
+              {
+                  int grid_id = (mi.i * ny + mi.j) * nz + mi.k;
+                  if (m_is_voxel_opaque[grid_id])
+                  {
+                      if (objs[grid_id][0]->material == nullptr)
+                          objs[grid_id][0]->material = new PhongMaterial(Vec3f(0.5, 0.5, 0.5));
+                      Vec3f voxel_color(objs[grid_id].size() / 20.0f, 1 - objs[grid_id].size() / 20.0f, 0);
+                      h.set(mi.tmin, new PhongMaterial(voxel_color), mi.normal, r);
+                      result = true;
+                      break;
+                  }
+                  mi.nextCell();
+              }
+          }
+          else
+          {
+              while (mi.i < nx && mi.j < ny && mi.k < nz && mi.i >= 0 && mi.j >= 0 && mi.k >= 0)
+              {
+                  int grid_id = (mi.i * ny + mi.j) * nz + mi.k;
+                  if (m_is_voxel_opaque[grid_id])
+                  {
+                      for (int i = 0; i < objs[grid_id].size(); i++)
+                      {
+                          bool tmpres;
+                          //try to intersect all the primitives in the cell
+                          if (objs[grid_id][i]->pretrans_mat)
+                          {
+                              objs[grid_id][i] = new Transform(*(objs[grid_id][i]->pretrans_mat), objs[grid_id][i]);
+                              tmpres = objs[grid_id][i]->intersect(r, h, tmin);
+                          }
+                          else
+                              tmpres = objs[grid_id][i]->intersect(r, h, tmin);
+                              // cnt++;
+                          if (tmpres)
+                          {
+                              //get the intersection point
+                              Vec3f p = h.getIntersectionPoint();
+                              Vec3f rp = p - g_min;
+                              //if the intersectionpoint is in the cell
+                              if (rp.x() + epsilon >= mi.i * grid_x && rp.x() - epsilon <= (mi.i + 1) * grid_x &&
+                                  rp.y() + epsilon >= mi.j * grid_y && rp.y() - epsilon <= (mi.j + 1) * grid_y &&
+                                  rp.z() + epsilon >= mi.k * grid_z && rp.z() - epsilon <= (mi.k + 1) * grid_z)
+                              {
+                                  result = true;
+                                  continue;
+                              }
+                              //else, reset the hit
+                              if(!result) h = pri_h;
+                          }
+                      }
+                  }
+                  mi.nextCell();
+              }
+          }
+      }
+      // cout << cnt << endl;
+      return result;
+  }
+  ```
+
+  新的grid的求交流程主要增加了两点——一是在最开始需要先和无限的平面求交，二是要跟cell中含有的的object进行求交，如果得到的交点不在当前cell中，需要舍弃。由于更新hit数据是写在每个Object的求交方法中的，所以我们应该在检验交点是否在当前cell前先保存一份hit，以免在“错误的”求交中更新了hit数据。
+
+* material.cpp
+
+  ```c++
+  class Checkerboard : public Material
+  {
+  public:
+      Matrix *mat;
+      Material *material1, *material2;
+      Checkerboard(Matrix *m, Material *mat1, Material *mat2) : Material(Vec3f(1,1,1)), mat(m), material1(mat1), material2(mat2){};
+      Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
+      {
+          Vec3f p = hit.getIntersectionPoint();
+          mat->Transform(p);
+          bool whichmaterial = (int(floor(p[0])) + int(floor(p[1])) + int(floor(p[2]))) % 2;
+          if (whichmaterial)
+          {
+              return material1->Shade(ray, hit, dirToLight, lightColor);
+          }
+          else
+          {
+              return material2->Shade(ray, hit, dirToLight, lightColor);
+          }
+          return Vec3f();
+      }
+      void glSetMaterial(void) const
+      {
+          material1->glSetMaterial();
+      }
+  };
+  
+  class Noise : public Material
+  {
+  public:
+      int octaves;
+      Matrix *mat;
+      Material *material1, *material2;
+      static float NoiseCalculate(Vec3f pos, int octaves)
+      {
+          float c = 0;
+          float iteration = 1.0;
+          for (int i = 0; i < octaves; i++)
+          {
+              c += PerlinNoise::noise(pos.x(), pos.y(), pos.z()) * iteration;
+              iteration /= 2.0;
+              pos *= 2.0f;
+          }
+          return c;
+      }
+      Noise(Matrix *m, Material *mat1, Material *mat2, int _octaves) : Material(Vec3f(1,1,1)), mat(m), material1(mat1), material2(mat2), octaves(_octaves){};
+      Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
+      {
+          Vec3f p = hit.getIntersectionPoint();
+          mat->Transform(p);
+          float c = Noise::NoiseCalculate(p, octaves);
+          Vec3f color1 = material1->Shade(ray, hit, dirToLight, lightColor);
+          Vec3f color2 = material2->Shade(ray, hit, dirToLight, lightColor);
+          return color1 * (1 - c) + color2 * c;
+      }
+      void glSetMaterial(void) const
+      {
+          material1->glSetMaterial();
+      }
+  };
+  
+  class Marble : public Material
+  {
+  public:
+      int octaves;
+      Matrix *mat;
+      Material *material1, *material2;
+      float frequency;
+      float amplitude;
+      Marble(Matrix *m, Material *mat1, Material *mat2, int octaves, float frequency, float amplitude)
+          : Material(Vec3f(1,1,1)), mat(m), material1(mat1), material2(mat2), octaves(octaves), frequency(frequency), amplitude(amplitude){};
+      Vec3f Shade(const Ray &ray, const Hit &hit, const Vec3f &dirToLight, const Vec3f &lightColor) const
+      {
+          Vec3f p = hit.getIntersectionPoint();
+          mat->Transform(p);
+          float c = sin(frequency * p.x() + amplitude * Noise::NoiseCalculate(p, octaves));
+          Vec3f color1 = material1->Shade(ray, hit, dirToLight, lightColor);
+          Vec3f color2 = material2->Shade(ray, hit, dirToLight, lightColor);
+          return color1 * (1 - c) + color2 * c;
+      }
+      void glSetMaterial(void) const
+      {
+          material1->glSetMaterial();
+      }
+  };
+  ```
+
+  棋盘的材质很好实现——在对要着色的点进行变换后，根据其所在位置的“奇偶性”来设置材质即可
+
+  Noise的计算按照作业要求上来：N(x,y,z) = noise(x,y,z) + noise(2*x,2*y,2*z)/2 + noise(4*x,4*y,4*z)/4 + ...，Marble利用了Noise的Calculate方法实现了所谓的大理石材质
+
 #### Assignment 7
+
+* filter.cpp
+
+  ```c++
+  #include "filter.h"
+  Vec3f Filter::getColor(int i, int j, Film *film)
+  {
+      Vec3f color(0, 0, 0);
+      Sample sample;
+      int num_samples = film->getNumSamples();
+      int support_radius = this->getSupportRadius();
+      float weights = 0;
+      float weight = 0;
+      for (int _i = i - support_radius; _i <= i + support_radius; _i++)
+      {
+          if (_i < 0 || _i >= film->getWidth())
+              continue;
+          for (int _j = j - support_radius; _j <= j + support_radius; _j++)
+          {
+              if (_j < 0 || _j >= film->getHeight())
+                  continue;
+              for (int n = 0; n < num_samples; n++)
+              {
+                  sample = film->getSample(_i, _j, n);
+                  weight = getWeight(sample.getPosition().x() - 0.5 + (_i - i),
+                                     sample.getPosition().y() - 0.5 + (_j - j));
+                  weights += weight;
+                  color += weight * sample.getColor();
+              }
+          }
+      }
+      color /= weights;
+      return color;
+  }
+  
+  float BoxFilter::getWeight(float x, float y)
+  {
+      if (x >= radius || x <= -radius || y >= radius || y <= -radius)
+          return 0;
+      return 1;
+  }
+  
+  float TentFilter::getWeight(float x, float y)
+  {
+      Vec2f p(x, y);
+      float pl = p.Length();
+      if (pl >= radius)
+          return 0;
+      return (1 - pl / radius);
+  }
+  
+  float GaussianFilter::getWeight(float x, float y)
+  {
+      Vec2f p(x, y);
+      float pl = p.Length();
+      return pow(e, -1 * pl * pl / (2 * sigma * sigma));
+  }
+  
+  ```
+
+  三种滤波器采用各自的权重计算方式，没有特别要提的，需要注意的是sample与filter的坐标系转换——采样的坐标系原点是每个像素的左下角，而滤波器的坐标系原点是每个像素的中心
+
+* sampler.h
+
+  ```c++
+  class RandomSampler : public Sampler
+  {
+  public:
+      RandomSampler(int spp) : Sampler(spp){};
+      Vec2f getSamplePosition(int n)
+      {
+          return Vec2f(rand() / double(RAND_MAX), rand() / double(RAND_MAX));
+      }
+  };
+  
+  class UniformSampler : public Sampler
+  {
+  private:
+      int length = 1;
+      float size = 1;
+  
+  public:
+      UniformSampler(int spp) : Sampler(spp) 
+      { 
+          length = sqrt(spp);
+          size = 1.0f / length;
+      };
+      Vec2f getSamplePosition(int n)
+      {
+          int x = n % length;
+          int y = (n / length) % length;
+          return Vec2f(size * (0.5 + x), size * (0.5 + y));
+      }
+  };
+  
+  class JitteredSampler : public Sampler
+  {
+  private:
+      int length = 1;
+      float size = 1;
+  
+  public:
+      JitteredSampler(int spp) : Sampler(spp)
+      {
+          length = sqrt(spp);
+          size = 1.0f / length;
+      };
+      Vec2f getSamplePosition(int n)
+      {
+          int x = n % length;
+          int y = (n / length) % length;
+          return Vec2f(size * (x + rand() / double(RAND_MAX)), size * (y + rand() / double(RAND_MAX)));
+      }
+  };
+  ```
+
+  分别实现了random，uniform和jittered三种采样器，需要注意的依然是坐标原点问题
+
+* main.cpp
+
+  ```c++
+  for (int x = 0; x < width; x++)
+          for (int y = 0; y < height; y++)
+          {
+              for (int n = 0; n < sample_num; n++)
+              {
+                  Vec2f pixel_offset = spr->getSamplePosition(n);
+                  float fx = (x + pixel_offset.x()) / (float)width;
+                  float fy = (y + pixel_offset.y()) / (float)height;
+                  Ray r = sp->getCamera()->generateRay(Vec2f(fx, fy));
+                  r.x = x;
+                  r.y = y;
+                  Hit h = Hit(MAXFLOAT, nullptr, Vec3f(0, 0, 0));
+                  Vec3f color;
+                  color = rt->traceRay(r, epsilon, 0, 1, 1, h, true);
+                  Vec3f pt_normal = h.getNormal();
+                  float depth = h.getT();
+                  depth = max(depth, depth_min);
+                  depth = min(depth, depth_max);
+                  float gray = 1 - (depth - depth_min) / precalc;
+                  film->setSample(x, y, n, pixel_offset, color);                
+                  depth_image->SetPixel(x, y, Vec3f(gray, gray, gray));
+                  normal_image->SetPixel(x, y, Vec3f(fabs(pt_normal.x()), fabs(pt_normal.y()), fabs(pt_normal.z())));
+              }
+          }
+  ```
+
+  将原本的渲染流程中的单次采样得到的结果改为多次采样后加权平均的过程
 
 ### 实验结果
 
 #### Assignment 1
+
+```zsh
+./raytracer -input scene1_01.txt -size 200 200 -output output1_01.tga -depth 9 10 depth1_01.tga
+```
+
+![image-20210915175543258](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175543258.png)
+
+![image-20210915175605992](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175605992.png)
 
 #### Assignment 2
 
@@ -1127,9 +2244,15 @@ Assignment 4直接把我们的Ray Caster升格为Ray Tracer，我们的项目不
 
 #### Assignment 5
 
+Assignment 5是实现体素渲染，本以为很简单的作业我却踩了很多坑——基本上都是代码相关而非算法相关的问题，我也增长了debug能力。因为我的assignment 5 6 7都是在公司电脑上完成的，而公司电脑并没有WSLg，我也没有费神去做OpenGL Preview相关的帮助调试的功能，不得不说，这给我带来了很大的麻烦，不可视的光追调试还是比较有挑战性的。此外，由于我并没有按照作业要求中的实现保守的插入，所以给我的Assignement6也带来了一些麻烦。
+
 #### Assignment 6
 
+Assignment 6是利用Grid进行加速，这让我第一次体会到了渲染的真谛——在保持图像质量的同时，用尽各种方法加快渲染速度。Grid对光追的加速效果十分显著——拿花瓶的渲染举例，我用传统的方法渲染，平均时间在一分钟左右，而使用Grid加速只用了不到十秒。但是Grid加速也有其局限：在Assignment 7的某个只有两个大三角形的测试场景中，利用Grid反而极大程度的拖慢了渲染速度，这也很好理解——利用Grid的时间复杂度（不考虑反射与折射）为O(num_pixels\*num_cell\*num_objs_per_cell)而传统光追为O(num_pixels\*num_objs)当场景中物体数量很少但会占据很多cell时，grid反而更慢，所以我们才需要bvh等更加高级的结构
+
 #### Assignment 7
+
+Assignment 7是利用超采样和过滤进行抗锯齿操作，我个人认为是学习意义大于实践意义的，毕竟在我们的渲染器中，锯齿并不常见（当然肯定存在），所以大多情况下不采用抗锯齿和采用抗锯齿图片并不会有太大的差别，但是抗锯齿又确实是必需品——毕竟在现实情况下，每个像素只采样一次的采样率还是太低了，必定有锯齿产生，这样渲染出的画面质量也不高。Assignment 7相当于彻底实现了课程要求的光线追踪器——我们有阴影、反射、折射，有加速，还有去噪，基本完成了光线追踪的每一个环节——当然是基础中的基础，后续改进的空间也很大，比如使用CUDA而非cpp进行光追的计算，比如利用BVH而非Grid进行加速，比如利用蒙特卡洛采样而非这三种非常naive的采样方法，但这些就是以后需要专门去研究的领域了，我们至少实现了一个完整的光线追踪渲染器
 
 ## Curve Editor (Assignment 8)
 
