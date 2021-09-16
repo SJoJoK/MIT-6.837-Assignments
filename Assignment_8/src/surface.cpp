@@ -1,4 +1,23 @@
 #include "surface.h"
+#include <GL/glut.h>
+#include <GL/gl.h>
+void SurfaceOfRevolution::Paint(ArgParser *args)
+{
+    this->c->Paint(args);
+}
+
+void BezierPatch::Paint(ArgParser *args)
+{
+    //DRAW THE CONTROL POINTS
+    glColor3f(1, 1, 1);
+    glPointSize(5);
+    glBegin(GL_POINTS);
+    for (int i = 0; i < points.size(); i++)
+    {
+        glVertex3f(points[i].x(), points[i].y(), points[i].z());
+    }
+    glEnd();
+}
 TriangleMesh* SurfaceOfRevolution ::OutputTriangles(ArgParser *args)
 {
     int ang_per_round = args->revolution_tessellation;

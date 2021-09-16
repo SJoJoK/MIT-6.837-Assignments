@@ -17,6 +17,7 @@ class SurfaceOfRevolution:public Surface
 public:
     SurfaceOfRevolution(){};
     SurfaceOfRevolution(Curve *c) : Surface(c){};
+    virtual void Paint(ArgParser *args);
     TriangleMesh *OutputTriangles(ArgParser *args);
 };
 class BezierPatch:public Surface
@@ -31,5 +32,6 @@ public:
     {
         points.resize(16);
     };
+    virtual void Paint(ArgParser *args);
     TriangleMesh *OutputTriangles(ArgParser *args);
 };

@@ -28,10 +28,10 @@ private:
     // HELPER FUNCTIONS
     void DefaultValues()
     {
-        input_file = (char *)"test.txt";
-        output_file = (char *)"output.obj";
-        output_bezier_file = (char *)"output_bezier.txt";
-        output_bspline_file = (char *)"output_bspline.txt";
+        input_file = nullptr;
+        output_file = nullptr;
+        output_bezier_file = nullptr;
+        output_bspline_file = nullptr;
         gui = 0;
         revolution_tessellation = 10;
         curve_tessellation = 30;
