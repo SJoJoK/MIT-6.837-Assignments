@@ -130,7 +130,7 @@ bool Sphere::intersect(const Ray &r, Hit &h, float tmin)
     if (t_p < 0)
         return false;
     double tmp = h.getT();
-    if (t_n < 0)
+    if (t_n < tmin)
     {
         if (t_p < tmp && t_p > tmin)
         {
