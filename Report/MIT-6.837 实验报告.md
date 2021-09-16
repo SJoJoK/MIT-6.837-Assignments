@@ -1,4 +1,4 @@
-# MIT-6.837 实验报告
+MIT-6.837 实验报告
 
 孙嘉锴，3180105871
 
@@ -2764,7 +2764,7 @@ raytracer -input scene6_17_marble_vase.txt -size 300 300 -output output6_17a.tga
 raytracer -input scene6_18_6.837_logo.txt -size 400 200 -output output6_18a.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 80 30 3
 ```
 
-![image-20210915214842586](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214842586.png)
+![image-20210916160518622](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916160518622.png)
 
 由于我没有实现Wood材质，所以用Marble代替
 
@@ -2810,18 +2810,785 @@ Assignment 7是利用超采样和过滤进行抗锯齿操作，我个人认为�
 
 ### 实验目的与要求
 
+实现一个曲线曲面编辑器，可以编辑并保存贝塞尔曲线，B样条曲线，旋转曲面与贝塞尔曲面
+
 ### 实验原理
+
+* BezierCurve
+
+  ![image-20210916143940091](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916143940091.png)
+
+* BSpline
+
+  ![image-20210916144007557](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916144007557.png)
+
+* Bezier Patch
+
+  ![image-20210916144052492](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916144052492.png)
+
+* Surface of Revolution
+
+  ![image-20210916144146769](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916144146769.png)
 
 ### 源代码与分析
 
+* Curve.h
+
+  ```c++
+  #pragma once
+  #include"spline.h"
+  class Curve:public Spline
+  {
+  public:
+      int num_p;
+      Matrix B;
+      Curve(){};
+      Curve(int num_p) : num_p(num_p)
+      {
+          points.resize(num_p);
+      };
+      void set(int i, Vec3f v)
+      {
+          points[i] = v;
+      }
+      virtual void Paint(ArgParser *args);
+      virtual void moveControlPoint(int selectedPoint, float x, float y)
+      {
+          points[selectedPoint] = Vec3f(x, y, 0);
+      };
+      virtual void addControlPoint(int selectedPoint, float x, float y)
+      {
+          points.insert(points.begin() + selectedPoint, Vec3f(x, y, 0));
+          num_p++;
+      };
+      virtual void deleteControlPoint(int selectedPoint)
+      {
+          points.erase(points.begin() + selectedPoint);
+          num_p--;
+      };
+      virtual int getNumVertices()
+      {
+          return num_p;
+      };
+      virtual Vec3f getVertex(int i)
+      {
+          return points[i];
+      }
+      virtual int getNumCurves()
+      {
+          return 0;
+      }
+      virtual vector<Vec3f> getPoints(ArgParser *args)
+      {
+          ;
+      }
+      Vec3f GBT(int i, float t);
+      Vec3f GBT(Vec3f p0, Vec3f p1, Vec3f p2, Vec3f p3, float t);
+  };
+  class BezierCurve:public Curve
+  {
+  public:
+      BezierCurve(int num_p) : Curve(num_p)
+      {
+          B = Matrix((const float[])
+              {
+              -1, 3, -3, 1, 
+              3, -6, 3, 0, 
+              -3, 3, 0, 0, 
+              1, 0, 0, 0
+              }
+          );
+      };
+      virtual int getNumCurves()
+      {
+          return (num_p - 1) / 3;
+      }
+      virtual vector<Vec3f> getPoints(ArgParser *args);
+      void Paint(ArgParser *args);
+      void OutputBezier(FILE *file);
+      void OutputBSpline(FILE *file);
+  };
+  class BSplineCurve:public Curve
+  {
+  public:
+      BSplineCurve(int num_p) : Curve(num_p)
+      {
+          B = Matrix((const float[]){
+              -1, 3, -3, 1,
+              3, -6, 0, 4,
+              -3, 3, 3, 1,
+              1, 0, 0, 0});
+          B *= (1 / 6.0f);
+      };
+      virtual int getNumCurves()
+      {
+          return num_p - 3;
+      }
+      virtual vector<Vec3f> getPoints(ArgParser *args);
+      void Paint(ArgParser *args);
+      void OutputBezier(FILE *file);
+      void OutputBSpline(FILE *file);
+  };
+  
+  ```
+
+* curve.cpp
+
+  ```c++
+  #include "curve.h"
+  #include "matrix.h"
+  #include <GL/glut.h>
+  #include <GL/gl.h>
+  void Curve::Paint(ArgParser *args)
+  {
+      //DRAW THE POLYGON
+      glColor3f(0, 0, 1);
+      glLineWidth(1);
+      glBegin(GL_LINES);
+      for (int i = 1; i < num_p; i++)
+      {
+          glVertex3f(points[i - 1].x(), points[i - 1].y(), points[i - 1].z());
+          glVertex3f(points[i].x(), points[i].y(), points[i].z());
+      }
+      glEnd();
+  
+      //DRAW THE CONTROL POINTS
+      glColor3f(1, 1, 1);
+      glPointSize(5);
+      glBegin(GL_POINTS);
+      for (int i = 0; i < num_p; i++)
+      {
+          glVertex3f(points[i].x(), points[i].y(), points[i].z());
+      }
+      glEnd();
+  }
+  
+  void BezierCurve::Paint(ArgParser *args)
+  {
+      Curve::Paint(args);
+      //DRAW THE CURVE
+      glColor3f(0.f, 1.f, 0.f);
+      glLineWidth(1);
+      glBegin(GL_LINE_STRIP);
+      float t = 0;
+      float delta = 1.0f / args->curve_tessellation;
+      Vec3f curve_pt;
+      for (int c = 0; c < num_p - 3; c+=3)
+      {
+          t = 0;
+          for (int i = 0; i <= args->curve_tessellation; i++)
+          {
+              curve_pt = GBT(c, t);
+              glVertex3f(curve_pt[0], curve_pt[1], curve_pt[2]);
+              t += delta;
+          }
+      }
+      glEnd();
+  }
+  
+  vector<Vec3f> BezierCurve::getPoints(ArgParser *args)
+  {
+      float t = 0;
+      float delta = 1.0f / args->curve_tessellation;
+      vector<Vec3f> curve_pts;
+      Vec3f curve_pt;
+      for (int c = 0; c < num_p - 3; c += 3)
+      {
+          t = 0;
+          for (int i = 0; i <= args->curve_tessellation; i++)
+          {
+              curve_pt = GBT(c, t);
+              curve_pts.push_back(curve_pt);
+              t += delta;
+          }
+      }
+      return curve_pts;
+  }
+  
+  void BSplineCurve::Paint(ArgParser *args)
+  {
+      Curve::Paint(args);
+      //DRAW THE CURVE
+      glColor3f(0.f, 1.f, 0.f);
+      glLineWidth(1);
+      glBegin(GL_LINE_STRIP);
+      float t = 0;
+      float delta = 1.0f / args->curve_tessellation;
+      Vec3f curve_pt;
+      for (int c = 0; c < num_p - 3; c++)
+      {
+          t = 0;
+          for (int i = 0; i <= args->curve_tessellation; i++)
+          {
+              curve_pt = GBT(c, t);
+              glVertex3f(curve_pt[0], curve_pt[1], curve_pt[2]);
+              t += delta;
+          }
+      }
+      glEnd();
+  }
+  
+  vector<Vec3f> BSplineCurve::getPoints(ArgParser *args)
+  {
+      float t = 0;
+      float delta = 1.0f / args->curve_tessellation;
+      vector<Vec3f> curve_pts;
+      Vec3f curve_pt;
+      for (int c = 0; c < num_p - 3; c++)
+      {
+          t = 0;
+          for (int i = 0; i <= args->curve_tessellation; i++)
+          {
+              curve_pt = GBT(c, t);
+              curve_pts.push_back(curve_pt);
+              t += delta;
+          }
+      }
+      return curve_pts;
+  }
+  
+  Vec3f Curve::GBT(int i, float t)
+  {
+      Vec4f T(pow(t, 3), pow(t, 2), pow(t, 1), 1);
+      B.Transform(T);
+      return points[i] * T[0] + points[i + 1] * T[1] + points[i + 2] * T[2] + points[i + 3] * T[3];
+  }
+  
+  Vec3f Curve::GBT(Vec3f p0, Vec3f p1, Vec3f p2, Vec3f p3, float t)
+  {
+      Vec4f T(pow(t, 3), pow(t, 2), pow(t, 1), 1);
+      B.Transform(T);
+      return p0 * T[0] + p1 * T[1] + p2 * T[2] + p3 * T[3];
+  }
+  
+  void BezierCurve::OutputBezier(FILE *file)
+  {
+      fprintf(file, "%s", "bezier\nnum_vertices ");
+      fprintf(file, "%d ", num_p);
+      for (Vec3f pt : points)
+      {
+          fprintf(file, "%.1f %.1f %.1f ", pt[0], pt[1], pt[2]);
+      }
+  }
+  
+  void BezierCurve::OutputBSpline(FILE *file)
+  {
+      BSplineCurve tmp(0);
+      tmp.B.Inverse();
+      Matrix trans = this->B * tmp.B;
+      Vec3f pt;
+      vector<Vec3f *> splines;
+      for (int i = 0; i < num_p - 1; i += 3)
+      {
+          const float o_G[] = {
+              points[i].x(), points[i + 1].x(), points[i + 2].x(), points[i + 3].x(),
+              points[i].y(), points[i + 1].y(), points[i + 2].y(), points[i + 3].y(),
+              points[i].z(), points[i + 1].z(), points[i + 2].z(), points[i + 3].z()};
+          Matrix G = Matrix(o_G);
+          Matrix result_matrix = G * trans;
+          Vec3f vec_result[4] = {
+              Vec3f(result_matrix.Get(0, 0), result_matrix.Get(0, 1), result_matrix.Get(0, 2)),
+              Vec3f(result_matrix.Get(1, 0), result_matrix.Get(1, 1), result_matrix.Get(1, 2)),
+              Vec3f(result_matrix.Get(2, 0), result_matrix.Get(2, 1), result_matrix.Get(2, 2)),
+              Vec3f(result_matrix.Get(3, 0), result_matrix.Get(3, 1), result_matrix.Get(3, 2))};
+          splines.push_back(vec_result);
+      }
+      for (Vec3f *spl : splines)
+      {
+          fprintf(file, "%s", "bspline num_vertices 4 ");
+          fprintf(file, "%.1f %.1f %.1f ", spl[0].x(), spl[0].y(), spl[0].z());
+          fprintf(file, "%.1f %.1f %.1f ", spl[1].x(), spl[1].y(), spl[1].z());
+          fprintf(file, "%.1f %.1f %.1f ", spl[2].x(), spl[2].y(), spl[2].z());
+          fprintf(file, "%.1f %.1f %.1f ", spl[3].x(), spl[3].y(), spl[3].z());
+      }
+  }
+  
+  void BSplineCurve::OutputBezier(FILE *file)
+  {
+      BezierCurve tmp(0);
+      tmp.B.Inverse();
+      Matrix trans = this->B * tmp.B;
+      Vec3f pt;
+      vector<Vec3f *> splines;
+      for (int i = 0; i < num_p - 1; i += 3)
+      {
+          const float o_G[] = {
+              points[i].x(), points[i + 1].x(), points[i + 2].x(), points[i + 3].x(),
+              points[i].y(), points[i + 1].y(), points[i + 2].y(), points[i + 3].y(),
+              points[i].z(), points[i + 1].z(), points[i + 2].z(), points[i + 3].z()};
+          Matrix G = Matrix(o_G);
+          Matrix result_matrix = G * trans;
+          Vec3f vec_result[4] = {
+              Vec3f(result_matrix.Get(0, 0), result_matrix.Get(0, 1), result_matrix.Get(0, 2)),
+              Vec3f(result_matrix.Get(1, 0), result_matrix.Get(1, 1), result_matrix.Get(1, 2)),
+              Vec3f(result_matrix.Get(2, 0), result_matrix.Get(2, 1), result_matrix.Get(2, 2)),
+              Vec3f(result_matrix.Get(3, 0), result_matrix.Get(3, 1), result_matrix.Get(3, 2))};
+          splines.push_back(vec_result);
+      }
+      for (Vec3f *spl : splines)
+      {
+          fprintf(file, "%s", "bezier num_vertices 4 ");
+          fprintf(file, "%.1f %.1f %.1f ", spl[0].x(), spl[0].y(), spl[0].z());
+          fprintf(file, "%.1f %.1f %.1f ", spl[1].x(), spl[1].y(), spl[1].z());
+          fprintf(file, "%.1f %.1f %.1f ", spl[2].x(), spl[2].y(), spl[2].z());
+          fprintf(file, "%.1f %.1f %.1f ", spl[3].x(), spl[3].y(), spl[3].z());
+      }
+  }
+  
+  void BSplineCurve::OutputBSpline(FILE *file)
+  {
+      fprintf(file, "%s", "bspline\nnum_vertices ");
+      fprintf(file, "%d ", num_p);
+      for (Vec3f pt : points)
+      {
+          fprintf(file, "%.1f %.1f %.1f ", pt[0], pt[1], pt[2]);
+      }
+  }
+  ```
+
+  曲线类的实现是本次实验的核心，对算法的理解是其次，代码的组织我个人认为i是更重要的，需要通过面向对象编程的知识尽量减少重复代码，课程PPT中一再强调的GBT方程给了我很大启发，我也是按此来管理代码的（存储B矩阵，然后先利用matrix类计算BT成绩，再计算GBT），而两种曲线的互相转化，其实就是矩阵变化，按照GBT去理解也很好实现
+
+* surface.h
+
+  ```c++
+  #pragma once
+  #include "spline.h"
+  #include "curve.h"
+  class Surface:public Spline
+  {
+  public:
+      Curve *c;
+      Surface(){};
+      Surface(Curve *c) : c(c){};
+      void set(int i, Vec3f v)
+      {
+          points[i] = v;
+      }
+  };
+  class SurfaceOfRevolution:public Surface
+  {
+  public:
+      SurfaceOfRevolution(){};
+      SurfaceOfRevolution(Curve *c) : Surface(c){};
+      TriangleMesh *OutputTriangles(ArgParser *args);
+  };
+  class BezierPatch:public Surface
+  {
+  public:
+      BezierPatch()
+      {
+          c = new BezierCurve(4);
+          points.resize(16);
+      };
+      BezierPatch(Curve *c) : Surface(c)
+      {
+          points.resize(16);
+      };
+      TriangleMesh *OutputTriangles(ArgParser *args);
+  };
+  ```
+
+* surface.cpp
+
+  ```c++
+  #include "surface.h"
+  TriangleMesh* SurfaceOfRevolution ::OutputTriangles(ArgParser *args)
+  {
+      int ang_per_round = args->revolution_tessellation;
+      float t = 0;
+      float theta = 0;
+      float delta_theta = 2 * M_PI / ang_per_round;
+      Matrix rot_M;
+      rot_M = rot_M.MakeYRotation(delta_theta);
+      vector<Vec3f> o_pts = this->c->getPoints(args);
+      vector<Vec3f> pts_1;
+      TriangleNet *tn = new TriangleNet(o_pts.size()-1, ang_per_round);
+      pts_1 = o_pts;
+      for (int i = 0; i < ang_per_round + 1; i++)
+      {
+          for (int j = 0; j < o_pts.size(); j++)
+          {
+              tn->SetVertex(j, i, pts_1[j]);
+          }
+          for (Vec3f &pt : pts_1)
+          {
+              rot_M.Transform(pt);
+          }
+      }
+      return tn;
+  }
+  
+  TriangleMesh *BezierPatch ::OutputTriangles(ArgParser *args)
+  {
+      float s = 0;
+      float t = 0;
+      float delta = 1.0f / args->patch_tessellation;
+      TriangleNet *tn = new TriangleNet(args->patch_tessellation, args->patch_tessellation);
+      Vec3f pt;
+      for (int i = 0; i <= args->patch_tessellation; i++)
+      {
+          t = 0;
+          for (int j = 0; j <= args->patch_tessellation; j++)
+          {
+              pt = this->c->GBT(
+                  this->c->GBT(this->points[0], this->points[1], this->points[2], this->points[3], t),
+                  this->c->GBT(this->points[4], this->points[5], this->points[6], this->points[7], t),
+                  this->c->GBT(this->points[8], this->points[9], this->points[10], this->points[11], t),
+                  this->c->GBT(this->points[12], this->points[13], this->points[14], this->points[15], t),
+                  s);
+              t += delta;
+              tn->SetVertex(i, j, pt);
+          }
+          s += delta;
+      }
+      return tn;
+  }
+  ```
+
+  两种曲面的实现都比较简单，进行一些简单的计算即可。TriangleNet类提供了很大的帮助，这也稍微锻炼了我的抽象能力——我一开始以为只有贝塞尔曲面可以用这个类，但其实旋转得到的曲面也可以这样用，毕竟只要是二维确定的曲面，都可以使用TriangleNet类。
+
+### 实验结果
+
+```zsh
+curve_editor -input spline8_01_bezier.txt -gui -curve_tessellation 30
+curve_editor -input spline8_02_bspline.txt -gui -curve_tessellation 30
+```
+
+![image-20210916145502746](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145502746.png)
+
+![image-20210916145522993](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145522993.png)
+
+```zsh
+curve_editor -input spline8_01_bezier.txt -output_bezier output8_01_bezier.txt
+curve_editor -input spline8_01_bezier.txt -output_bspline output8_01_bspline.txt
+curve_editor -input spline8_02_bspline.txt -output_bezier output8_02_bezier.txt
+curve_editor -input spline8_02_bspline.txt -output_bspline output8_02_bspline.txt
+curve_editor -input output8_01_bezier.txt -gui -curve_tessellation 30
+curve_editor -input output8_01_bspline.txt -gui -curve_tessellation 30
+curve_editor -input output8_02_bezier.txt -gui -curve_tessellation 30
+curve_editor -input output8_02_bspline.txt -gui -curve_tessellation 30
+```
+
+![image-20210916145649644](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145649644.png)
+
+![image-20210916145923937](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145923937.png)
+
+![image-20210916145858742](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145858742.png)
+
+![image-20210916145946748](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145946748.png)
+
+```zsh
+curve_editor -input spline8_03_bezier.txt -gui -curve_tessellation 30
+curve_editor -input spline8_04_bspline.txt -gui -curve_tessellation 30
+curve_editor -input spline8_05_bspline_dups.txt -gui -curve_tessellation 30
+```
+
+![image-20210916150011272](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150011272.png)
+
+![image-20210916150037514](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150037514.png)
+
+![image-20210916150054665](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150054665.png)
+
+```zsh
+curve_editor -input spline8_06_torus.txt -curve_tessellation 4 -gui
+curve_editor -input spline8_06_torus.txt -curve_tessellation 4 -revolution_tessellation 10 -output torus_low.obj
+curve_editor -input spline8_06_torus.txt -curve_tessellation 30 -revolution_tessellation 60 -output torus_high.obj
+```
+
+![image-20210916150154176](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150154176.png)
+
+![image-20210916150355126](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150355126.png)
+
+![image-20210916150413716](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150413716.png)
+
+```zsh
+curve_editor -input spline8_07_vase.txt -curve_tessellation 4 -output_bspline output8_07_edit.txt -gui
+curve_editor -input output8_07_edit.txt -curve_tessellation 4 -revolution_tessellation 10 -output vase_low.obj
+curve_editor -input output8_07_edit.txt -curve_tessellation 10 -revolution_tessellation 60 -output vase_high.obj
+```
+
+![image-20210916150916177](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150916177.png)
+
+![image-20210916151017036](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151017036.png)
+
+![image-20210916151027691](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151027691.png)
+
+```zsh
+curve_editor -input spline8_08_bezier_patch.txt -patch_tessellation 4 -output patch_low.obj
+curve_editor -input spline8_08_bezier_patch.txt -patch_tessellation 10 -output patch_med.obj
+curve_editor -input spline8_08_bezier_patch.txt -patch_tessellation 40 -output patch_high.obj
+```
+
+![image-20210916151229962](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151229962.png)
+
+![image-20210916151238628](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151238628.png)
+
+![image-20210916151251057](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151251057.png)
+
+```zsh
+curve_editor -input spline8_09_teapot.txt -curve_tessellation 4 -gui
+curve_editor -input spline8_09_teapot.txt -patch_tessellation 4 -curve_tessellation 4 -revolution_tessellation 10 -output teapot_low.obj
+curve_editor -input spline8_09_teapot.txt -patch_tessellation 30 -curve_tessellation 30 -revolution_tessellation 100 -output teapot_high.obj
+```
+
+![image-20210916152747853](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152747853.png)
+
+![image-20210916152825412](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152825412.png)
+
+![image-20210916152835210](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152835210.png)
+
+```zsh
+curve_editor -input output8_07_edit.txt -curve_tessellation 20 -revolution_tessellation 100 -output vase_very_high.obj
+raytracer -input scene8_10_transparent_vase.txt -output output8_10.tga -grid 30 30 30 -size 300 300 -bounces 4 -shade_back -jittered_samples 9 -tent_filter 1.0 -shadows
+raytracer -input scene8_11_reflective_teapot.txt -output output8_11.tga -grid 50 30 30 -size 300 300 -bounces 4 -shade_back -jittered_samples 9 -tent_filter 1.0 -shadows
+```
+
+![image-20210916152912942](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152912942.png)
+
+![image-20210916155218215](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155218215.png)
+
+![image-20210916155912295](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155912295.png)
+
 ### 实验小结
+
+本次实验主要是为了巩固和实践课程中学到的曲线和曲面的知识，虽然两者在数学上表示很简洁、很完美，但是具体实践起来，无论是代码组织上，还是代码实现上，都有很多tricky的点，这倒也印证了我一直以来的一个想法——计算机是一门实践的科学，当然图形学更是。只有idea肯定不够，实现才是最重要的。
 
 ## Particle System (Assignment 9)
 
 ### 实验目的与要求
 
+根据课程提供的Base代码，实现粒子系统的ForceField，Generator和Integrator
+
 ### 实验原理
+
+* Euler's method
+
+  ![image-20210916155701142](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155701142.png)
+
+* Improved Euler's method
+
+  ![image-20210916155746730](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155746730.png)
+
+* Midpoint method
+
+  ![image-20210916155806298](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155806298.png)
 
 ### 源代码与分析
 
+* Forcefield.h
+
+  ```c++
+  #pragma once
+  #include "vectors.h"
+  class ForceField
+  {
+  public:
+      virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const = 0;
+  };
+  class GravityForceField : public ForceField
+  {
+  public:
+      Vec3f g;
+      GravityForceField(Vec3f gravity)
+      {
+          this->g = gravity;
+      };
+      virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
+      {
+          return g;
+      }
+  };
+  
+  class ConstantForceField : public ForceField
+  {
+  public:
+      Vec3f f;
+      ConstantForceField(Vec3f force)
+      {
+          this->f = force;
+      };
+      virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
+      {
+          return f * (1/mass);
+      }
+  };
+  class RadialForceField : public ForceField
+  {
+  public:
+      float mag;
+      RadialForceField(float magnitude)
+      {
+          this->mag = magnitude;
+      };
+      virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
+      {
+          return mag * (Vec3f(0, 0, 0) - position);
+      }
+  };
+  class VerticalForceField : public ForceField
+  {
+  public:
+      float mag;
+      VerticalForceField(float magnitude)
+      {
+          this->mag = magnitude;
+      };
+      virtual Vec3f getAcceleration(const Vec3f &position, float mass, float t) const
+      {
+          return mag * (Vec3f(0, -1*position.y(), 0));
+      }
+  };
+  
+  ```
+
+  四种力场都很好理解也很好实现，重力场是恒定加速度，恒定力场需要除以质量，另外两种力场只需注意方向即可
+
+* generator.cpp
+
+  ```c++
+  #include "generator.h"
+  #include "GL/gl.h"
+  #include "GL/glu.h"
+  int HoseGenerator::numNewParticles(float current_time, float dt) const
+  {
+      return dt * desired_num_particles / lifespan;
+  };
+  Particle* HoseGenerator::Generate(float current_time, int i)
+  {
+      Vec3f p = this->position + this->random->randomVector() * this->positon_randomness;
+      Vec3f v = this->velocity + this->random->randomVector() * this->velocity_randomness;
+      float m = this->mass + this->random->next() * this->mass_randomness;
+      float lf = this->lifespan + this->random->next() * this->mass_randomness;
+      Particle *pt = new Particle(p, v, color, dead_color, m, lf);
+      return pt;
+  }
+  
+  int RingGenerator::numNewParticles(float current_time, float dt) const
+  {
+      //最大两倍
+      return dt * desired_num_particles * (current_time > 2.0 ? 2.0 : current_time) / lifespan;
+  };
+  Particle *RingGenerator::Generate(float current_time, int i)
+  {
+      float radius = 3 * (current_time > 2.0 ? 2.0 : current_time) / 2.0;
+      float theta = this->random->next() * 2 * M_PI;
+      Vec3f p = Vec3f(radius * cosf(theta), 0, radius * sinf(theta)) + this->random->randomVector() * this->positon_randomness;
+      Vec3f v = this->velocity + this->random->randomVector() * this->velocity_randomness;
+      float m = this->mass + this->random->next() * this->mass_randomness;
+      float lf = this->lifespan + this->random->next() * this->mass_randomness;
+      Particle *pt = new Particle(p, v, color, dead_color, m, lf);
+      return pt;
+  }
+  void RingGenerator::Paint() const
+  {
+      glBegin(GL_QUADS);
+      glVertex3f(-10.0, 0.0, 10.0);
+      glVertex3f(10.0, 0.0, 10.0);
+      glVertex3f(10.0, 0.0, -10.0);
+      glVertex3f(-10.0, 0.0, -10.0);
+      glEnd();
+  }
+  ```
+
+  HoseGenerator比较好做：在给定的生成点和给定的速度上加一些随机即可，而RingGenerator，根据作业要求，是要实现一个Expanding但不无限扩大的环，所以半径也好、生成的粒子数也好，都需要考虑计算一下
+
+* integrator.cpp
+
+  ```c++
+  #include "integrator.h"
+  void EulerIntegrator::Update(Particle *particle, ForceField *forcefield, float t, float dt)
+  {
+      Vec3f p = particle->getPosition();
+      Vec3f v = particle->getVelocity();
+      Vec3f a = forcefield->getAcceleration(p, particle->getMass(), t);
+      particle->setPosition(p + v * dt);
+      particle->setVelocity(v + a * dt);
+      particle->increaseAge(dt);
+  };
+  void MidpointIntegrator::Update(Particle *particle, ForceField *forcefield, float t, float dt)
+  {
+      Vec3f p = particle->getPosition();
+      Vec3f v = particle->getVelocity();
+      Vec3f a = forcefield->getAcceleration(p, particle->getMass(), t);
+  
+      Vec3f pm = p + v * dt * 0.5;
+      Vec3f vm = v + a * dt * 0.5;
+      Vec3f am = forcefield->getAcceleration(pm, particle->getMass(), t + dt * 0.5);
+      particle->setPosition(p + vm * dt);
+      particle->setVelocity(v + am * dt);
+      particle->increaseAge(dt);
+  };
+  ```
+
+  按照两种积分求解器进行计算即可
+
+### 实验结果
+
+```zsh
+particle_system -input system9_01_hose.txt -refresh 0.1  -dt 0.1 
+particle_system -input system9_01_hose.txt -refresh 0.05 -dt 0.05
+particle_system -input system9_01_hose.txt -refresh 0.1  -dt 0.1  -motion_blur
+particle_system -input system9_01_hose.txt -refresh 0.05 -dt 0.05 -motion_blur
+```
+
+![image-20210916161648400](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161648400.png)
+
+![image-20210916161719166](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161719166.png)
+
+![image-20210916161734209](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161734209.png)
+
+![image-20210916161753042](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161753042.png)
+
+```zsh
+particle_system -input system9_02_hose_gravity.txt -refresh 0.05 -dt 0.05 -draw_vectors 0.1
+particle_system -input system9_02_hose_gravity.txt -refresh 0.05 -dt 0.05 -motion_blur
+```
+
+![image-20210916161806785](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161806785.png)
+
+![image-20210916161823010](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161823010.png)
+
+```zsh
+particle_system -input system9_03_hose_force.txt -refresh 0.05 -dt 0.05 -draw_vectors 0.1
+particle_system -input system9_03_hose_force.txt -refresh 0.05 -dt 0.05 -motion_blur
+```
+
+![image-20210916161836481](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161836481.png)
+
+![image-20210916161849323](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161849323.png)
+
+```zsh
+particle_system -input system9_04_circle_euler.txt -refresh 0.1  -dt 0.1  -integrator_color -draw_vectors 0.02
+particle_system -input system9_04_circle_euler.txt -refresh 0.05 -dt 0.05 -integrator_color -motion_blur
+particle_system -input system9_04_circle_euler.txt -refresh 0.01 -dt 0.01 -integrator_color -motion_blur
+```
+
+![image-20210916161905114](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161905114.png)
+
+![image-20210916161918814](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161918814.png)
+
+![image-20210916161931660](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161931660.png)
+
+```zsh
+particle_system -input system9_05_circle_midpoint.txt -refresh 0.1  -dt 0.1  -integrator_color -draw_vectors 0.02
+particle_system -input system9_05_circle_midpoint.txt -refresh 0.05 -dt 0.05 -integrator_color -motion_blur
+particle_system -input system9_05_circle_midpoint.txt -refresh 0.01 -dt 0.01 -integrator_color -motion_blur
+```
+
+![image-20210916161947301](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161947301.png)
+
+![image-20210916162005397](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162005397.png)
+
+![image-20210916162020502](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162020502.png)
+
+```zsh
+particle_system -input system9_08_fire.txt -refresh 0.05 -dt 0.05  -motion_blur
+```
+
+![image-20210916162050737](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162050737.png)
+
+![image-20210916162105517](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162105517.png)
+
 ### 实验小结
+
+我在实习期间使用Unreal 4的Niagara粒子系统实现过鸟群，但基本都是工程方面和美术方面的工作，比如调整力场参数，生成参数，写基于time的material等，并没有实现过一个真正的粒子系统，本次实验主要是写了力场、生成器和积分器，基本上涵盖了粒子系统所有的基础功能。正如作业所说：Particle systems are an art form，要实现好看（以及性能好）的效果，不仅需要工程师在代码层面的优化，也需要美工的指引，这也从某种程度上反映了计算机图形学的发展现状吧
