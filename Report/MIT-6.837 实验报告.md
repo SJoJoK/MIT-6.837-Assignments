@@ -1,4 +1,4 @@
-MIT-6.837 实验报告
+# MIT-6.837 实验报告
 
 孙嘉锴，3180105871
 
@@ -247,71 +247,35 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 * Phong Shading
 
-  ![image-20210908172433807](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908172433807.png)
-
 * Blinn-Torrance Variation
 
-  ![1631093095669](C:\Users\45098\AppData\Local\Temp\utools-clipboard\1631093095669.png)
 
 #### Assignment 4
 
 * Shadow
 
-  ![image-20210908220746016](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908220746016.png)
-
-  ![image-20210908220905053](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908220905053.png)
-
 * Mirror Reflection
-
-  ![image-20210908220955086](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908220955086.png)
-
-  ![image-20210908221009838](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221009838.png)
 
 * Refraction
 
-  ![image-20210908221132110](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221132110.png)
-
-  ![image-20210908221144976](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221144976.png)
-
 * Ray Tracing
 
-  ![image-20210908221254870](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210908221254870.png)
 
 #### Assignment 5
 
 * Bounding Box
 
-  ![image-20210915155042419](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155042419.png)
-
-  ![image-20210915155059876](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155059876.png)
-
-  ![image-20210915155108199](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155108199.png)
-
-  ![image-20210915155118799](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155118799.png)
-
-  ![image-20210915155128614](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155128614.png)
-
-  ![image-20210915155138221](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155138221.png)
-
 * Grid
 
-  ![image-20210915155321826](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155321826.png)
-
-  ![image-20210915155347749](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915155347749.png)
 
 #### Assignment 6
 
 * Soild Texture
 
-  ![image-20210915163252035](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915163252035.png)
 
 #### Assignment 7
 
 * Sampling
-
-  ![image-20210915172309481](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915172309481.png)
-
-  ![image-20210915172346990](C:\Users\45098\AppData\Roaming\Typora\typora-user-images\image-20210915172346990.png)
 
 * Filter
 
