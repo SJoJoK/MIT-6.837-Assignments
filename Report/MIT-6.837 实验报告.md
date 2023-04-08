@@ -315,11 +315,11 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 
 * Filter
 
-  ![image-20210915172643762](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915172643762.png)
+  ![image-20210915172643762](MIT-6.837 实验报告.assets\image-20210915172643762.png)
 
-  ![image-20210915172653124](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915172653124.png)
+  ![image-20210915172653124](MIT-6.837 实验报告.assets\image-20210915172653124.png)
 
-  ![image-20210915172705252](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915172705252.png)
+  ![image-20210915172705252](MIT-6.837 实验报告.assets\image-20210915172705252.png)
 
 ### 源代码与分析
 
@@ -2208,49 +2208,49 @@ IFS系统的实现比较简单，基本就是将伪代码翻译为C++代码，�
 raytracer -input scene1_01.txt -size 200 200 -output output1_01.tga -depth 9 10 depth1_01.tga
 ```
 
-![image-20210915175543258](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175543258.png)
+![image-20210915175543258](MIT-6.837 实验报告.assets\image-20210915175543258.png)
 
-![image-20210915175605992](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175605992.png)
+![image-20210915175605992](MIT-6.837 实验报告.assets\image-20210915175605992.png)
 
 ```zsh
 raytracer -input scene1_02.txt -size 200 200 -output output1_02.tga -depth 8 12 depth1_02.tga
 ```
 
-![image-20210915175857743](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915175857743.png)
+![image-20210915175857743](MIT-6.837 实验报告.assets\image-20210915175857743.png)
 
-![image-20210915180007059](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180007059.png)
+![image-20210915180007059](MIT-6.837 实验报告.assets\image-20210915180007059.png)
 
 ```zsh
 raytracer -input scene1_03.txt -size 200 200 -output output1_03.tga -depth 8 12 depth1_03.tga
 ```
 
-![image-20210915180130103](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180130103.png)
+![image-20210915180130103](MIT-6.837 实验报告.assets\image-20210915180130103.png)
 
-![image-20210915180140202](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180140202.png)
+![image-20210915180140202](MIT-6.837 实验报告.assets\image-20210915180140202.png)
 
 ```zsh
 raytracer -input scene1_04.txt -size 200 200 -output output1_04.tga -depth 12 17 depth1_04.tga
 ```
 
-![image-20210915180154889](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180154889-16317001160981.png)
+![image-20210915180154889](MIT-6.837 实验报告.assets\image-20210915180154889-16317001160981.png)
 
-![image-20210915180205387](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180205387.png)
+![image-20210915180205387](MIT-6.837 实验报告.assets\image-20210915180205387.png)
 
 ```zsh
 raytracer -input scene1_05.txt -size 200 200 -output output1_05.tga -depth 14.5 19.5 depth1_05.tga
 ```
 
-![image-20210915180219459](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180219459.png)
+![image-20210915180219459](MIT-6.837 实验报告.assets\image-20210915180219459.png)
 
-![image-20210915180229979](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180229979.png)
+![image-20210915180229979](MIT-6.837 实验报告.assets\image-20210915180229979.png)
 
 ```zsh
 raytracer -input scene1_06.txt -size 200 200 -output output1_06.tga -depth 3 7 depth1_06.tga
 ```
 
-![image-20210915180248534](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180248534.png)
+![image-20210915180248534](MIT-6.837 实验报告.assets\image-20210915180248534.png)
 
-![image-20210915180302233](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180302233.png)
+![image-20210915180302233](MIT-6.837 实验报告.assets\image-20210915180302233.png)
 
 ```zsh
 raytracer -input scene1_07.txt -size 200 200 -output output1_07.tga -depth -2 2 depth1_07.tga
@@ -2258,9 +2258,9 @@ raytracer -input scene1_07.txt -size 200 200 -output output1_07.tga -depth -2 2 
 
 原场景的相机位置有问题，需要调整
 
-![image-20210915180338517](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180338517.png)
+![image-20210915180338517](MIT-6.837 实验报告.assets\image-20210915180338517.png)
 
-![image-20210915180354106](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180354106.png)
+![image-20210915180354106](MIT-6.837 实验报告.assets\image-20210915180354106.png)
 
 #### Assignment 2
 
@@ -2269,61 +2269,61 @@ raytracer -input scene2_01_diffuse.txt -size 200 200 -output output2_01.tga
 raytracer -input scene2_02_ambient.txt -size 200 200 -output output2_02.tga
 ```
 
-![image-20210915180647251](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180647251.png)
+![image-20210915180647251](MIT-6.837 实验报告.assets\image-20210915180647251.png)
 
-![image-20210915180700516](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180700516.png)
+![image-20210915180700516](MIT-6.837 实验报告.assets\image-20210915180700516.png)
 
 ```zsh
 raytracer -input scene2_03_colored_lights.txt -size 200 200 -output output2_03.tga -normals normals2_03.tga
 ```
 
-![image-20210915180721412](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180721412.png)
+![image-20210915180721412](MIT-6.837 实验报告.assets\image-20210915180721412.png)
 
-![image-20210915180736448](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180736448.png)
+![image-20210915180736448](MIT-6.837 实验报告.assets\image-20210915180736448.png)
 
 ```zsh
 raytracer -input scene2_04_perspective.txt -size 200 200 -output output2_04.tga -normals normals2_04.tga
 ```
 
-![image-20210915180818465](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180818465.png)
+![image-20210915180818465](MIT-6.837 实验报告.assets\image-20210915180818465.png)
 
-![image-20210915180844650](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915180844650.png)
+![image-20210915180844650](MIT-6.837 实验报告.assets\image-20210915180844650.png)
 
 ```zsh
 raytracer -input scene2_05_inside_sphere.txt -size 200 200 -output output2_05.tga -depth 9 11 depth2_05.tga -normals normals2_05.tga -shade_back
 raytracer -input scene2_05_inside_sphere.txt -size 200 200 -output output2_05_no_back.tga
 ```
 
-![image-20210915182716242](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182716242.png)
+![image-20210915182716242](MIT-6.837 实验报告.assets\image-20210915182716242.png)
 
-![image-20210915182734654](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182734654.png)
+![image-20210915182734654](MIT-6.837 实验报告.assets\image-20210915182734654.png)
 
-![image-20210915182805018](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182805018.png)
+![image-20210915182805018](MIT-6.837 实验报告.assets\image-20210915182805018.png)
 
-![image-20210915182835999](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915182835999.png)
+![image-20210915182835999](MIT-6.837 实验报告.assets\image-20210915182835999.png)
 
 ```zsh
 raytracer -input scene2_06_plane.txt -size 200 200 -output output2_06.tga -depth 8 20 depth2_06.tga -normals normals2_06.tga
 ```
 
-![image-20210915185800217](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915185800217.png)
+![image-20210915185800217](MIT-6.837 实验报告.assets\image-20210915185800217.png)
 
-![image-20210915185820074](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915185820074.png)
+![image-20210915185820074](MIT-6.837 实验报告.assets\image-20210915185820074.png)
 
-![image-20210915185829483](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915185829483.png)
+![image-20210915185829483](MIT-6.837 实验报告.assets\image-20210915185829483.png)
 
 ```zsh
 raytracer -input scene2_07_sphere_triangles.txt -size 200 200 -output output2_07.tga -depth 9 11 depth2_07.tga -normals normals2_07.tga -shade_back
 raytracer -input scene2_07_sphere_triangles.txt -size 200 200 -output output2_07_no_back.tga
 ```
 
-![image-20210915190000110](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190000110.png)
+![image-20210915190000110](MIT-6.837 实验报告.assets\image-20210915190000110.png)
 
-![image-20210915190014479](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190014479.png)
+![image-20210915190014479](MIT-6.837 实验报告.assets\image-20210915190014479.png)
 
-![image-20210915190025303](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190025303.png)
+![image-20210915190025303](MIT-6.837 实验报告.assets\image-20210915190025303.png)
 
-![image-20210915190213426](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190213426.png)
+![image-20210915190213426](MIT-6.837 实验报告.assets\image-20210915190213426.png)
 
 ```zsh
 raytracer -input scene2_08_cube.txt -size 200 200 -output output2_08.tga
@@ -2331,44 +2331,44 @@ raytracer -input scene2_09_bunny_200.txt -size 200 200 -output output2_09.tga
 raytracer -input scene2_10_bunny_1k.txt -size 200 200 -output output2_10.tga
 ```
 
-![image-20210915190230164](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190230164.png)
+![image-20210915190230164](MIT-6.837 实验报告.assets\image-20210915190230164.png)
 
-![image-20210915190239173](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190239173.png)
+![image-20210915190239173](MIT-6.837 实验报告.assets\image-20210915190239173.png)
 
-![image-20210915190249040](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190249040.png)
+![image-20210915190249040](MIT-6.837 实验报告.assets\image-20210915190249040.png)
 
 ```zsh
 raytracer -input scene2_11_squashed_sphere.txt -size 200 200 -output output2_11.tga -normals normals2_11.tga
 ```
 
-![image-20210915190258956](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190258956.png)
+![image-20210915190258956](MIT-6.837 实验报告.assets\image-20210915190258956.png)
 
-![image-20210915190308509](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190308509.png)
+![image-20210915190308509](MIT-6.837 实验报告.assets\image-20210915190308509.png)
 
 ```zsh
 raytracer -input scene2_12_rotated_sphere.txt -size 200 200 -output output2_12.tga -normals normals2_12.tga
 ```
 
-![image-20210915190322711](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190322711.png)
+![image-20210915190322711](MIT-6.837 实验报告.assets\image-20210915190322711.png)
 
-![image-20210915190333165](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190333165.png)
+![image-20210915190333165](MIT-6.837 实验报告.assets\image-20210915190333165.png)
 
 ```zsh
 raytracer -input scene2_13_rotated_squashed_sphere.txt -size 200 200 -output output2_13.tga -normals normals2_13.tga
 ```
 
-![image-20210915190358565](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190358565.png)
+![image-20210915190358565](MIT-6.837 实验报告.assets\image-20210915190358565.png)
 
-![image-20210915190407271](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190407271.png)
+![image-20210915190407271](MIT-6.837 实验报告.assets\image-20210915190407271.png)
 
 ```zsh
 raytracer -input scene2_14_axes_cube.txt -size 200 200 -output output2_14.tga
 raytracer -input scene2_15_crazy_transforms.txt -size 200 200 -output output2_15.tga
 ```
 
-![image-20210915190423431](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190423431.png)
+![image-20210915190423431](MIT-6.837 实验报告.assets\image-20210915190423431.png)
 
-![image-20210915190822223](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190822223.png)
+![image-20210915190822223](MIT-6.837 实验报告.assets\image-20210915190822223.png)
 
 右侧三角形中间的绿线应该是精度问题或边界问题
 
@@ -2376,9 +2376,9 @@ raytracer -input scene2_15_crazy_transforms.txt -size 200 200 -output output2_15
 raytracer -input scene2_16_t_scale.txt -size 200 200 -output output2_16.tga -depth 2 7 depth2_16.tga
 ```
 
-![image-20210915190932329](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915190932329.png)
+![image-20210915190932329](MIT-6.837 实验报告.assets\image-20210915190932329.png)
 
-![image-20210915191026121](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191026121.png)
+![image-20210915191026121](MIT-6.837 实验报告.assets\image-20210915191026121.png)
 
 #### Assignment 3
 
@@ -2386,46 +2386,46 @@ raytracer -input scene2_16_t_scale.txt -size 200 200 -output output2_16.tga -dep
 raytracer -input scene3_01_cube_orthographic.txt -size 200 200 -output output3_01.tga -gui
 ```
 
-![image-20210915191559937](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191559937.png)
+![image-20210915191559937](MIT-6.837 实验报告.assets\image-20210915191559937.png)
 
-![image-20210915191611814](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191611814.png)
+![image-20210915191611814](MIT-6.837 实验报告.assets\image-20210915191611814.png)
 
 ```zsh
 raytracer -input scene3_02_cube_perspective.txt -size 200 200 -output output3_02.tga -gui
 ```
 
-![image-20210915191632328](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191632328.png)
+![image-20210915191632328](MIT-6.837 实验报告.assets\image-20210915191632328.png)
 
-![image-20210915191649040](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191649040.png)
+![image-20210915191649040](MIT-6.837 实验报告.assets\image-20210915191649040.png)
 
 ```zsh
 raytracer -input scene3_03_bunny_mesh_200.txt -size 200 200 -output output3_03.tga -gui
 raytracer -input scene3_04_bunny_mesh_1k.txt -size 200 200 -output output3_04.tga -gui
 ```
 
-![image-20210915191709176](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191709176.png)
+![image-20210915191709176](MIT-6.837 实验报告.assets\image-20210915191709176.png)
 
-![image-20210915193220134](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193220134.png)
+![image-20210915193220134](MIT-6.837 实验报告.assets\image-20210915193220134.png)
 
-![image-20210915193335008](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193335008.png)
+![image-20210915193335008](MIT-6.837 实验报告.assets\image-20210915193335008.png)
 
-![image-20210915193353761](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193353761.png)
+![image-20210915193353761](MIT-6.837 实验报告.assets\image-20210915193353761.png)
 
 ```zsh
 raytracer -input scene3_05_axes_cube.txt -size 200 200 -output output3_05.tga -gui
 ```
 
-![image-20210915191943766](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191943766.png)
+![image-20210915191943766](MIT-6.837 实验报告.assets\image-20210915191943766.png)
 
-![image-20210915193239854](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193239854.png)
+![image-20210915193239854](MIT-6.837 实验报告.assets\image-20210915193239854.png)
 
 ```zsh
 raytracer -input scene3_06_crazy_transforms.txt -size 200 200 -output output3_06.tga -gui
 ```
 
-![image-20210915191957528](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915191957528.png)
+![image-20210915191957528](MIT-6.837 实验报告.assets\image-20210915191957528.png)
 
-![image-20210915194106208](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194106208.png)
+![image-20210915194106208](MIT-6.837 实验报告.assets\image-20210915194106208.png)
 
 ```zsh
 raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui -tessellation 10 5
@@ -2434,47 +2434,47 @@ raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui 
 raytracer -input scene3_08_sphere.txt -size 200 200 -output output3_08.tga -gui -tessellation 20 10 -gouraud
 ```
 
-![image-20210915193507963](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193507963.png)
+![image-20210915193507963](MIT-6.837 实验报告.assets\image-20210915193507963.png)
 
-![image-20210915193527344](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193527344.png)
+![image-20210915193527344](MIT-6.837 实验报告.assets\image-20210915193527344.png)
 
-![image-20210915193600355](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193600355.png)
+![image-20210915193600355](MIT-6.837 实验报告.assets\image-20210915193600355.png)
 
-![image-20210915193621835](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193621835.png)
+![image-20210915193621835](MIT-6.837 实验报告.assets\image-20210915193621835.png)
 
-![image-20210915194140680](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194140680.png)
+![image-20210915194140680](MIT-6.837 实验报告.assets\image-20210915194140680.png)
 
 ```zsh
 raytracer -input scene3_09_exponent_variations.txt -size 300 300 -output output3_09.tga -gui -tessellation 100 50 -gouraud
 ```
 
-![image-20210915193943759](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193943759.png)
+![image-20210915193943759](MIT-6.837 实验报告.assets\image-20210915193943759.png)
 
-![image-20210915194150774](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194150774.png)
+![image-20210915194150774](MIT-6.837 实验报告.assets\image-20210915194150774.png)
 
 ```zsh
 raytracer -input scene3_10_exponent_variations_back.txt -size 300 300 -output output3_10.tga -gui -tessellation 100 50 -gouraud
 ```
 
-![image-20210915193957468](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915193957468.png)
+![image-20210915193957468](MIT-6.837 实验报告.assets\image-20210915193957468.png)
 
-![image-20210915194201356](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194201356.png)
+![image-20210915194201356](MIT-6.837 实验报告.assets\image-20210915194201356.png)
 
 ```zsh
 raytracer -input scene3_11_weird_lighting_diffuse.txt -size 200 200 -output output3_11.tga -gui -tessellation 100 50 -gouraud
 ```
 
-![image-20210915194012549](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194012549.png)
+![image-20210915194012549](MIT-6.837 实验报告.assets\image-20210915194012549.png)
 
-![image-20210915194212923](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194212923.png)
+![image-20210915194212923](MIT-6.837 实验报告.assets\image-20210915194212923.png)
 
 ```zsh
 raytracer -input scene3_12_weird_lighting_specular.txt -size 200 200 -output output3_12.tga -gui -tessellation 100 50 -gouraud
 ```
 
-![image-20210915194025596](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194025596.png)
+![image-20210915194025596](MIT-6.837 实验报告.assets\image-20210915194025596.png)
 
-![image-20210915194225837](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915194225837.png)
+![image-20210915194225837](MIT-6.837 实验报告.assets\image-20210915194225837.png)
 
 #### Assignment 4
 
@@ -2482,19 +2482,19 @@ raytracer -input scene3_12_weird_lighting_specular.txt -size 200 200 -output out
 raytracer -input scene4_01_sphere_shadow.txt -size 200 200 -output output4_01.tga -shadows
 ```
 
-![image-20210915205630862](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205630862.png)
+![image-20210915205630862](MIT-6.837 实验报告.assets\image-20210915205630862.png)
 
 ```zsh
 raytracer -input scene4_02_colored_shadows.txt -size 200 200 -output output4_02.tga -shadows -gui -tessellation 50 25 -gouraud
 ```
 
-![image-20210915195221070](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195221070.png)
+![image-20210915195221070](MIT-6.837 实验报告.assets\image-20210915195221070.png)
 
 ```zsh
 raytracer -input scene4_03_mirrored_floor.txt -size 200 200 -output output4_03.tga -shadows -bounces 1 -weight 0.01 -gui
 ```
 
-![image-20210915195229423](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195229423.png)
+![image-20210915195229423](MIT-6.837 实验报告.assets\image-20210915195229423.png)
 
 ```zsh
 raytracer -input scene4_04_reflective_sphere.txt -size 200 200 -output output4_04a.tga -shadows -bounces 0 -weight 0.01
@@ -2505,17 +2505,17 @@ raytracer -input scene4_04_reflective_sphere.txt -size 200 200 -output output4_0
 
 * a
 
-  ![image-20210915205720237](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205720237.png)
+  ![image-20210915205720237](MIT-6.837 实验报告.assets\image-20210915205720237.png)
 
 * d
 
-  ![image-20210915205731852](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205731852.png)
+  ![image-20210915205731852](MIT-6.837 实验报告.assets\image-20210915205731852.png)
 
 ```zsh
 raytracer -input scene4_05_transparent_bar.txt -size 200 200 -output output4_05.tga -shadows -bounces 10 -weight 0.01 -shade_back -gui
 ```
 
-![image-20210915195318495](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195318495.png)
+![image-20210915195318495](MIT-6.837 实验报告.assets\image-20210915195318495.png)
 
 ```zsh
 raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06a.tga -shadows -bounces 0 -weight 0.01 -shade_back -gui
@@ -2528,15 +2528,15 @@ raytracer -input scene4_06_transparent_bars.txt -size 200 200 -output output4_06
 
 * a
 
-  ![image-20210915195334999](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195334999.png)
+  ![image-20210915195334999](MIT-6.837 实验报告.assets\image-20210915195334999.png)
 
 * d
 
-  ![image-20210915195351289](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195351289.png)
+  ![image-20210915195351289](MIT-6.837 实验报告.assets\image-20210915195351289.png)
 
 * f
 
-  ![image-20210915195406529](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915195406529.png)
+  ![image-20210915195406529](MIT-6.837 实验报告.assets\image-20210915195406529.png)
 
 ```zsh
 raytracer -input scene4_07_transparent_sphere_1.0.txt -size 200 200 -output output4_07.tga -shadows -bounces 5 -weight 0.01 -shade_back -gui -tessellation 30 15
@@ -2544,17 +2544,17 @@ raytracer -input scene4_08_transparent_sphere_1.1.txt -size 200 200 -output outp
 raytracer -input scene4_09_transparent_sphere_2.0.txt -size 200 200 -output output4_09.tga -shadows -bounces 5 -weight 0.01 -shade_back -gui -tessellation 30 15
 ```
 
-![image-20210915204810343](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915204810343.png)
+![image-20210915204810343](MIT-6.837 实验报告.assets\image-20210915204810343.png)
 
-![image-20210915205415239](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205415239.png)
+![image-20210915205415239](MIT-6.837 实验报告.assets\image-20210915205415239.png)
 
-![image-20210915205422998](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205422998.png)
+![image-20210915205422998](MIT-6.837 实验报告.assets\image-20210915205422998.png)
 
 ```zsh
 raytracer -input scene4_10_point_light_distance.txt -size 200 200 -output output4_10.tga -shadows -gui
 ```
 
-![image-20210915205459611](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205459611.png)
+![image-20210915205459611](MIT-6.837 实验报告.assets\image-20210915205459611.png)
 
 ```zsh
 raytracer -input scene4_11_point_light_circle.txt -size 200 200 -output output4_11.tga -shadows 
@@ -2562,11 +2562,11 @@ raytracer -input scene4_12_point_light_circle_d_attenuation.txt -size 200 200 -o
 raytracer -input scene4_13_point_light_circle_d2_attenuation.txt -size 200 200 -output output4_13.tga -shadows
 ```
 
-![image-20210915205508243](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205508243.png)
+![image-20210915205508243](MIT-6.837 实验报告.assets\image-20210915205508243.png)
 
-![image-20210915205517395](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205517395.png)
+![image-20210915205517395](MIT-6.837 实验报告.assets\image-20210915205517395.png)
 
-![image-20210915205525965](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205525965.png)
+![image-20210915205525965](MIT-6.837 实验报告.assets\image-20210915205525965.png)
 
 ```zsh
 raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14a.tga -shadows -shade_back -bounces 0 -weight 0.01 
@@ -2579,15 +2579,15 @@ raytracer -input scene4_14_faceted_gem.txt -size 200 200 -output output4_14f.tga
 
 * a
 
-  ![image-20210915205751708](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205751708.png)
+  ![image-20210915205751708](MIT-6.837 实验报告.assets\image-20210915205751708.png)
 
 * d
 
-  ![image-20210915205808124](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205808124.png)
+  ![image-20210915205808124](MIT-6.837 实验报告.assets\image-20210915205808124.png)
 
 * f
 
-  ![image-20210915205819357](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915205819357.png)
+  ![image-20210915205819357](MIT-6.837 实验报告.assets\image-20210915205819357.png)
 
 #### Assignment 5
 
@@ -2597,26 +2597,26 @@ raytracer -input scene5_01_sphere.txt -size 200 200 -output output5_01b.tga -gui
 raytracer -input scene5_01_sphere.txt -size 200 200 -output output5_01c.tga -gui -grid 15 15 15 -visualize_grid
 ```
 
-![image-20210915210337818](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210337818.png)
+![image-20210915210337818](MIT-6.837 实验报告.assets\image-20210915210337818.png)
 
-![image-20210915210541574](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210541574.png)
+![image-20210915210541574](MIT-6.837 实验报告.assets\image-20210915210541574.png)
 
-![image-20210915210559408](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210559408.png)
+![image-20210915210559408](MIT-6.837 实验报告.assets\image-20210915210559408.png)
 
 ```zsh
 raytracer -input scene5_02_spheres.txt -size 200 200 -output output5_02a.tga -gui -grid 15 15 15 -visualize_grid
 raytracer -input scene5_02_spheres.txt -size 200 200 -output output5_02b.tga -gui -grid 15 15 3 -visualize_grid
 ```
 
-![image-20210915210649691](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210649691.png)
+![image-20210915210649691](MIT-6.837 实验报告.assets\image-20210915210649691.png)
 
-![image-20210915210704194](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210704194.png)
+![image-20210915210704194](MIT-6.837 实验报告.assets\image-20210915210704194.png)
 
 ```zsh
 raytracer -input scene5_03_offcenter_spheres.txt -size 200 200 -output output5_03.tga -gui -grid 20 20 20 -visualize_grid
 ```
 
-![image-20210915210820571](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210820571.png)
+![image-20210915210820571](MIT-6.837 实验报告.assets\image-20210915210820571.png)
 
 （题目提供场景即为正交相机，所以渲染结果是正确的）
 
@@ -2624,13 +2624,13 @@ raytracer -input scene5_03_offcenter_spheres.txt -size 200 200 -output output5_0
 raytracer -input scene5_04_plane_test.txt -size 200 200 -output output5_04.tga -gui -grid 15 15 15 -visualize_grid
 ```
 
-![image-20210915210919496](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210919496.png)
+![image-20210915210919496](MIT-6.837 实验报告.assets\image-20210915210919496.png)
 
 ```zsh
 raytracer -input scene5_05_sphere_triangles.txt -size 200 200 -output output5_05.tga -gui -grid 20 20 10 -visualize_grid
 ```
 
-![image-20210915210950544](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915210950544.png)
+![image-20210915210950544](MIT-6.837 实验报告.assets\image-20210915210950544.png)
 
 ```zsh
 raytracer -input scene5_06_bunny_mesh_200.txt -size 200 200 -output output5_06.tga -gui -grid 10 10 7 -visualize_grid
@@ -2639,31 +2639,31 @@ raytracer -input scene5_08_bunny_mesh_5k.txt -size 200 200 -output output5_08.tg
 raytracer -input scene5_09_bunny_mesh_40k.txt -size 200 200 -output output5_09.tga -gui -grid 40 40 33 -visualize_grid
 ```
 
-![image-20210915211046554](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211046554.png)
+![image-20210915211046554](MIT-6.837 实验报告.assets\image-20210915211046554.png)
 
-![image-20210915211106653](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211106653.png)
+![image-20210915211106653](MIT-6.837 实验报告.assets\image-20210915211106653.png)
 
-![image-20210915211128549](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211128549.png)
+![image-20210915211128549](MIT-6.837 实验报告.assets\image-20210915211128549.png)
 
-![image-20210915211544733](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211544733.png)
+![image-20210915211544733](MIT-6.837 实验报告.assets\image-20210915211544733.png)
 
 ```zsh
 raytracer -input scene5_10_scale_translate.txt -size 200 200 -output output5_10.tga -gui -grid 15 15 15 -visualize_grid
 ```
 
-![image-20210915211627487](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211627487.png)
+![image-20210915211627487](MIT-6.837 实验报告.assets\image-20210915211627487.png)
 
 ```zsh
 raytracer -input scene5_11_rotated_triangles.txt -size 200 200 -output output5_11.tga -gui -grid 15 15 9 -visualize_grid
 ```
 
-![image-20210915211652804](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915211652804.png)
+![image-20210915211652804](MIT-6.837 实验报告.assets\image-20210915211652804.png)
 
 ```zsh
 raytracer -input scene5_12_nested_transformations.txt -size 200 200 -output output5_12.tga -gui -grid 30 30 30 -visualize_grid
 ```
 
-![image-20210915212139787](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915212139787.png)
+![image-20210915212139787](MIT-6.837 实验报告.assets\image-20210915212139787.png)
 
 #### Assignment 6
 
@@ -2671,25 +2671,25 @@ raytracer -input scene5_12_nested_transformations.txt -size 200 200 -output outp
 raytracer -input scene6_01_sphere.txt -output output6_01b.tga -size 200 200 -grid 10 10 10 -stats
 ```
 
-![image-20210915213155179](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213155179.png)
+![image-20210915213155179](MIT-6.837 实验报告.assets\image-20210915213155179.png)
 
 ```zsh
 raytracer -input scene6_02_sphere_triangles.txt -output output6_02b.tga -size 200 200 -grid 10 10 10 -stats 
 raytracer -input scene6_02_sphere_triangles.txt -output output6_02d.tga -size 200 200 -grid 10 10 10 -stats -shadows 
 ```
 
-![image-20210915213237764](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213237764.png)
+![image-20210915213237764](MIT-6.837 实验报告.assets\image-20210915213237764.png)
 
-![image-20210915213249557](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213249557.png)
+![image-20210915213249557](MIT-6.837 实验报告.assets\image-20210915213249557.png)
 
 ```zsh
 raytracer -input scene6_03_sphere_plane.txt -output output6_03b.tga -size 200 200 -grid 10 10 10 -stats
 raytracer -input scene6_03_sphere_plane.txt -output output6_03d.tga -size 200 200 -grid 10 10 10 -stats -shadows
 ```
 
-![image-20210915213342462](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213342462.png)
+![image-20210915213342462](MIT-6.837 实验报告.assets\image-20210915213342462.png)
 
-![image-20210915213355369](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213355369.png)
+![image-20210915213355369](MIT-6.837 实验报告.assets\image-20210915213355369.png)
 
 ```zsh
 raytracer -input scene6_04_bunny_mesh_200.txt -output output6_04b.tga -size 200 200 -grid 10 10 7 -stats
@@ -2699,72 +2699,72 @@ raytracer -input scene6_06_bunny_mesh_5k.txt  -output output6_06.tga -size 200 2
 raytracer -input scene6_07_bunny_mesh_40k.txt -output output6_07.tga -size 200 200 -grid 40 40 33 -stats -shadows
 ```
 
-![image-20210915213503730](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213503730.png)
+![image-20210915213503730](MIT-6.837 实验报告.assets\image-20210915213503730.png)
 
-![image-20210915213558838](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213558838.png)
+![image-20210915213558838](MIT-6.837 实验报告.assets\image-20210915213558838.png)
 
-![image-20210915213651077](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213651077.png)
+![image-20210915213651077](MIT-6.837 实验报告.assets\image-20210915213651077.png)
 
-![image-20210915213728749](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213728749.png)
+![image-20210915213728749](MIT-6.837 实验报告.assets\image-20210915213728749.png)
 
-![image-20210915213810479](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213810479.png)
+![image-20210915213810479](MIT-6.837 实验报告.assets\image-20210915213810479.png)
 
 ```zsh
 raytracer -input scene6_08_scale_translate.txt -size 200 200 -output output6_08b.tga -grid 15 15 15
 ```
 
-![image-20210915213903372](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213903372.png)
+![image-20210915213903372](MIT-6.837 实验报告.assets\image-20210915213903372.png)
 
 ```zsh
 raytracer -input scene6_09_rotated_triangles.txt -size 200 200 -output output6_09b.tga -grid 15 15 9 
 ```
 
-![image-20210915213926545](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213926545.png)
+![image-20210915213926545](MIT-6.837 实验报告.assets\image-20210915213926545.png)
 
 ```zsh
 raytracer -input scene6_10_nested_transformations.txt -size 200 200 -output output6_10b.tga -grid 30 30 30
 ```
 
-![image-20210915213952634](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213952634.png)
+![image-20210915213952634](MIT-6.837 实验报告.assets\image-20210915213952634.png)
 
 ```zsh
 raytracer -input scene6_11_mirrored_floor.txt -size 200 200 -output output6_11b.tga -shadows -bounces 1 -weight 0.01 -grid 40 10 40 -stats
 ```
 
-![image-20210915214046717](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214046717.png)
+![image-20210915214046717](MIT-6.837 实验报告.assets\image-20210915214046717.png)
 
 ```zsh
 raytracer -input scene6_12_faceted_gem.txt -size 200 200 -output output6_12b.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 20 20 20 -stats
 ```
 
-![image-20210915214201647](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214201647.png)
+![image-20210915214201647](MIT-6.837 实验报告.assets\image-20210915214201647.png)
 
 ```zsh
 raytracer -input scene6_13_checkerboard.txt -size 200 200 -output output6_13.tga -shadows 
 raytracer -input scene6_14_glass_sphere.txt -size 200 200 -output output6_14.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 20 20 20
 ```
 
-![image-20210915214238719](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214238719.png)
+![image-20210915214238719](MIT-6.837 实验报告.assets\image-20210915214238719.png)
 
-![image-20210915214319224](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214319224.png)
+![image-20210915214319224](MIT-6.837 实验报告.assets\image-20210915214319224.png)
 
 ```zsh
 raytracer -input scene6_15_marble_cubes.txt -size 300 300 -output output6_15.tga
 ```
 
-![image-20210915214359237](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915214359237.png)
+![image-20210915214359237](MIT-6.837 实验报告.assets\image-20210915214359237.png)
 
 ```zsh
 raytracer -input scene6_17_marble_vase.txt -size 300 300 -output output6_17a.tga -grid 15 30 15 -bounces 1 -shadows
 ```
 
-![image-20210915213033603](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210915213033603.png)
+![image-20210915213033603](MIT-6.837 实验报告.assets\image-20210915213033603.png)
 
 ```zsh
 raytracer -input scene6_18_6.837_logo.txt -size 400 200 -output output6_18a.tga -shadows -shade_back -bounces 5 -weight 0.01 -grid 80 30 3
 ```
 
-![image-20210916160518622](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916160518622.png)
+![image-20210916160518622](MIT-6.837 实验报告.assets\image-20210916160518622.png)
 
 由于我没有实现Wood材质，所以用Marble代替
 
@@ -2816,19 +2816,19 @@ Assignment 7是利用超采样和过滤进行抗锯齿操作，我个人认为�
 
 * BezierCurve
 
-  ![image-20210916143940091](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916143940091.png)
+  ![image-20210916143940091](MIT-6.837 实验报告.assets\image-20210916143940091.png)
 
 * BSpline
 
-  ![image-20210916144007557](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916144007557.png)
+  ![image-20210916144007557](MIT-6.837 实验报告.assets\image-20210916144007557.png)
 
 * Bezier Patch
 
-  ![image-20210916144052492](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916144052492.png)
+  ![image-20210916144052492](MIT-6.837 实验报告.assets\image-20210916144052492.png)
 
 * Surface of Revolution
 
-  ![image-20210916144146769](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916144146769.png)
+  ![image-20210916144146769](MIT-6.837 实验报告.assets\image-20210916144146769.png)
 
 ### 源代码与分析
 
@@ -3254,9 +3254,9 @@ curve_editor -input spline8_01_bezier.txt -gui -curve_tessellation 30
 curve_editor -input spline8_02_bspline.txt -gui -curve_tessellation 30
 ```
 
-![image-20210916145502746](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145502746.png)
+![image-20210916145502746](MIT-6.837 实验报告.assets\image-20210916145502746.png)
 
-![image-20210916145522993](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145522993.png)
+![image-20210916145522993](MIT-6.837 实验报告.assets\image-20210916145522993.png)
 
 ```zsh
 curve_editor -input spline8_01_bezier.txt -output_bezier output8_01_bezier.txt
@@ -3269,13 +3269,13 @@ curve_editor -input output8_02_bezier.txt -gui -curve_tessellation 30
 curve_editor -input output8_02_bspline.txt -gui -curve_tessellation 30
 ```
 
-![image-20210916145649644](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145649644.png)
+![image-20210916145649644](MIT-6.837 实验报告.assets\image-20210916145649644.png)
 
-![image-20210916145923937](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145923937.png)
+![image-20210916145923937](MIT-6.837 实验报告.assets\image-20210916145923937.png)
 
-![image-20210916145858742](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145858742.png)
+![image-20210916145858742](MIT-6.837 实验报告.assets\image-20210916145858742.png)
 
-![image-20210916145946748](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916145946748.png)
+![image-20210916145946748](MIT-6.837 实验报告.assets\image-20210916145946748.png)
 
 ```zsh
 curve_editor -input spline8_03_bezier.txt -gui -curve_tessellation 30
@@ -3283,11 +3283,11 @@ curve_editor -input spline8_04_bspline.txt -gui -curve_tessellation 30
 curve_editor -input spline8_05_bspline_dups.txt -gui -curve_tessellation 30
 ```
 
-![image-20210916150011272](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150011272.png)
+![image-20210916150011272](MIT-6.837 实验报告.assets\image-20210916150011272.png)
 
-![image-20210916150037514](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150037514.png)
+![image-20210916150037514](MIT-6.837 实验报告.assets\image-20210916150037514.png)
 
-![image-20210916150054665](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150054665.png)
+![image-20210916150054665](MIT-6.837 实验报告.assets\image-20210916150054665.png)
 
 ```zsh
 curve_editor -input spline8_06_torus.txt -curve_tessellation 4 -gui
@@ -3295,11 +3295,11 @@ curve_editor -input spline8_06_torus.txt -curve_tessellation 4 -revolution_tesse
 curve_editor -input spline8_06_torus.txt -curve_tessellation 30 -revolution_tessellation 60 -output torus_high.obj
 ```
 
-![image-20210916150154176](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150154176.png)
+![image-20210916150154176](MIT-6.837 实验报告.assets\image-20210916150154176.png)
 
-![image-20210916150355126](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150355126.png)
+![image-20210916150355126](MIT-6.837 实验报告.assets\image-20210916150355126.png)
 
-![image-20210916150413716](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150413716.png)
+![image-20210916150413716](MIT-6.837 实验报告.assets\image-20210916150413716.png)
 
 ```zsh
 curve_editor -input spline8_07_vase.txt -curve_tessellation 4 -output_bspline output8_07_edit.txt -gui
@@ -3307,11 +3307,11 @@ curve_editor -input output8_07_edit.txt -curve_tessellation 4 -revolution_tessel
 curve_editor -input output8_07_edit.txt -curve_tessellation 10 -revolution_tessellation 60 -output vase_high.obj
 ```
 
-![image-20210916150916177](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916150916177.png)
+![image-20210916150916177](MIT-6.837 实验报告.assets\image-20210916150916177.png)
 
-![image-20210916151017036](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151017036.png)
+![image-20210916151017036](MIT-6.837 实验报告.assets\image-20210916151017036.png)
 
-![image-20210916151027691](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151027691.png)
+![image-20210916151027691](MIT-6.837 实验报告.assets\image-20210916151027691.png)
 
 ```zsh
 curve_editor -input spline8_08_bezier_patch.txt -patch_tessellation 4 -output patch_low.obj
@@ -3319,11 +3319,11 @@ curve_editor -input spline8_08_bezier_patch.txt -patch_tessellation 10 -output p
 curve_editor -input spline8_08_bezier_patch.txt -patch_tessellation 40 -output patch_high.obj
 ```
 
-![image-20210916151229962](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151229962.png)
+![image-20210916151229962](MIT-6.837 实验报告.assets\image-20210916151229962.png)
 
-![image-20210916151238628](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151238628.png)
+![image-20210916151238628](MIT-6.837 实验报告.assets\image-20210916151238628.png)
 
-![image-20210916151251057](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916151251057.png)
+![image-20210916151251057](MIT-6.837 实验报告.assets\image-20210916151251057.png)
 
 ```zsh
 curve_editor -input spline8_09_teapot.txt -curve_tessellation 4 -gui
@@ -3331,11 +3331,11 @@ curve_editor -input spline8_09_teapot.txt -patch_tessellation 4 -curve_tessellat
 curve_editor -input spline8_09_teapot.txt -patch_tessellation 30 -curve_tessellation 30 -revolution_tessellation 100 -output teapot_high.obj
 ```
 
-![image-20210916152747853](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152747853.png)
+![image-20210916152747853](MIT-6.837 实验报告.assets\image-20210916152747853.png)
 
-![image-20210916152825412](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152825412.png)
+![image-20210916152825412](MIT-6.837 实验报告.assets\image-20210916152825412.png)
 
-![image-20210916152835210](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152835210.png)
+![image-20210916152835210](MIT-6.837 实验报告.assets\image-20210916152835210.png)
 
 ```zsh
 curve_editor -input output8_07_edit.txt -curve_tessellation 20 -revolution_tessellation 100 -output vase_very_high.obj
@@ -3343,11 +3343,11 @@ raytracer -input scene8_10_transparent_vase.txt -output output8_10.tga -grid 30 
 raytracer -input scene8_11_reflective_teapot.txt -output output8_11.tga -grid 50 30 30 -size 300 300 -bounces 4 -shade_back -jittered_samples 9 -tent_filter 1.0 -shadows
 ```
 
-![image-20210916152912942](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916152912942.png)
+![image-20210916152912942](MIT-6.837 实验报告.assets\image-20210916152912942.png)
 
-![image-20210916155218215](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155218215.png)
+![image-20210916155218215](MIT-6.837 实验报告.assets\image-20210916155218215.png)
 
-![image-20210916155912295](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155912295.png)
+![image-20210916155912295](MIT-6.837 实验报告.assets\image-20210916155912295.png)
 
 ### 实验小结
 
@@ -3363,15 +3363,15 @@ raytracer -input scene8_11_reflective_teapot.txt -output output8_11.tga -grid 50
 
 * Euler's method
 
-  ![image-20210916155701142](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155701142.png)
+  ![image-20210916155701142](MIT-6.837 实验报告.assets\image-20210916155701142.png)
 
 * Improved Euler's method
 
-  ![image-20210916155746730](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155746730.png)
+  ![image-20210916155746730](MIT-6.837 实验报告.assets\image-20210916155746730.png)
 
 * Midpoint method
 
-  ![image-20210916155806298](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916155806298.png)
+  ![image-20210916155806298](MIT-6.837 实验报告.assets\image-20210916155806298.png)
 
 ### 源代码与分析
 
@@ -3531,31 +3531,31 @@ particle_system -input system9_01_hose.txt -refresh 0.1  -dt 0.1  -motion_blur
 particle_system -input system9_01_hose.txt -refresh 0.05 -dt 0.05 -motion_blur
 ```
 
-![image-20210916161648400](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161648400.png)
+![image-20210916161648400](MIT-6.837 实验报告.assets\image-20210916161648400.png)
 
-![image-20210916161719166](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161719166.png)
+![image-20210916161719166](MIT-6.837 实验报告.assets\image-20210916161719166.png)
 
-![image-20210916161734209](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161734209.png)
+![image-20210916161734209](MIT-6.837 实验报告.assets\image-20210916161734209.png)
 
-![image-20210916161753042](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161753042.png)
+![image-20210916161753042](MIT-6.837 实验报告.assets\image-20210916161753042.png)
 
 ```zsh
 particle_system -input system9_02_hose_gravity.txt -refresh 0.05 -dt 0.05 -draw_vectors 0.1
 particle_system -input system9_02_hose_gravity.txt -refresh 0.05 -dt 0.05 -motion_blur
 ```
 
-![image-20210916161806785](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161806785.png)
+![image-20210916161806785](MIT-6.837 实验报告.assets\image-20210916161806785.png)
 
-![image-20210916161823010](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161823010.png)
+![image-20210916161823010](MIT-6.837 实验报告.assets\image-20210916161823010.png)
 
 ```zsh
 particle_system -input system9_03_hose_force.txt -refresh 0.05 -dt 0.05 -draw_vectors 0.1
 particle_system -input system9_03_hose_force.txt -refresh 0.05 -dt 0.05 -motion_blur
 ```
 
-![image-20210916161836481](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161836481.png)
+![image-20210916161836481](MIT-6.837 实验报告.assets\image-20210916161836481.png)
 
-![image-20210916161849323](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161849323.png)
+![image-20210916161849323](MIT-6.837 实验报告.assets\image-20210916161849323.png)
 
 ```zsh
 particle_system -input system9_04_circle_euler.txt -refresh 0.1  -dt 0.1  -integrator_color -draw_vectors 0.02
@@ -3563,11 +3563,11 @@ particle_system -input system9_04_circle_euler.txt -refresh 0.05 -dt 0.05 -integ
 particle_system -input system9_04_circle_euler.txt -refresh 0.01 -dt 0.01 -integrator_color -motion_blur
 ```
 
-![image-20210916161905114](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161905114.png)
+![image-20210916161905114](MIT-6.837 实验报告.assets\image-20210916161905114.png)
 
-![image-20210916161918814](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161918814.png)
+![image-20210916161918814](MIT-6.837 实验报告.assets\image-20210916161918814.png)
 
-![image-20210916161931660](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161931660.png)
+![image-20210916161931660](MIT-6.837 实验报告.assets\image-20210916161931660.png)
 
 ```zsh
 particle_system -input system9_05_circle_midpoint.txt -refresh 0.1  -dt 0.1  -integrator_color -draw_vectors 0.02
@@ -3575,19 +3575,19 @@ particle_system -input system9_05_circle_midpoint.txt -refresh 0.05 -dt 0.05 -in
 particle_system -input system9_05_circle_midpoint.txt -refresh 0.01 -dt 0.01 -integrator_color -motion_blur
 ```
 
-![image-20210916161947301](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916161947301.png)
+![image-20210916161947301](MIT-6.837 实验报告.assets\image-20210916161947301.png)
 
-![image-20210916162005397](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162005397.png)
+![image-20210916162005397](MIT-6.837 实验报告.assets\image-20210916162005397.png)
 
-![image-20210916162020502](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162020502.png)
+![image-20210916162020502](MIT-6.837 实验报告.assets\image-20210916162020502.png)
 
 ```zsh
 particle_system -input system9_08_fire.txt -refresh 0.05 -dt 0.05  -motion_blur
 ```
 
-![image-20210916162050737](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162050737.png)
+![image-20210916162050737](MIT-6.837 实验报告.assets\image-20210916162050737.png)
 
-![image-20210916162105517](D:\Programs\MIT_CG\Report\MIT-6.837 实验报告.assets\image-20210916162105517.png)
+![image-20210916162105517](MIT-6.837 实验报告.assets\image-20210916162105517.png)
 
 ### 实验小结
 
